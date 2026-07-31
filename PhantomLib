@@ -100,16 +100,17 @@ function PhantomLib:LoadConfig()
 end
 
 -------------------------------------------------------------------------------
--- WINDOW INITIALIZATION
+-- WINDOW INITIALIZATION (RAYFIELD STYLE)
 -------------------------------------------------------------------------------
 function PhantomLib:CreateWindow(options)
     options = options or {}
     local self = setmetatable({}, PhantomLib)
     
+    -- Rayfield-style configuration mapping
     self.WindowName = options.Name or "Phantom Hub"
     self.LoadingTitle = options.LoadingTitle or self.WindowName
     self.LoadingSubtitle = options.LoadingSubtitle or "Loading Interface..."
-    self.Theme = PhantomLib.Themes.Default
+    self.Theme = PhantomLib.Themes.Default -- Extendable in the future
     self.Tabs = {}
     self.ActiveTab = nil
     self.Flags = PhantomLib.Flags
@@ -124,9 +125,8 @@ function PhantomLib:CreateWindow(options)
     screen.ResetOnSpawn = false
     screen.Parent = getGuiParent()
 
+    -- Mobile Support
     local isTouch = UserInputService.TouchEnabled
-    local toggleKey = options.Keybind or Enum.KeyCode.RightControl
-
     local mobileToggle = Instance.new("TextButton", screen)
     mobileToggle.Size = UDim2.fromOffset(45, 45)
     mobileToggle.Position = UDim2.new(0.5, -22, 0, 15)
@@ -142,6 +142,7 @@ function PhantomLib:CreateWindow(options)
     mobStroke.Color = self.Theme.Border
     mobStroke.Thickness = 2
 
+    -- Notifications
     local notifContainer = Instance.new("Frame", screen)
     notifContainer.Size = UDim2.new(0, 260, 1, -40)
     notifContainer.Position = UDim2.new(1, -20, 1, -20)
@@ -151,8 +152,8 @@ function PhantomLib:CreateWindow(options)
     local notifLayout = Instance.new("UIListLayout", notifContainer)
     notifLayout.VerticalAlignment = Enum.VerticalAlignment.Bottom
     notifLayout.Padding = UDim.new(0, 8)
-    notifLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
+    -- Main Frame
     local main = Instance.new("Frame", screen)
     main.Size = UDim2.fromOffset(650, 430)
     main.Position = UDim2.new(0.5, -325, 0.5, -215)
@@ -165,10 +166,10 @@ function PhantomLib:CreateWindow(options)
     stroke.Color = self.Theme.Border
     stroke.Thickness = 1
 
+    -- Header
     local header = Instance.new("Frame", main)
     header.Size = UDim2.new(1, 0, 0, 42)
     header.BackgroundColor3 = self.Theme.Sidebar
-    header.BorderSizePixel = 0
 
     local title = Instance.new("TextLabel", header)
     title.Size = UDim2.new(0, 220, 1, 0)
@@ -180,6 +181,7 @@ function PhantomLib:CreateWindow(options)
     title.Font = Enum.Font.GothamBold
     title.TextXAlignment = Enum.TextXAlignment.Left
 
+    -- FPS/Ping Stats
     local statsHud = Instance.new("TextLabel", header)
     statsHud.Size = UDim2.new(0, 160, 1, 0)
     statsHud.Position = UDim2.new(1, -240, 0, 0)
@@ -207,6 +209,7 @@ function PhantomLib:CreateWindow(options)
         end
     end)
 
+    -- Window Controls
     local controls = Instance.new("Frame", header)
     controls.Size = UDim2.new(0, 60, 1, 0)
     controls.Position = UDim2.new(1, -70, 0, 0)
@@ -232,6 +235,7 @@ function PhantomLib:CreateWindow(options)
     closeBtn.Font = Enum.Font.GothamBold
     Instance.new("UICorner", closeBtn).CornerRadius = UDim.new(0, 6)
 
+    -- Dragging Logic
     local dragging, dragStart, startPos
     header.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
@@ -248,17 +252,19 @@ function PhantomLib:CreateWindow(options)
         if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then dragging = false end
     end)
 
+    -- Hotkey
+    local toggleKey = options.Keybind or Enum.KeyCode.RightControl
     UserInputService.InputBegan:Connect(function(input, gpe)
         if not gpe and input.KeyCode == toggleKey then
             main.Visible = not main.Visible
         end
     end)
 
+    -- Sidebar Layout
     local sidebar = Instance.new("Frame", main)
     sidebar.Size = UDim2.new(0, 170, 1, -42)
     sidebar.Position = UDim2.new(0, 0, 0, 42)
     sidebar.BackgroundColor3 = self.Theme.Sidebar
-    sidebar.BorderSizePixel = 0
 
     local searchBoxBg = Instance.new("Frame", sidebar)
     searchBoxBg.Size = UDim2.new(1, -16, 0, 30)
@@ -283,18 +289,11 @@ function PhantomLib:CreateWindow(options)
     tabListContainer.Position = UDim2.new(0, 0, 0, 46)
     tabListContainer.BackgroundTransparency = 1
     tabListContainer.ScrollBarThickness = 0
-    tabListContainer.CanvasSize = UDim2.new(0, 0, 0, 0)
 
     local sidebarLayout = Instance.new("UIListLayout", tabListContainer)
     sidebarLayout.Padding = UDim.new(0, 4)
-    sidebarLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    
     local sidebarPad = Instance.new("UIPadding", tabListContainer)
     sidebarPad.PaddingLeft = UDim.new(0, 8); sidebarPad.PaddingRight = UDim.new(0, 8)
-
-    sidebarLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-        tabListContainer.CanvasSize = UDim2.new(0, 0, 0, sidebarLayout.AbsoluteContentSize.Y + 16)
-    end)
 
     searchInput:GetPropertyChangedSignal("Text"):Connect(function()
         local filter = searchInput.Text:lower()
@@ -330,13 +329,13 @@ function PhantomLib:CreateWindow(options)
     closeBtn.MouseButton1Click:Connect(function() self:Destroy() end)
 
     -------------------------------------------------------------------------------
-    -- INTRO SEQUENCE WITH CUSTOM LOGO
+    -- PREMIUM RAYFIELD-STYLE LOADING SEQUENCE
     -------------------------------------------------------------------------------
     main.Visible = false
 
     local introFrame = Instance.new("Frame", screen)
-    introFrame.Size = UDim2.fromOffset(320, 160)
-    introFrame.Position = UDim2.new(0.5, -160, 0.5, -80)
+    introFrame.Size = UDim2.fromOffset(320, 130)
+    introFrame.Position = UDim2.new(0.5, -160, 0.5, -65)
     introFrame.BackgroundColor3 = self.Theme.Card
     introFrame.BackgroundTransparency = 1
     introFrame.ClipsDescendants = true
@@ -347,49 +346,29 @@ function PhantomLib:CreateWindow(options)
     introStroke.Thickness = 1
     introStroke.Transparency = 1
 
-    -- PhantomLib Custom Logo Container
-    local logoContainer = Instance.new("Frame", introFrame)
-    logoContainer.Size = UDim2.fromOffset(40, 40)
-    logoContainer.Position = UDim2.new(0.5, -20, 0, 16)
-    logoContainer.BackgroundColor3 = self.Theme.Background
-    logoContainer.BackgroundTransparency = 1
-    Instance.new("UICorner", logoContainer).CornerRadius = UDim.new(0, 8)
-
-    local logoStroke = Instance.new("UIStroke", logoContainer)
-    logoStroke.Color = self.Theme.Accent
-    logoStroke.Thickness = 2
-    logoStroke.Transparency = 1
-
-    local logoInner = Instance.new("Frame", logoContainer)
-    logoInner.Size = UDim2.fromOffset(16, 16)
-    logoInner.Position = UDim2.new(0.5, -8, 0.5, -8)
-    logoInner.BackgroundColor3 = self.Theme.Accent
-    logoInner.BackgroundTransparency = 1
-    Instance.new("UICorner", logoInner).CornerRadius = UDim.new(1, 0)
-
     local wmTitle = Instance.new("TextLabel", introFrame)
-    wmTitle.Size = UDim2.new(1, 0, 0, 24)
-    wmTitle.Position = UDim2.new(0, 0, 0, 62)
+    wmTitle.Size = UDim2.new(1, 0, 0, 30)
+    wmTitle.Position = UDim2.new(0, 0, 0, 25)
     wmTitle.BackgroundTransparency = 1
     wmTitle.Text = self.LoadingTitle
     wmTitle.TextColor3 = self.Theme.Text
-    wmTitle.TextSize = 16
+    wmTitle.TextSize = 20
     wmTitle.Font = Enum.Font.GothamBold
     wmTitle.TextTransparency = 1
 
     local wmSub = Instance.new("TextLabel", introFrame)
-    wmSub.Size = UDim2.new(1, 0, 0, 18)
-    wmSub.Position = UDim2.new(0, 0, 0, 88)
+    wmSub.Size = UDim2.new(1, 0, 0, 20)
+    wmSub.Position = UDim2.new(0, 0, 0, 60)
     wmSub.BackgroundTransparency = 1
     wmSub.Text = self.LoadingSubtitle
     wmSub.TextColor3 = self.Theme.Accent
-    wmSub.TextSize = 11
+    wmSub.TextSize = 12
     wmSub.Font = Enum.Font.GothamMedium
     wmSub.TextTransparency = 1
 
     local pBarBg = Instance.new("Frame", introFrame)
     pBarBg.Size = UDim2.new(0.85, 0, 0, 4)
-    pBarBg.Position = UDim2.new(0.075, 0, 1, -22)
+    pBarBg.Position = UDim2.new(0.075, 0, 1, -25)
     pBarBg.BackgroundColor3 = self.Theme.Background
     pBarBg.BackgroundTransparency = 1
     Instance.new("UICorner", pBarBg).CornerRadius = UDim.new(1, 0)
@@ -402,13 +381,12 @@ function PhantomLib:CreateWindow(options)
     task.spawn(function()
         smoothTween(introFrame, 0.3, {BackgroundTransparency = 0})
         smoothTween(introStroke, 0.3, {Transparency = 0})
-        smoothTween(logoStroke, 0.3, {Transparency = 0})
-        smoothTween(logoInner, 0.3, {BackgroundTransparency = 0})
         smoothTween(wmTitle, 0.3, {TextTransparency = 0})
         smoothTween(wmSub, 0.3, {TextTransparency = 0})
         smoothTween(pBarBg, 0.3, {BackgroundTransparency = 0})
         
         task.wait(0.2)
+        -- Simulating a segmented Rayfield-style loading bar
         smoothTween(pBarFill, 0.4, {Size = UDim2.new(0.4, 0, 1, 0)})
         task.wait(0.5)
         smoothTween(pBarFill, 0.6, {Size = UDim2.new(1, 0, 1, 0)})
@@ -416,26 +394,16 @@ function PhantomLib:CreateWindow(options)
 
         smoothTween(introFrame, 0.4, {BackgroundTransparency = 1})
         smoothTween(introStroke, 0.4, {Transparency = 1})
-        smoothTween(logoStroke, 0.4, {Transparency = 1})
-        smoothTween(logoInner, 0.4, {BackgroundTransparency = 1})
         smoothTween(wmTitle, 0.4, {TextTransparency = 1})
         smoothTween(wmSub, 0.4, {TextTransparency = 1})
         smoothTween(pBarBg, 0.4, {BackgroundTransparency = 1})
+        smoothTween(pBarFill, 0.4, {BackgroundTransparency = 1})
         
         task.wait(0.4)
         introFrame:Destroy()
         main.Visible = true
-        main.Position = UDim2.new(0.5, -325, 0.5, -190)
+        main.Position = UDim2.new(0.5, -325, 0.5, -190) -- Slight drop-in effect
         springTween(main, 0.4, {Position = UDim2.new(0.5, -325, 0.5, -215)})
-
-        if not isTouch then
-            local keyName = tostring(toggleKey):gsub("Enum.KeyCode.", "")
-            self:Notify({
-                Title = "Interface Loaded",
-                Content = "Press [" .. keyName .. "] to toggle the menu.",
-                Duration = 4
-            })
-        end
     end)
 
     if self.AutoSaveEnabled then self:LoadConfig() end
@@ -492,20 +460,16 @@ function PhantomLib:CreateTab(tabName)
     btn.Size = UDim2.new(1, 0, 0, 32)
     btn.BackgroundColor3 = self.Theme.Card
     btn.BackgroundTransparency = 1
-    btn.Text = "  " .. tabName; btn.TextColor3 = self.Theme.Muted; btn.TextSize = 12; btn.Font = Enum.Font.GothamMedium
-    btn.TextXAlignment = Enum.TextXAlignment.Left
+    btn.Text = tabName; btn.TextColor3 = self.Theme.Muted; btn.TextSize = 12; btn.Font = Enum.Font.GothamMedium
     Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
 
     local view = Instance.new("ScrollingFrame", self.Container)
     view.Size = UDim2.new(1, 0, 1, 0)
     view.BackgroundTransparency = 1; view.Visible = false
     view.ScrollBarThickness = 2; view.BorderSizePixel = 0
-    view.CanvasSize = UDim2.new(0, 0, 0, 0)
 
     local layout = Instance.new("UIListLayout", view)
     layout.Padding = UDim.new(0, 8)
-    layout.SortOrder = Enum.SortOrder.LayoutOrder
-    
     local pad = Instance.new("UIPadding", view)
     pad.PaddingTop = UDim.new(0, 12); pad.PaddingLeft = UDim.new(0, 12); pad.PaddingRight = UDim.new(0, 12); pad.PaddingBottom = UDim.new(0, 12)
 
