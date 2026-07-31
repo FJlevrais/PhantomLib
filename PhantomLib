@@ -100,7 +100,7 @@ function PhantomLib:LoadConfig()
 end
 
 -------------------------------------------------------------------------------
--- WINDOW INITIALIZATION (RAYFIELD STYLE)
+-- WINDOW INITIALIZATION
 -------------------------------------------------------------------------------
 function PhantomLib:CreateWindow(options)
     options = options or {}
@@ -151,6 +151,7 @@ function PhantomLib:CreateWindow(options)
     local notifLayout = Instance.new("UIListLayout", notifContainer)
     notifLayout.VerticalAlignment = Enum.VerticalAlignment.Bottom
     notifLayout.Padding = UDim.new(0, 8)
+    notifLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
     local main = Instance.new("Frame", screen)
     main.Size = UDim2.fromOffset(650, 430)
@@ -167,6 +168,7 @@ function PhantomLib:CreateWindow(options)
     local header = Instance.new("Frame", main)
     header.Size = UDim2.new(1, 0, 0, 42)
     header.BackgroundColor3 = self.Theme.Sidebar
+    header.BorderSizePixel = 0
 
     local title = Instance.new("TextLabel", header)
     title.Size = UDim2.new(0, 220, 1, 0)
@@ -256,6 +258,7 @@ function PhantomLib:CreateWindow(options)
     sidebar.Size = UDim2.new(0, 170, 1, -42)
     sidebar.Position = UDim2.new(0, 0, 0, 42)
     sidebar.BackgroundColor3 = self.Theme.Sidebar
+    sidebar.BorderSizePixel = 0
 
     local searchBoxBg = Instance.new("Frame", sidebar)
     searchBoxBg.Size = UDim2.new(1, -16, 0, 30)
@@ -280,11 +283,18 @@ function PhantomLib:CreateWindow(options)
     tabListContainer.Position = UDim2.new(0, 0, 0, 46)
     tabListContainer.BackgroundTransparency = 1
     tabListContainer.ScrollBarThickness = 0
+    tabListContainer.CanvasSize = UDim2.new(0, 0, 0, 0)
 
     local sidebarLayout = Instance.new("UIListLayout", tabListContainer)
     sidebarLayout.Padding = UDim.new(0, 4)
+    sidebarLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    
     local sidebarPad = Instance.new("UIPadding", tabListContainer)
     sidebarPad.PaddingLeft = UDim.new(0, 8); sidebarPad.PaddingRight = UDim.new(0, 8)
+
+    sidebarLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        tabListContainer.CanvasSize = UDim2.new(0, 0, 0, sidebarLayout.AbsoluteContentSize.Y + 16)
+    end)
 
     searchInput:GetPropertyChangedSignal("Text"):Connect(function()
         local filter = searchInput.Text:lower()
@@ -337,10 +347,10 @@ function PhantomLib:CreateWindow(options)
     introStroke.Thickness = 1
     introStroke.Transparency = 1
 
-    -- Custom PhantomLib Geometric Logo Container
+    -- PhantomLib Custom Logo Container
     local logoContainer = Instance.new("Frame", introFrame)
-    logoContainer.Size = UDim2.fromOffset(36, 36)
-    logoContainer.Position = UDim2.new(0.5, -18, 0, 18)
+    logoContainer.Size = UDim2.fromOffset(40, 40)
+    logoContainer.Position = UDim2.new(0.5, -20, 0, 16)
     logoContainer.BackgroundColor3 = self.Theme.Background
     logoContainer.BackgroundTransparency = 1
     Instance.new("UICorner", logoContainer).CornerRadius = UDim.new(0, 8)
@@ -351,25 +361,25 @@ function PhantomLib:CreateWindow(options)
     logoStroke.Transparency = 1
 
     local logoInner = Instance.new("Frame", logoContainer)
-    logoInner.Size = UDim2.fromOffset(14, 14)
-    logoInner.Position = UDim2.new(0.5, -7, 0.5, -7)
+    logoInner.Size = UDim2.fromOffset(16, 16)
+    logoInner.Position = UDim2.new(0.5, -8, 0.5, -8)
     logoInner.BackgroundColor3 = self.Theme.Accent
     logoInner.BackgroundTransparency = 1
     Instance.new("UICorner", logoInner).CornerRadius = UDim.new(1, 0)
 
     local wmTitle = Instance.new("TextLabel", introFrame)
     wmTitle.Size = UDim2.new(1, 0, 0, 24)
-    wmTitle.Position = UDim2.new(0, 0, 0, 60)
+    wmTitle.Position = UDim2.new(0, 0, 0, 62)
     wmTitle.BackgroundTransparency = 1
     wmTitle.Text = self.LoadingTitle
     wmTitle.TextColor3 = self.Theme.Text
-    wmTitle.TextSize = 18
+    wmTitle.TextSize = 16
     wmTitle.Font = Enum.Font.GothamBold
     wmTitle.TextTransparency = 1
 
     local wmSub = Instance.new("TextLabel", introFrame)
     wmSub.Size = UDim2.new(1, 0, 0, 18)
-    wmSub.Position = UDim2.new(0, 0, 0, 86)
+    wmSub.Position = UDim2.new(0, 0, 0, 88)
     wmSub.BackgroundTransparency = 1
     wmSub.Text = self.LoadingSubtitle
     wmSub.TextColor3 = self.Theme.Accent
@@ -411,7 +421,6 @@ function PhantomLib:CreateWindow(options)
         smoothTween(wmTitle, 0.4, {TextTransparency = 1})
         smoothTween(wmSub, 0.4, {TextTransparency = 1})
         smoothTween(pBarBg, 0.4, {BackgroundTransparency = 1})
-        smoothTween(pBarFill, 0.4, {TextTransparency = 1})
         
         task.wait(0.4)
         introFrame:Destroy()
@@ -419,7 +428,6 @@ function PhantomLib:CreateWindow(options)
         main.Position = UDim2.new(0.5, -325, 0.5, -190)
         springTween(main, 0.4, {Position = UDim2.new(0.5, -325, 0.5, -215)})
 
-        -- Automatically notify the user of the toggle keybind if not on mobile
         if not isTouch then
             local keyName = tostring(toggleKey):gsub("Enum.KeyCode.", "")
             self:Notify({
@@ -484,16 +492,20 @@ function PhantomLib:CreateTab(tabName)
     btn.Size = UDim2.new(1, 0, 0, 32)
     btn.BackgroundColor3 = self.Theme.Card
     btn.BackgroundTransparency = 1
-    btn.Text = tabName; btn.TextColor3 = self.Theme.Muted; btn.TextSize = 12; btn.Font = Enum.Font.GothamMedium
+    btn.Text = "  " .. tabName; btn.TextColor3 = self.Theme.Muted; btn.TextSize = 12; btn.Font = Enum.Font.GothamMedium
+    btn.TextXAlignment = Enum.TextXAlignment.Left
     Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
 
     local view = Instance.new("ScrollingFrame", self.Container)
     view.Size = UDim2.new(1, 0, 1, 0)
     view.BackgroundTransparency = 1; view.Visible = false
     view.ScrollBarThickness = 2; view.BorderSizePixel = 0
+    view.CanvasSize = UDim2.new(0, 0, 0, 0)
 
     local layout = Instance.new("UIListLayout", view)
     layout.Padding = UDim.new(0, 8)
+    layout.SortOrder = Enum.SortOrder.LayoutOrder
+    
     local pad = Instance.new("UIPadding", view)
     pad.PaddingTop = UDim.new(0, 12); pad.PaddingLeft = UDim.new(0, 12); pad.PaddingRight = UDim.new(0, 12); pad.PaddingBottom = UDim.new(0, 12)
 
