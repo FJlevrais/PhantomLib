@@ -1,0 +1,423 @@
+--[[
+    PhantomLib
+--]]
+
+local PhantomLib = {}
+PhantomLib.__index = PhantomLib
+
+local CoreGui = game:GetService("CoreGui")
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+local Players = game:GetService("Players")
+
+local LocalPlayer = Players.LocalPlayer
+
+PhantomLib.Themes = {
+    Default = { Background = Color3.fromRGB(20, 20, 24), Sidebar = Color3.fromRGB(15, 15, 18), Card = Color3.fromRGB(28, 28, 34), Accent = Color3.fromRGB(99, 102, 241), Text = Color3.fromRGB(240, 240, 245), Muted = Color3.fromRGB(140, 140, 150), Border = Color3.fromRGB(40, 40, 48) },
+    Light   = { Background = Color3.fromRGB(245, 245, 248), Sidebar = Color3.fromRGB(230, 232, 238), Card = Color3.fromRGB(255, 255, 255), Accent = Color3.fromRGB(79, 70, 229), Text = Color3.fromRGB(25, 25, 30), Muted = Color3.fromRGB(110, 110, 120), Border = Color3.fromRGB(215, 220, 228) },
+    Cyber   = { Background = Color3.fromRGB(13, 13, 22), Sidebar = Color3.fromRGB(8, 8, 14), Card = Color3.fromRGB(22, 22, 36), Accent = Color3.fromRGB(255, 0, 128), Text = Color3.fromRGB(0, 240, 255), Muted = Color3.fromRGB(120, 120, 160), Border = Color3.fromRGB(255, 0, 128) },
+    Ocean   = { Background = Color3.fromRGB(10, 14, 23), Sidebar = Color3.fromRGB(6, 9, 15), Card = Color3.fromRGB(16, 23, 38), Accent = Color3.fromRGB(14, 165, 233), Text = Color3.fromRGB(224, 242, 254), Muted = Color3.fromRGB(100, 130, 160), Border = Color3.fromRGB(30, 41, 59) }
+}
+
+local function tween(object, duration, properties)
+    local anim = TweenService:Create(object, TweenInfo.new(duration, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), properties)
+    anim:Play()
+    return anim
+end
+
+local function getGuiParent()
+    local success, target = pcall(function() return CoreGui end)
+    return (success and target) and target or LocalPlayer:WaitForChild("PlayerGui")
+end
+
+function PhantomLib:CreateWindow(options)
+    options = options or {}
+    local self = setmetatable({}, PhantomLib)
+    self.Theme = PhantomLib.Themes[options.Theme] or PhantomLib.Themes.Default
+    self.Tabs = {}
+    self.ActiveTab = nil
+    self.Flags = {}
+
+    local screen = Instance.new("ScreenGui")
+    screen.Name = "PhantomLib_UI"
+    screen.ResetOnSpawn = false
+    screen.Parent = getGuiParent()
+
+    local notifContainer = Instance.new("Frame", screen)
+    notifContainer.Size = UDim2.new(0, 250, 1, -40)
+    notifContainer.Position = UDim2.new(1, -20, 1, -20)
+    notifContainer.AnchorPoint = Vector2.new(1, 1)
+    notifContainer.BackgroundTransparency = 1
+    
+    local notifLayout = Instance.new("UIListLayout", notifContainer)
+    notifLayout.VerticalAlignment = Enum.VerticalAlignment.Bottom
+    notifLayout.Padding = UDim.new(0, 8)
+
+    local main = Instance.new("Frame", screen)
+    main.Size = options.Size or UDim2.fromOffset(580, 390)
+    main.Position = UDim2.new(0.5, -290, 0.5, -195)
+    main.BackgroundColor3 = self.Theme.Background
+    main.BorderSizePixel = 0
+    main.ClipsDescendants = true
+    Instance.new("UICorner", main).CornerRadius = UDim.new(0, 8)
+    
+    local stroke = Instance.new("UIStroke", main)
+    stroke.Color = self.Theme.Border
+
+    local header = Instance.new("Frame", main)
+    header.Size = UDim2.new(1, 0, 0, 38)
+    header.BackgroundColor3 = self.Theme.Sidebar
+
+    local title = Instance.new("TextLabel", header)
+    title.Size = UDim2.new(1, -40, 1, 0)
+    title.Position = UDim2.new(0, 12, 0, 0)
+    title.BackgroundTransparency = 1
+    title.Text = options.Name or "Phantom Window"
+    title.TextColor3 = self.Theme.Text
+    title.TextSize = 14
+    title.Font = Enum.Font.GothamBold
+    title.TextXAlignment = Enum.TextXAlignment.Left
+
+    -- Dragging
+    local dragging, dragStart, startPos
+    header.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true; dragStart = input.Position; startPos = main.Position
+        end
+    end)
+    UserInputService.InputChanged:Connect(function(input)
+        if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+            local delta = input.Position - dragStart
+            main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+        end
+    end)
+    UserInputService.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then dragging = false end
+    end)
+
+    local sidebar = Instance.new("Frame", main)
+    sidebar.Size = UDim2.new(0, 140, 1, -38)
+    sidebar.Position = UDim2.new(0, 0, 0, 38)
+    sidebar.BackgroundColor3 = self.Theme.Sidebar
+    
+    local sidebarLayout = Instance.new("UIListLayout", sidebar)
+    sidebarLayout.Padding = UDim.new(0, 4)
+    local sidebarPad = Instance.new("UIPadding", sidebar)
+    sidebarPad.PaddingTop = UDim.new(0, 8); sidebarPad.PaddingLeft = UDim.new(0, 6); sidebarPad.PaddingRight = UDim.new(0, 6)
+
+    local container = Instance.new("Frame", main)
+    container.Size = UDim2.new(1, -140, 1, -38)
+    container.Position = UDim2.new(0, 140, 0, 38)
+    container.BackgroundTransparency = 1
+
+    self.Screen = screen
+    self.NotifContainer = notifContainer
+    self.Container = container
+    self.Sidebar = sidebar
+
+    -- HARDCODED LOADING NOTIFICATION (Cannot be overridden by options)
+    self:Notify({
+        Title = "PhantomLib",
+        Content = "Interface Loaded Successfully!",
+        Duration = 3
+    })
+
+    return self
+end
+
+function PhantomLib:Notify(cfg)
+    cfg = cfg or {}
+    local toast = Instance.new("Frame", self.NotifContainer)
+    toast.Size = UDim2.new(1, 0, 0, 55)
+    toast.BackgroundColor3 = self.Theme.Sidebar
+    toast.BackgroundTransparency = 1
+    Instance.new("UICorner", toast).CornerRadius = UDim.new(0, 6)
+    
+    local stroke = Instance.new("UIStroke", toast)
+    stroke.Color = self.Theme.Accent; stroke.Transparency = 1
+
+    local title = Instance.new("TextLabel", toast)
+    title.Size = UDim2.new(1, -20, 0, 20); title.Position = UDim2.new(0, 10, 0, 6)
+    title.BackgroundTransparency = 1; title.Text = cfg.Title or "Notification"; title.TextColor3 = self.Theme.Text
+    title.TextSize = 13; title.Font = Enum.Font.GothamBold; title.TextXAlignment = Enum.TextXAlignment.Left; title.TextTransparency = 1
+
+    local desc = Instance.new("TextLabel", toast)
+    desc.Size = UDim2.new(1, -20, 0, 20); desc.Position = UDim2.new(0, 10, 0, 26)
+    desc.BackgroundTransparency = 1; desc.Text = cfg.Content or ""; desc.TextColor3 = self.Theme.Muted
+    desc.TextSize = 12; desc.Font = Enum.Font.Gotham; desc.TextXAlignment = Enum.TextXAlignment.Left
+    desc.TextTransparency = 1
+
+    tween(toast, 0.25, {BackgroundTransparency = 0})
+    tween(stroke, 0.25, {Transparency = 0})
+    tween(title, 0.25, {TextTransparency = 0})
+    tween(desc, 0.25, {TextTransparency = 0})
+
+    task.delay(cfg.Duration or 3, function()
+        tween(toast, 0.25, {BackgroundTransparency = 1})
+        tween(stroke, 0.25, {Transparency = 1})
+        tween(title, 0.25, {TextTransparency = 1})
+        tween(desc, 0.25, {TextTransparency = 1})
+        task.wait(0.25)
+        toast:Destroy()
+    end)
+end
+
+function PhantomLib:CreateTab(tabName)
+    local tabData = { Name = tabName, Window = self }
+
+    local btn = Instance.new("TextButton", self.Sidebar)
+    btn.Size = UDim2.new(1, 0, 0, 32)
+    btn.BackgroundColor3 = self.Theme.Card
+    btn.BackgroundTransparency = 1
+    btn.Text = tabName; btn.TextColor3 = self.Theme.Muted; btn.TextSize = 13; btn.Font = Enum.Font.GothamMedium
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
+
+    local view = Instance.new("ScrollingFrame", self.Container)
+    view.Size = UDim2.new(1, 0, 1, 0)
+    view.BackgroundTransparency = 1; view.Visible = false
+    view.ScrollBarThickness = 2; view.BorderSizePixel = 0
+
+    local layout = Instance.new("UIListLayout", view)
+    layout.Padding = UDim.new(0, 6)
+    local pad = Instance.new("UIPadding", view)
+    pad.PaddingTop = UDim.new(0, 8); pad.PaddingLeft = UDim.new(0, 8); pad.PaddingRight = UDim.new(0, 8); pad.PaddingBottom = UDim.new(0, 8)
+
+    layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        view.CanvasSize = UDim2.new(0, 0, 0, layout.AbsoluteContentSize.Y + 16)
+    end)
+
+    tabData.Button = btn; tabData.View = view
+
+    local function selectTab()
+        for _, tab in ipairs(self.Tabs) do
+            tab.View.Visible = false
+            tween(tab.Button, 0.15, {BackgroundTransparency = 1, TextColor3 = self.Theme.Muted})
+        end
+        view.Visible = true
+        tween(btn, 0.15, {BackgroundTransparency = 0, TextColor3 = self.Theme.Text})
+        self.ActiveTab = tabData
+    end
+
+    btn.MouseButton1Click:Connect(selectTab)
+    if #self.Tabs == 0 then selectTab() end
+    table.insert(self.Tabs, tabData)
+
+    -- Button
+    function tabData:CreateButton(cfg)
+        cfg = cfg or {}
+        local b = Instance.new("TextButton", view)
+        b.Size = UDim2.new(1, 0, 0, 36)
+        b.BackgroundColor3 = self.Window.Theme.Card
+        b.Text = cfg.Name or "Button"
+        b.TextColor3 = self.Window.Theme.Text; b.TextSize = 13; b.Font = Enum.Font.GothamMedium
+        Instance.new("UICorner", b).CornerRadius = UDim.new(0, 6)
+        local stroke = Instance.new("UIStroke", b); stroke.Color = self.Window.Theme.Border
+
+        b.MouseButton1Click:Connect(function()
+            if cfg.Callback then pcall(cfg.Callback) end
+        end)
+    end
+
+    -- Toggle
+    function tabData:CreateToggle(cfg)
+        cfg = cfg or {}
+        local state = cfg.CurrentValue or false
+
+        local frame = Instance.new("Frame", view)
+        frame.Size = UDim2.new(1, 0, 0, 38)
+        frame.BackgroundColor3 = self.Window.Theme.Card
+        Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 6)
+
+        local label = Instance.new("TextLabel", frame)
+        label.Size = UDim2.new(1, -50, 1, 0); label.Position = UDim2.new(0, 10, 0, 0)
+        label.BackgroundTransparency = 1; label.Text = cfg.Name or "Toggle"
+        label.TextColor3 = self.Window.Theme.Text; label.TextSize = 13; label.Font = Enum.Font.Gotham; label.TextXAlignment = Enum.TextXAlignment.Left
+
+        local track = Instance.new("Frame", frame)
+        track.Size = UDim2.fromOffset(36, 18); track.Position = UDim2.new(1, -44, 0.5, -9)
+        track.BackgroundColor3 = state and self.Window.Theme.Accent or self.Window.Theme.Border
+        Instance.new("UICorner", track).CornerRadius = UDim.new(1, 0)
+
+        local knob = Instance.new("Frame", track)
+        knob.Size = UDim2.fromOffset(12, 12)
+        knob.Position = state and UDim2.new(1, -15, 0.5, -6) or UDim2.new(0, 3, 0.5, -6)
+        knob.BackgroundColor3 = self.Window.Theme.Text
+        Instance.new("UICorner", knob).CornerRadius = UDim.new(1, 0)
+
+        local trigger = Instance.new("TextButton", frame)
+        trigger.Size = UDim2.new(1, 0, 1, 0); trigger.BackgroundTransparency = 1; trigger.Text = ""
+
+        local function update()
+            tween(track, 0.15, {BackgroundColor3 = state and self.Window.Theme.Accent or self.Window.Theme.Border})
+            tween(knob, 0.15, {Position = state and UDim2.new(1, -15, 0.5, -6) or UDim2.new(0, 3, 0.5, -6)})
+            if cfg.Flag then self.Window.Flags[cfg.Flag] = state end
+            if cfg.Callback then pcall(cfg.Callback, state) end
+        end
+
+        trigger.MouseButton1Click:Connect(function()
+            state = not state
+            update()
+        end)
+
+        if cfg.Flag then self.Window.Flags[cfg.Flag] = state end
+    end
+
+    -- Slider
+    function tabData:CreateSlider(cfg)
+        cfg = cfg or {}
+        local min = cfg.Range and cfg.Range[1] or 0
+        local max = cfg.Range and cfg.Range[2] or 100
+        local val = math.clamp(cfg.CurrentValue or min, min, max)
+
+        local frame = Instance.new("Frame", view)
+        frame.Size = UDim2.new(1, 0, 0, 50)
+        frame.BackgroundColor3 = self.Window.Theme.Card
+        Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 6)
+
+        local title = Instance.new("TextLabel", frame)
+        title.Size = UDim2.new(1, -20, 0, 20); title.Position = UDim2.new(0, 10, 0, 5)
+        title.BackgroundTransparency = 1; title.Text = cfg.Name or "Slider"; title.TextColor3 = self.Window.Theme.Text
+        title.TextSize = 13; title.Font = Enum.Font.Gotham; title.TextXAlignment = Enum.TextXAlignment.Left
+
+        local valDisplay = Instance.new("TextLabel", frame)
+        valDisplay.Size = UDim2.new(1, -20, 0, 20); valDisplay.Position = UDim2.new(0, 10, 0, 5)
+        valDisplay.BackgroundTransparency = 1; valDisplay.Text = tostring(val) .. (cfg.Suffix or ""); valDisplay.TextColor3 = self.Window.Theme.Accent
+        valDisplay.TextSize = 13; valDisplay.Font = Enum.Font.GothamBold; valDisplay.TextXAlignment = Enum.TextXAlignment.Right
+
+        local track = Instance.new("Frame", frame)
+        track.Size = UDim2.new(1, -20, 0, 6); track.Position = UDim2.new(0, 10, 0, 32)
+        track.BackgroundColor3 = self.Window.Theme.Sidebar
+        Instance.new("UICorner", track).CornerRadius = UDim.new(1, 0)
+
+        local fill = Instance.new("Frame", track)
+        fill.Size = UDim2.new((val - min) / (max - min), 0, 1, 0)
+        fill.BackgroundColor3 = self.Window.Theme.Accent
+        Instance.new("UICorner", fill).CornerRadius = UDim.new(1, 0)
+
+        local trigger = Instance.new("TextButton", track)
+        trigger.Size = UDim2.new(1, 0, 1, 10); trigger.Position = UDim2.new(0, 0, 0, -5)
+        trigger.BackgroundTransparency = 1; trigger.Text = ""
+
+        local dragging = false
+        local function update(input)
+            local percent = math.clamp((input.Position.X - track.AbsolutePosition.X) / track.AbsoluteSize.X, 0, 1)
+            val = math.floor(min + ((max - min) * percent))
+            valDisplay.Text = tostring(val) .. (cfg.Suffix or "")
+            tween(fill, 0.05, {Size = UDim2.new(percent, 0, 1, 0)})
+            if cfg.Flag then self.Window.Flags[cfg.Flag] = val end
+            if cfg.Callback then pcall(cfg.Callback, val) end
+        end
+
+        trigger.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then dragging = true; update(input) end
+        end)
+        UserInputService.InputEnded:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then dragging = false end
+        end)
+        UserInputService.InputChanged:Connect(function(input)
+            if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then update(input) end
+        end)
+
+        if cfg.Flag then self.Window.Flags[cfg.Flag] = val end
+    end
+
+    -- Input Textbox
+    function tabData:CreateInput(cfg)
+        cfg = cfg or {}
+        local frame = Instance.new("Frame", view)
+        frame.Size = UDim2.new(1, 0, 0, 42); frame.BackgroundColor3 = self.Window.Theme.Card
+        Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 6)
+
+        local label = Instance.new("TextLabel", frame)
+        label.Size = UDim2.new(0.5, 0, 1, 0); label.Position = UDim2.new(0, 10, 0, 0)
+        label.BackgroundTransparency = 1; label.Text = cfg.Name or "Input"; label.TextColor3 = self.Window.Theme.Text
+        label.TextSize = 13; label.Font = Enum.Font.Gotham; label.TextXAlignment = Enum.TextXAlignment.Left
+
+        local boxBg = Instance.new("Frame", frame)
+        boxBg.Size = UDim2.new(0.5, -20, 0, 28); boxBg.Position = UDim2.new(0.5, 10, 0, 7)
+        boxBg.BackgroundColor3 = self.Window.Theme.Sidebar
+        Instance.new("UICorner", boxBg).CornerRadius = UDim.new(0, 4)
+
+        local input = Instance.new("TextBox", boxBg)
+        input.Size = UDim2.new(1, -10, 1, 0); input.Position = UDim2.new(0, 5, 0, 0)
+        input.BackgroundTransparency = 1; input.Text = cfg.CurrentValue or ""; input.PlaceholderText = cfg.PlaceholderText or "Type..."
+        input.TextColor3 = self.Window.Theme.Text; input.PlaceholderColor3 = self.Window.Theme.Muted
+        input.TextSize = 12; input.Font = Enum.Font.Gotham; input.TextXAlignment = Enum.TextXAlignment.Left; input.ClearTextOnFocus = false
+
+        input.FocusLost:Connect(function()
+            if cfg.Flag then self.Window.Flags[cfg.Flag] = input.Text end
+            if cfg.Callback then pcall(cfg.Callback, input.Text) end
+        end)
+    end
+
+    -- ColorPicker
+    function tabData:CreateColorPicker(cfg)
+        cfg = cfg or {}
+        local currentColor = cfg.Color or Color3.fromRGB(255, 255, 255)
+        local expanded = false
+
+        local frame = Instance.new("Frame", view)
+        frame.Size = UDim2.new(1, 0, 0, 42); frame.BackgroundColor3 = self.Window.Theme.Card
+        frame.ClipsDescendants = true
+        Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 6)
+
+        local title = Instance.new("TextLabel", frame)
+        title.Size = UDim2.new(1, -60, 0, 42); title.Position = UDim2.new(0, 10, 0, 0)
+        title.BackgroundTransparency = 1; title.Text = cfg.Name or "Color Picker"; title.TextColor3 = self.Window.Theme.Text
+        title.TextSize = 13; title.Font = Enum.Font.Gotham; title.TextXAlignment = Enum.TextXAlignment.Left
+
+        local preview = Instance.new("TextButton", frame)
+        preview.Size = UDim2.new(0, 30, 0, 20); preview.Position = UDim2.new(1, -40, 0, 11)
+        preview.BackgroundColor3 = currentColor; preview.Text = ""
+        Instance.new("UICorner", preview).CornerRadius = UDim.new(0, 4)
+
+        local hueTrack = Instance.new("Frame", frame)
+        hueTrack.Size = UDim2.new(1, -20, 0, 15); hueTrack.Position = UDim2.new(0, 10, 0, 50)
+        Instance.new("UICorner", hueTrack).CornerRadius = UDim.new(0, 4)
+        
+        local gradient = Instance.new("UIGradient", hueTrack)
+        gradient.Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 0, 0)), ColorSequenceKeypoint.new(0.16, Color3.fromRGB(255, 255, 0)),
+            ColorSequenceKeypoint.new(0.33, Color3.fromRGB(0, 255, 0)), ColorSequenceKeypoint.new(0.50, Color3.fromRGB(0, 255, 255)),
+            ColorSequenceKeypoint.new(0.66, Color3.fromRGB(0, 0, 255)), ColorSequenceKeypoint.new(0.83, Color3.fromRGB(255, 0, 255)),
+            ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 0, 0))
+        })
+
+        local trigger = Instance.new("TextButton", hueTrack)
+        trigger.Size = UDim2.new(1, 0, 1, 0); trigger.BackgroundTransparency = 1; trigger.Text = ""
+        
+        local dragging = false
+        local function update(input)
+            local percent = math.clamp((input.Position.X - hueTrack.AbsolutePosition.X) / hueTrack.AbsoluteSize.X, 0, 1)
+            currentColor = Color3.fromHSV(1 - percent, 1, 1)
+            preview.BackgroundColor3 = currentColor
+            if cfg.Flag then self.Window.Flags[cfg.Flag] = currentColor end
+            if cfg.Callback then pcall(cfg.Callback, currentColor) end
+        end
+
+        trigger.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then dragging = true; update(input) end
+        end)
+        UserInputService.InputEnded:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then dragging = false end
+        end)
+        UserInputService.InputChanged:Connect(function(input)
+            if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then update(input) end
+        end)
+
+        preview.MouseButton1Click:Connect(function()
+            expanded = not expanded
+            tween(frame, 0.15, {Size = UDim2.new(1, 0, 0, expanded and 80 or 42)})
+        end)
+
+        if cfg.Flag then self.Window.Flags[cfg.Flag] = currentColor end
+    end
+
+    return tabData
+end
+
+function PhantomLib:Destroy()
+    if self.Screen then self.Screen:Destroy() end
+end
+
+return PhantomLib
