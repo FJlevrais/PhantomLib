@@ -1,6 +1,6 @@
 --[[
     PhantomLib Framework (Rayfield-Style API)
-    Clean, declarative syntax with fixed loading titles.
+    Updated with Scroll Frame integration to prevent infinite vertical UI expansion.
 --]]
 
 local PhantomLib = {}
@@ -22,7 +22,6 @@ PhantomLib.Themes = {
     Ocean   = { Background = Color3.fromRGB(10, 14, 23), Sidebar = Color3.fromRGB(6, 9, 15), Card = Color3.fromRGB(16, 23, 38), Accent = Color3.fromRGB(14, 165, 233), Text = Color3.fromRGB(224, 242, 254), Muted = Color3.fromRGB(100, 130, 160), Border = Color3.fromRGB(30, 41, 59) }
 }
 
--- Global tracking of active window objects for cleanup calls
 getgenv()._PhantomLib_Instances = getgenv()._PhantomLib_Instances or {}
 
 local function tween(object, duration, properties)
@@ -42,7 +41,6 @@ function PhantomLib:CreateWindow(options)
     local guiParent = getGuiParent()
     local screenName = "PhantomLib_" .. windowName:gsub("%s+", "_")
 
-    -- Detect and disable features on existing window instance before destroying it
     if getgenv()._PhantomLib_Instances[screenName] then
         pcall(function()
             getgenv()._PhantomLib_Instances[screenName]:DisableAllAndDestroy()
@@ -77,7 +75,7 @@ function PhantomLib:CreateWindow(options)
     notifLayout.VerticalAlignment = Enum.VerticalAlignment.Bottom
     notifLayout.Padding = UDim.new(0, 8)
 
-    local targetSize = options.Size or UDim2.fromOffset(580, 390)
+    local targetSize = options.Size or UDim2.fromOffset(520, 420)
     local main = Instance.new("Frame", screen)
     main.Size = targetSize
     main.Position = UDim2.new(0.5, -targetSize.X.Offset / 2, 0.5, -targetSize.Y.Offset / 2)
@@ -103,7 +101,6 @@ function PhantomLib:CreateWindow(options)
     title.Font = Enum.Font.GothamBold
     title.TextXAlignment = Enum.TextXAlignment.Left
 
-    -- Header Minimize & Close controls
     local controls = Instance.new("Frame", header)
     controls.Size = UDim2.new(0, 60, 1, 0)
     controls.Position = UDim2.new(1, -65, 0, 0)
@@ -142,7 +139,6 @@ function PhantomLib:CreateWindow(options)
         self:DisableAllAndDestroy()
     end)
 
-    -- Window Dragging
     local dragging, dragStart, startPos
     header.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
@@ -159,15 +155,23 @@ function PhantomLib:CreateWindow(options)
         if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then dragging = false end
     end)
 
-    local sidebar = Instance.new("Frame", main)
+    -- Sidebar Container (Scrollable)
+    local sidebar = Instance.new("ScrollingFrame", main)
     sidebar.Size = UDim2.new(0, 140, 1, -38)
     sidebar.Position = UDim2.new(0, 0, 0, 38)
     sidebar.BackgroundColor3 = self.Theme.Sidebar
+    sidebar.BorderSizePixel = 0
+    sidebar.ScrollBarThickness = 2
+    sidebar.ScrollBarImageColor3 = self.Theme.Muted
     
     local sidebarLayout = Instance.new("UIListLayout", sidebar)
     sidebarLayout.Padding = UDim.new(0, 4)
     local sidebarPad = Instance.new("UIPadding", sidebar)
-    sidebarPad.PaddingTop = UDim.new(0, 8); sidebarPad.PaddingLeft = UDim.new(0, 6); sidebarPad.PaddingRight = UDim.new(0, 6)
+    sidebarPad.PaddingTop = UDim.new(0, 8); sidebarPad.PaddingLeft = UDim.new(0, 6); sidebarPad.PaddingRight = UDim.new(0, 6); sidebarPad.PaddingBottom = UDim.new(0, 8)
+
+    sidebarLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        sidebar.CanvasSize = UDim2.new(0, 0, 0, sidebarLayout.AbsoluteContentSize.Y + 16)
+    end)
 
     local container = Instance.new("Frame", main)
     container.Size = UDim2.new(1, -140, 1, -38)
@@ -181,7 +185,6 @@ function PhantomLib:CreateWindow(options)
     self.Container = container
     self.Sidebar = sidebar
 
-    -- Loading Notification
     self:Notify({
         Title = "PhantomLib",
         Content = "Interface Loaded Successfully!",
@@ -229,10 +232,6 @@ function PhantomLib:Notify(cfg)
         end
     end)
 end
-
---------------------------------------------------------------------------------
--- Server Utility Methods
---------------------------------------------------------------------------------
 
 function PhantomLib:Rejoin()
     TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, LocalPlayer)
@@ -299,10 +298,6 @@ function PhantomLib:JoinSmallServer()
     end
 end
 
---------------------------------------------------------------------------------
--- Tab & Element Builders
---------------------------------------------------------------------------------
-
 function PhantomLib:CreateTab(tabName)
     local tabData = { Name = tabName, Window = self }
 
@@ -313,15 +308,18 @@ function PhantomLib:CreateTab(tabName)
     btn.Text = tabName; btn.TextColor3 = self.Theme.Muted; btn.TextSize = 13; btn.Font = Enum.Font.GothamMedium
     Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
 
+    -- Tab View (Scrollable Element Area)
     local view = Instance.new("ScrollingFrame", self.Container)
     view.Size = UDim2.new(1, 0, 1, 0)
     view.BackgroundTransparency = 1; view.Visible = false
-    view.ScrollBarThickness = 2; view.BorderSizePixel = 0
+    view.ScrollBarThickness = 3
+    view.ScrollBarImageColor3 = self.Theme.Muted
+    view.BorderSizePixel = 0
 
     local layout = Instance.new("UIListLayout", view)
     layout.Padding = UDim.new(0, 6)
     local pad = Instance.new("UIPadding", view)
-    pad.PaddingTop = UDim.new(0, 8); pad.PaddingLeft = UDim.new(0, 8); pad.PaddingRight = UDim.new(0, 8); pad.PaddingBottom = UDim.new(0, 8)
+    pad.PaddingTop = UDim.new(0, 8); pad.PaddingLeft = UDim.new(0, 8); pad.PaddingRight = UDim.new(0, 10); pad.PaddingBottom = UDim.new(0, 8)
 
     layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
         view.CanvasSize = UDim2.new(0, 0, 0, layout.AbsoluteContentSize.Y + 16)
@@ -570,12 +568,7 @@ function PhantomLib:CreateTab(tabName)
     return tabData
 end
 
---------------------------------------------------------------------------------
--- Cleanup Methods
---------------------------------------------------------------------------------
-
 function PhantomLib:DisableAllAndDestroy()
-    -- Disables all registered toggles back to false and fires their callbacks
     if self.ToggleObjects then
         for _, toggle in ipairs(self.ToggleObjects) do
             if toggle:Get() then
@@ -584,7 +577,6 @@ function PhantomLib:DisableAllAndDestroy()
         end
     end
 
-    -- Clear global reference
     if self.ScreenName and getgenv()._PhantomLib_Instances then
         getgenv()._PhantomLib_Instances[self.ScreenName] = nil
     end
