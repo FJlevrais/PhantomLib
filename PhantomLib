@@ -1,7 +1,6 @@
 --[[
-    PhantomLib Framework v2.1
-    + Gradients, smooth animations, new elements
-    + Search bar per tab
+    PhantomLib Framework v2.2
+    Fixed CreateLabel / CreateSection + stability improvements
 ]]
 
 local PhantomLib = {}
@@ -130,7 +129,6 @@ function PhantomLib:CreateWindow(options)
     screen.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     screen.Parent = guiParent
 
-    -- Notifications
     local notifContainer = Instance.new("Frame")
     notifContainer.Size = UDim2.new(0, 290, 1, -25)
     notifContainer.Position = UDim2.new(1, -12, 1, -12)
@@ -145,7 +143,6 @@ function PhantomLib:CreateWindow(options)
 
     local targetSize = options.Size or UDim2.fromOffset(580, 470)
 
-    -- Main
     local main = Instance.new("Frame")
     main.Size = targetSize
     main.Position = UDim2.new(0.5, -targetSize.X.Offset/2, 0.5, -targetSize.Y.Offset/2)
@@ -166,7 +163,6 @@ function PhantomLib:CreateWindow(options)
         math.clamp(self.Theme.Background.B*255 - 10, 0, 255)/255
     ), 135)
 
-    -- Header
     local header = Instance.new("Frame")
     header.Size = UDim2.new(1, 0, 0, 44)
     header.BackgroundColor3 = self.Theme.Sidebar
@@ -198,7 +194,6 @@ function PhantomLib:CreateWindow(options)
     accentLine.Parent = header
     createGradient(accentLine, self.Theme.Accent, Color3.fromRGB(255,255,255), 0)
 
-    -- Controls
     local controls = Instance.new("Frame")
     controls.Size = UDim2.new(0, 74, 1, 0)
     controls.Position = UDim2.new(1, -82, 0, 0)
@@ -243,7 +238,6 @@ function PhantomLib:CreateWindow(options)
         self:DisableAllAndDestroy()
     end)
 
-    -- Dragging
     local dragging, dragStart, startPos
     header.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
@@ -264,7 +258,6 @@ function PhantomLib:CreateWindow(options)
         end
     end)
 
-    -- Sidebar
     local sidebar = Instance.new("ScrollingFrame")
     sidebar.Size = UDim2.new(0, 155, 1, -44)
     sidebar.Position = UDim2.new(0, 0, 0, 44)
@@ -296,7 +289,6 @@ function PhantomLib:CreateWindow(options)
         sidebar.CanvasSize = UDim2.new(0, 0, 0, sidebarLayout.AbsoluteContentSize.Y + 24)
     end)
 
-    -- Content
     local container = Instance.new("Frame")
     container.Size = UDim2.new(1, -155, 1, -44)
     container.Position = UDim2.new(0, 155, 0, 44)
@@ -313,9 +305,9 @@ function PhantomLib:CreateWindow(options)
     self.TargetSize = targetSize
 
     self:Notify({
-        Title = "PhantomLib v2.1",
-        Content = "Search bar + polish loaded ✨",
-        Duration = 3.5
+        Title = "PhantomLib v2.2",
+        Content = "Fixed & ready ✨",
+        Duration = 3
     })
 
     return self
@@ -436,7 +428,7 @@ function PhantomLib:JoinSmallServer()
 end
 
 -------------------------------------------------
--- CREATE TAB + SEARCH BAR
+-- CREATE TAB
 -------------------------------------------------
 function PhantomLib:CreateTab(tabName)
     local tabData = { Name = tabName, Window = self, Elements = {} }
@@ -452,7 +444,6 @@ function PhantomLib:CreateTab(tabName)
     btn.Parent = self.Sidebar
     Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 8)
 
-    -- Tab content view
     local view = Instance.new("ScrollingFrame")
     view.Size = UDim2.new(1, 0, 1, 0)
     view.BackgroundTransparency = 1
@@ -478,7 +469,7 @@ function PhantomLib:CreateTab(tabName)
         view.CanvasSize = UDim2.new(0, 0, 0, layout.AbsoluteContentSize.Y + 20)
     end)
 
-    -- ===================== SEARCH BAR =====================
+    -- Search Bar
     local searchFrame = Instance.new("Frame")
     searchFrame.Size = UDim2.new(1, 0, 0, 38)
     searchFrame.BackgroundColor3 = self.Theme.Card
@@ -524,7 +515,6 @@ function PhantomLib:CreateTab(tabName)
     clearBtn.Parent = searchFrame
     Instance.new("UICorner", clearBtn).CornerRadius = UDim.new(0, 6)
 
-    -- Focus animation
     searchBox.Focused:Connect(function()
         tween(searchStroke, 0.2, {Color = self.Theme.Accent, Thickness = 1.6})
     end)
@@ -535,7 +525,6 @@ function PhantomLib:CreateTab(tabName)
     local function filterElements(query)
         query = string.lower(query or "")
         clearBtn.Visible = query \~= ""
-
         for _, elementData in ipairs(tabData.Elements) do
             local match = query == "" or string.find(string.lower(elementData.Name), query, 1, true)
             elementData.Frame.Visible = match
@@ -551,7 +540,6 @@ function PhantomLib:CreateTab(tabName)
         filterElements("")
         searchBox:CaptureFocus()
     end)
-    -- ======================================================
 
     tabData.Button = btn
     tabData.View = view
@@ -571,13 +559,12 @@ function PhantomLib:CreateTab(tabName)
     if #self.Tabs == 0 then selectTab() end
     table.insert(self.Tabs, tabData)
 
-    -- Helper to register elements for search
     local function register(name, frame)
         table.insert(tabData.Elements, {Name = name or "Unnamed", Frame = frame})
     end
 
     -------------------------------------------------
-    -- ELEMENTS
+    -- ELEMENTS (FIXED)
     -------------------------------------------------
     function tabData:CreateSection(cfg)
         cfg = cfg or {}
@@ -599,7 +586,7 @@ function PhantomLib:CreateTab(tabName)
         label.Parent = frame
 
         register(name, frame)
-        return frame
+        return label   -- ← Returns the TextLabel now
     end
 
     function tabData:CreateLabel(cfg)
@@ -622,7 +609,7 @@ function PhantomLib:CreateTab(tabName)
         label.Parent = frame
 
         register(name, frame)
-        return frame
+        return label   -- ← Returns the TextLabel (this was the bug)
     end
 
     function tabData:CreateButton(cfg)
@@ -991,8 +978,7 @@ function PhantomLib:CreateTab(tabName)
             keyBtn.TextColor3 = self.Window.Theme.Accent
         end)
 
-        local conn
-        conn = UserInputService.InputBegan:Connect(function(input, gpe)
+        UserInputService.InputBegan:Connect(function(input, gpe)
             if listening and not gpe and input.UserInputType == Enum.UserInputType.Keyboard then
                 key = input.KeyCode
                 keyBtn.Text = key.Name
@@ -1100,9 +1086,6 @@ function PhantomLib:CreateTab(tabName)
     return tabData
 end
 
--------------------------------------------------
--- DESTROY
--------------------------------------------------
 function PhantomLib:DisableAllAndDestroy()
     if self.ToggleObjects then
         for _, toggle in ipairs(self.ToggleObjects) do
