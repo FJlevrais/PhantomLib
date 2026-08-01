@@ -10,6 +10,8 @@ local CoreGui = game:GetService("CoreGui")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 local Players = game:GetService("Players")
+local TeleportService = game:GetService("TeleportService")
+local HttpService = game:GetService("HttpService")
 
 local LocalPlayer = Players.LocalPlayer
 
@@ -19,6 +21,9 @@ PhantomLib.Themes = {
     Cyber   = { Background = Color3.fromRGB(13, 13, 22), Sidebar = Color3.fromRGB(8, 8, 14), Card = Color3.fromRGB(22, 22, 36), Accent = Color3.fromRGB(255, 0, 128), Text = Color3.fromRGB(0, 240, 255), Muted = Color3.fromRGB(120, 120, 160), Border = Color3.fromRGB(255, 0, 128) },
     Ocean   = { Background = Color3.fromRGB(10, 14, 23), Sidebar = Color3.fromRGB(6, 9, 15), Card = Color3.fromRGB(16, 23, 38), Accent = Color3.fromRGB(14, 165, 233), Text = Color3.fromRGB(224, 242, 254), Muted = Color3.fromRGB(100, 130, 160), Border = Color3.fromRGB(30, 41, 59) }
 }
+
+-- Global tracking of active window objects for cleanup calls
+getgenv()._PhantomLib_Instances = getgenv()._PhantomLib_Instances or {}
 
 local function tween(object, duration, properties)
     local anim = TweenService:Create(object, TweenInfo.new(duration, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), properties)
@@ -33,16 +38,34 @@ end
 
 function PhantomLib:CreateWindow(options)
     options = options or {}
+    local windowName = options.Name or "Phantom Window"
+    local guiParent = getGuiParent()
+    local screenName = "PhantomLib_" .. windowName:gsub("%s+", "_")
+
+    -- Detect and disable features on existing window instance before destroying it
+    if getgenv()._PhantomLib_Instances[screenName] then
+        pcall(function()
+            getgenv()._PhantomLib_Instances[screenName]:DisableAllAndDestroy()
+        end)
+    else
+        local existingGui = guiParent:FindFirstChild(screenName)
+        if existingGui then existingGui:Destroy() end
+    end
+
     local self = setmetatable({}, PhantomLib)
     self.Theme = PhantomLib.Themes[options.Theme] or PhantomLib.Themes.Default
     self.Tabs = {}
     self.ActiveTab = nil
     self.Flags = {}
+    self.ToggleObjects = {}
+    self.Minimized = false
+
+    getgenv()._PhantomLib_Instances[screenName] = self
 
     local screen = Instance.new("ScreenGui")
-    screen.Name = "PhantomLib_UI"
+    screen.Name = screenName
     screen.ResetOnSpawn = false
-    screen.Parent = getGuiParent()
+    screen.Parent = guiParent
 
     local notifContainer = Instance.new("Frame", screen)
     notifContainer.Size = UDim2.new(0, 250, 1, -40)
@@ -54,9 +77,10 @@ function PhantomLib:CreateWindow(options)
     notifLayout.VerticalAlignment = Enum.VerticalAlignment.Bottom
     notifLayout.Padding = UDim.new(0, 8)
 
+    local targetSize = options.Size or UDim2.fromOffset(580, 390)
     local main = Instance.new("Frame", screen)
-    main.Size = options.Size or UDim2.fromOffset(580, 390)
-    main.Position = UDim2.new(0.5, -290, 0.5, -195)
+    main.Size = targetSize
+    main.Position = UDim2.new(0.5, -targetSize.X.Offset / 2, 0.5, -targetSize.Y.Offset / 2)
     main.BackgroundColor3 = self.Theme.Background
     main.BorderSizePixel = 0
     main.ClipsDescendants = true
@@ -70,16 +94,55 @@ function PhantomLib:CreateWindow(options)
     header.BackgroundColor3 = self.Theme.Sidebar
 
     local title = Instance.new("TextLabel", header)
-    title.Size = UDim2.new(1, -40, 1, 0)
+    title.Size = UDim2.new(1, -80, 1, 0)
     title.Position = UDim2.new(0, 12, 0, 0)
     title.BackgroundTransparency = 1
-    title.Text = options.Name or "Phantom Window"
+    title.Text = windowName
     title.TextColor3 = self.Theme.Text
     title.TextSize = 14
     title.Font = Enum.Font.GothamBold
     title.TextXAlignment = Enum.TextXAlignment.Left
 
-    -- Dragging
+    -- Header Minimize & Close controls
+    local controls = Instance.new("Frame", header)
+    controls.Size = UDim2.new(0, 60, 1, 0)
+    controls.Position = UDim2.new(1, -65, 0, 0)
+    controls.BackgroundTransparency = 1
+
+    local minimizeBtn = Instance.new("TextButton", controls)
+    minimizeBtn.Size = UDim2.new(0, 24, 0, 24)
+    minimizeBtn.Position = UDim2.new(0, 0, 0.5, -12)
+    minimizeBtn.BackgroundColor3 = self.Theme.Card
+    minimizeBtn.Text = "-"
+    minimizeBtn.TextColor3 = self.Theme.Text
+    minimizeBtn.TextSize = 14
+    minimizeBtn.Font = Enum.Font.GothamBold
+    Instance.new("UICorner", minimizeBtn).CornerRadius = UDim.new(0, 4)
+
+    local closeBtn = Instance.new("TextButton", controls)
+    closeBtn.Size = UDim2.new(0, 24, 0, 24)
+    closeBtn.Position = UDim2.new(0, 30, 0.5, -12)
+    closeBtn.BackgroundColor3 = Color3.fromRGB(239, 68, 68)
+    closeBtn.Text = "×"
+    closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    closeBtn.TextSize = 16
+    closeBtn.Font = Enum.Font.GothamBold
+    Instance.new("UICorner", closeBtn).CornerRadius = UDim.new(0, 4)
+
+    minimizeBtn.MouseButton1Click:Connect(function()
+        self.Minimized = not self.Minimized
+        if self.Minimized then
+            tween(main, 0.25, { Size = UDim2.new(targetSize.X.Scale, targetSize.X.Offset, 0, 38) })
+        else
+            tween(main, 0.25, { Size = targetSize })
+        end
+    end)
+
+    closeBtn.MouseButton1Click:Connect(function()
+        self:DisableAllAndDestroy()
+    end)
+
+    -- Window Dragging
     local dragging, dragStart, startPos
     header.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
@@ -111,12 +174,14 @@ function PhantomLib:CreateWindow(options)
     container.Position = UDim2.new(0, 140, 0, 38)
     container.BackgroundTransparency = 1
 
+    self.ScreenName = screenName
     self.Screen = screen
+    self.Main = main
     self.NotifContainer = notifContainer
     self.Container = container
     self.Sidebar = sidebar
 
-    -- HARDCODED LOADING NOTIFICATION (Cannot be overridden by options)
+    -- Loading Notification
     self:Notify({
         Title = "PhantomLib",
         Content = "Interface Loaded Successfully!",
@@ -154,14 +219,89 @@ function PhantomLib:Notify(cfg)
     tween(desc, 0.25, {TextTransparency = 0})
 
     task.delay(cfg.Duration or 3, function()
-        tween(toast, 0.25, {BackgroundTransparency = 1})
-        tween(stroke, 0.25, {Transparency = 1})
-        tween(title, 0.25, {TextTransparency = 1})
-        tween(desc, 0.25, {TextTransparency = 1})
-        task.wait(0.25)
-        toast:Destroy()
+        if toast and toast.Parent then
+            tween(toast, 0.25, {BackgroundTransparency = 1})
+            tween(stroke, 0.25, {Transparency = 1})
+            tween(title, 0.25, {TextTransparency = 1})
+            tween(desc, 0.25, {TextTransparency = 1})
+            task.wait(0.25)
+            if toast then toast:Destroy() end
+        end
     end)
 end
+
+--------------------------------------------------------------------------------
+-- Server Utility Methods
+--------------------------------------------------------------------------------
+
+function PhantomLib:Rejoin()
+    TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, LocalPlayer)
+end
+
+function PhantomLib:ServerHop()
+    local req = (syn and syn.request) or (http and http.request) or http_request or (fluxus and fluxus.request) or request
+    if not req then return end
+
+    local placeId = game.PlaceId
+    local serversApi = "https://games.roblox.com/v1/games/" .. placeId .. "/servers/0?sortOrder=Asc&limit=100"
+    local res = req({ Url = serversApi, Method = "GET" })
+
+    if res and res.StatusCode == 200 then
+        local body = HttpService:JSONDecode(res.Body)
+        if body and body.data then
+            local validServers = {}
+            for _, s in ipairs(body.data) do
+                if type(s) == "table" and s.id ~= game.JobId and s.playing < s.maxPlayers then
+                    table.insert(validServers, s.id)
+                end
+            end
+            if #validServers > 0 then
+                local chosenId = validServers[math.random(1, #validServers)]
+                TeleportService:TeleportToPlaceInstance(placeId, chosenId, LocalPlayer)
+            end
+        end
+    end
+end
+
+function PhantomLib:JoinSmallServer()
+    local req = (syn and syn.request) or (http and http.request) or http_request or (fluxus and fluxus.request) or request
+    if not req then return end
+
+    local placeId = game.PlaceId
+    local cursor = ""
+    local targetServerId = nil
+    local minPlayers = math.huge
+
+    for page = 1, 5 do
+        local url = "https://games.roblox.com/v1/games/" .. placeId .. "/servers/0?sortOrder=Asc&limit=100" .. (cursor ~= "" and "&cursor=" .. cursor or "")
+        local res = req({ Url = url, Method = "GET" })
+        if res and res.StatusCode == 200 then
+            local body = HttpService:JSONDecode(res.Body)
+            if body and body.data then
+                for _, s in ipairs(body.data) do
+                    if type(s) == "table" and s.id ~= game.JobId and s.playing < s.maxPlayers then
+                        if s.playing < minPlayers then
+                            minPlayers = s.playing
+                            targetServerId = s.id
+                        end
+                    end
+                end
+            end
+            cursor = body.nextPageCursor or ""
+            if not cursor or cursor == "" then break end
+        else
+            break
+        end
+    end
+
+    if targetServerId then
+        TeleportService:TeleportToPlaceInstance(placeId, targetServerId, LocalPlayer)
+    end
+end
+
+--------------------------------------------------------------------------------
+-- Tab & Element Builders
+--------------------------------------------------------------------------------
 
 function PhantomLib:CreateTab(tabName)
     local tabData = { Name = tabName, Window = self }
@@ -203,7 +343,7 @@ function PhantomLib:CreateTab(tabName)
     if #self.Tabs == 0 then selectTab() end
     table.insert(self.Tabs, tabData)
 
-    -- Button
+    -- Button Element
     function tabData:CreateButton(cfg)
         cfg = cfg or {}
         local b = Instance.new("TextButton", view)
@@ -219,7 +359,7 @@ function PhantomLib:CreateTab(tabName)
         end)
     end
 
-    -- Toggle
+    -- Toggle Element
     function tabData:CreateToggle(cfg)
         cfg = cfg or {}
         local state = cfg.CurrentValue or false
@@ -248,22 +388,35 @@ function PhantomLib:CreateTab(tabName)
         local trigger = Instance.new("TextButton", frame)
         trigger.Size = UDim2.new(1, 0, 1, 0); trigger.BackgroundTransparency = 1; trigger.Text = ""
 
-        local function update()
+        local toggleObj = {}
+
+        local function update(newState)
+            state = newState
             tween(track, 0.15, {BackgroundColor3 = state and self.Window.Theme.Accent or self.Window.Theme.Border})
             tween(knob, 0.15, {Position = state and UDim2.new(1, -15, 0.5, -6) or UDim2.new(0, 3, 0.5, -6)})
             if cfg.Flag then self.Window.Flags[cfg.Flag] = state end
             if cfg.Callback then pcall(cfg.Callback, state) end
         end
 
+        function toggleObj:Set(val)
+            update(val)
+        end
+
+        function toggleObj:Get()
+            return state
+        end
+
         trigger.MouseButton1Click:Connect(function()
-            state = not state
-            update()
+            update(not state)
         end)
 
         if cfg.Flag then self.Window.Flags[cfg.Flag] = state end
+        table.insert(self.Window.ToggleObjects, toggleObj)
+
+        return toggleObj
     end
 
-    -- Slider
+    -- Slider Element
     function tabData:CreateSlider(cfg)
         cfg = cfg or {}
         local min = cfg.Range and cfg.Range[1] or 0
@@ -322,7 +475,7 @@ function PhantomLib:CreateTab(tabName)
         if cfg.Flag then self.Window.Flags[cfg.Flag] = val end
     end
 
-    -- Input Textbox
+    -- Input Textbox Element
     function tabData:CreateInput(cfg)
         cfg = cfg or {}
         local frame = Instance.new("Frame", view)
@@ -351,7 +504,7 @@ function PhantomLib:CreateTab(tabName)
         end)
     end
 
-    -- ColorPicker
+    -- ColorPicker Element
     function tabData:CreateColorPicker(cfg)
         cfg = cfg or {}
         local currentColor = cfg.Color or Color3.fromRGB(255, 255, 255)
@@ -417,8 +570,36 @@ function PhantomLib:CreateTab(tabName)
     return tabData
 end
 
+--------------------------------------------------------------------------------
+-- Cleanup Methods
+--------------------------------------------------------------------------------
+
+function PhantomLib:DisableAllAndDestroy()
+    -- Disables all registered toggles back to false and fires their callbacks
+    if self.ToggleObjects then
+        for _, toggle in ipairs(self.ToggleObjects) do
+            if toggle:Get() then
+                toggle:Set(false)
+            end
+        end
+    end
+
+    -- Clear global reference
+    if self.ScreenName and getgenv()._PhantomLib_Instances then
+        getgenv()._PhantomLib_Instances[self.ScreenName] = nil
+    end
+
+    self:Destroy()
+end
+
 function PhantomLib:Destroy()
-    if self.Screen then self.Screen:Destroy() end
+    if self.Screen then
+        if self.Main then
+            tween(self.Main, 0.15, { BackgroundTransparency = 1 })
+        end
+        task.wait(0.15)
+        self.Screen:Destroy()
+    end
 end
 
 return PhantomLib
