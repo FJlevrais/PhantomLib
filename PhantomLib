@@ -1,7 +1,6 @@
 --[[
     PhantomLib Framework (Rayfield-Style API)
-    Refined UI: Fully transparent text backgrounds, compact height, auto-updating scrolling tab frames, 
-    rounded header top corners, and rounded sidebar top-left corner.
+    Refined UI: Fully transparent text backgrounds, compact height, auto-updating scrolling tab frames, rounded header top corners.
 --]]
 
 local PhantomLib = {}
@@ -138,8 +137,10 @@ function PhantomLib:CreateWindow(options)
     header.BackgroundColor3 = self.Theme.Sidebar
     header.BorderSizePixel = 0
     
+    -- Rounds top-left & top-right of the topbar to match the main window
     Instance.new("UICorner", header).CornerRadius = UDim.new(0, 7)
 
+    -- Covers bottom corner rounding of header frame to stay flush with lower UI elements
     local headerFill = Instance.new("Frame", header)
     headerFill.Size = UDim2.new(1, 0, 0, 10)
     headerFill.Position = UDim2.new(0, 0, 1, -10)
@@ -223,7 +224,6 @@ function PhantomLib:CreateWindow(options)
         if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then dragging = false end
     end)
 
-    -- Sidebar / Tab Container
     local sidebar = Instance.new("ScrollingFrame", main)
     sidebar.Size = UDim2.new(0, 115, 1, -28)
     sidebar.Position = UDim2.new(0, 0, 0, 28)
@@ -232,21 +232,8 @@ function PhantomLib:CreateWindow(options)
     sidebar.ScrollBarThickness = 2
     sidebar.ScrollBarImageColor3 = self.Theme.Muted
     
-    -- Rounded corner for top-left and bottom-left of sidebar
-    Instance.new("UICorner", sidebar).CornerRadius = UDim.new(0, 7)
-
-    -- Fill overlay to keep the right edge of the sidebar straight against the content view
-    local sidebarFill = Instance.new("Frame", sidebar)
-    sidebarFill.Size = UDim2.new(0, 10, 1, 0)
-    sidebarFill.Position = UDim2.new(1, -10, 0, 0)
-    sidebarFill.BackgroundColor3 = self.Theme.Sidebar
-    sidebarFill.BorderSizePixel = 0
-    sidebarFill.ZIndex = 0
-
     local sidebarLayout = Instance.new("UIListLayout", sidebar)
     sidebarLayout.Padding = UDim.new(0, 3)
-    sidebarLayout.SortOrder = Enum.SortOrder.LayoutOrder
-
     local sidebarPad = Instance.new("UIPadding", sidebar)
     sidebarPad.PaddingTop = UDim.new(0, 5); sidebarPad.PaddingLeft = UDim.new(0, 4); sidebarPad.PaddingRight = UDim.new(0, 4); sidebarPad.PaddingBottom = UDim.new(0, 5)
 
@@ -387,7 +374,6 @@ function PhantomLib:CreateTab(tabName)
     btn.BackgroundColor3 = self.Theme.Card
     btn.BackgroundTransparency = 1
     btn.Text = tabName; btn.TextColor3 = self.Theme.Muted; btn.TextSize = 11; btn.Font = Enum.Font.GothamMedium
-    btn.ZIndex = 2
     Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 4)
 
     local view = Instance.new("ScrollingFrame", self.Container)
