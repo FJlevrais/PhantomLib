@@ -1,6 +1,6 @@
 --[[
     PhantomLib Framework (Rayfield-Style API)
-    Refined UI: Compact height, auto-updating scrolling tab frames, and modernized visual design.
+    Refined UI: Fully transparent text backgrounds, compact height, auto-updating scrolling tab frames.
 --]]
 
 local PhantomLib = {}
@@ -20,49 +20,49 @@ PhantomLib.Themes = {
         Background = Color3.fromRGB(18, 18, 22), 
         Sidebar = Color3.fromRGB(13, 13, 16), 
         Card = Color3.fromRGB(28, 29, 36), 
-        ButtonGradTop = Color3.fromRGB(42, 44, 56),
-        ButtonGradBottom = Color3.fromRGB(28, 29, 36),
+        ButtonGradTop = Color3.fromRGB(45, 52, 70),
+        ButtonGradBottom = Color3.fromRGB(30, 35, 48),
         Accent = Color3.fromRGB(99, 102, 241), 
         GradientAccent = Color3.fromRGB(139, 92, 246), 
         Text = Color3.fromRGB(240, 240, 245), 
         Muted = Color3.fromRGB(140, 140, 155), 
-        Border = Color3.fromRGB(45, 48, 60) 
+        Border = Color3.fromRGB(65, 75, 100) 
     },
     Light = { 
         Background = Color3.fromRGB(245, 245, 248), 
         Sidebar = Color3.fromRGB(230, 232, 238), 
         Card = Color3.fromRGB(255, 255, 255), 
-        ButtonGradTop = Color3.fromRGB(255, 255, 255),
-        ButtonGradBottom = Color3.fromRGB(240, 242, 248),
+        ButtonGradTop = Color3.fromRGB(240, 242, 248),
+        ButtonGradBottom = Color3.fromRGB(220, 225, 238),
         Accent = Color3.fromRGB(79, 70, 229), 
         GradientAccent = Color3.fromRGB(124, 58, 237), 
         Text = Color3.fromRGB(25, 25, 30), 
         Muted = Color3.fromRGB(110, 110, 120), 
-        Border = Color3.fromRGB(215, 220, 228) 
+        Border = Color3.fromRGB(180, 190, 210) 
     },
     Cyber = { 
         Background = Color3.fromRGB(13, 13, 22), 
         Sidebar = Color3.fromRGB(8, 8, 14), 
         Card = Color3.fromRGB(24, 24, 40), 
-        ButtonGradTop = Color3.fromRGB(36, 30, 58),
-        ButtonGradBottom = Color3.fromRGB(20, 18, 34),
+        ButtonGradTop = Color3.fromRGB(50, 40, 80),
+        ButtonGradBottom = Color3.fromRGB(30, 25, 55),
         Accent = Color3.fromRGB(255, 0, 128), 
         GradientAccent = Color3.fromRGB(0, 240, 255), 
         Text = Color3.fromRGB(0, 240, 255), 
         Muted = Color3.fromRGB(130, 130, 175), 
-        Border = Color3.fromRGB(70, 35, 90) 
+        Border = Color3.fromRGB(100, 50, 130) 
     },
     Ocean = { 
         Background = Color3.fromRGB(10, 14, 23), 
         Sidebar = Color3.fromRGB(6, 9, 15), 
         Card = Color3.fromRGB(20, 28, 44), 
-        ButtonGradTop = Color3.fromRGB(28, 40, 62),
-        ButtonGradBottom = Color3.fromRGB(16, 22, 36),
+        ButtonGradTop = Color3.fromRGB(35, 55, 88),
+        ButtonGradBottom = Color3.fromRGB(22, 35, 58),
         Accent = Color3.fromRGB(14, 165, 233), 
         GradientAccent = Color3.fromRGB(56, 189, 248), 
         Text = Color3.fromRGB(224, 242, 254), 
         Muted = Color3.fromRGB(110, 140, 175), 
-        Border = Color3.fromRGB(35, 52, 78) 
+        Border = Color3.fromRGB(50, 80, 120) 
     }
 }
 
@@ -119,7 +119,6 @@ function PhantomLib:CreateWindow(options)
     notifLayout.VerticalAlignment = Enum.VerticalAlignment.Bottom
     notifLayout.Padding = UDim.new(0, 6)
 
-    -- Compact default size (450 width x 260 height)
     local targetSize = options.Size or UDim2.fromOffset(450, 260)
     local main = Instance.new("Frame", screen)
     main.Size = targetSize
@@ -145,7 +144,7 @@ function PhantomLib:CreateWindow(options)
     local title = Instance.new("TextLabel", header)
     title.Size = UDim2.new(1, -70, 1, 0)
     title.Position = UDim2.new(0, 10, 0, 0)
-    title.BackgroundTransparency = 1
+    title.BackgroundTransparency = 1 -- Title background transparency = 1
     title.Text = windowName
     title.TextColor3 = self.Theme.Text
     title.TextSize = 12
@@ -161,6 +160,7 @@ function PhantomLib:CreateWindow(options)
     minimizeBtn.Size = UDim2.new(0, 18, 0, 18)
     minimizeBtn.Position = UDim2.new(0, 0, 0.5, -9)
     minimizeBtn.BackgroundColor3 = self.Theme.Card
+    minimizeBtn.BackgroundTransparency = 1
     minimizeBtn.Text = "-"
     minimizeBtn.TextColor3 = self.Theme.Text
     minimizeBtn.TextSize = 12
@@ -171,6 +171,7 @@ function PhantomLib:CreateWindow(options)
     closeBtn.Size = UDim2.new(0, 18, 0, 18)
     closeBtn.Position = UDim2.new(0, 22, 0.5, -9)
     closeBtn.BackgroundColor3 = Color3.fromRGB(239, 68, 68)
+    closeBtn.BackgroundTransparency = 1
     closeBtn.Text = "×"
     closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
     closeBtn.TextSize = 13
@@ -354,11 +355,10 @@ function PhantomLib:CreateTab(tabName)
     local btn = Instance.new("TextButton", self.Sidebar)
     btn.Size = UDim2.new(1, 0, 0, 24)
     btn.BackgroundColor3 = self.Theme.Card
-    btn.BackgroundTransparency = 1
+    btn.BackgroundTransparency = 1 -- Sidebar Tab Button Background Transparency = 1
     btn.Text = tabName; btn.TextColor3 = self.Theme.Muted; btn.TextSize = 11; btn.Font = Enum.Font.GothamMedium
     Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 4)
 
-    -- Primary ScrollingFrame for all tab elements
     local view = Instance.new("ScrollingFrame", self.Container)
     view.Size = UDim2.new(1, 0, 1, 0)
     view.BackgroundTransparency = 1; view.Visible = false
@@ -372,7 +372,6 @@ function PhantomLib:CreateTab(tabName)
     local pad = Instance.new("UIPadding", view)
     pad.PaddingTop = UDim.new(0, 5); pad.PaddingLeft = UDim.new(0, 5); pad.PaddingRight = UDim.new(0, 6); pad.PaddingBottom = UDim.new(0, 5)
 
-    -- Dynamic Auto-Canvas Resizing for Tab Frame
     layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
         view.CanvasSize = UDim2.new(0, 0, 0, layout.AbsoluteContentSize.Y + 10)
     end)
@@ -385,7 +384,7 @@ function PhantomLib:CreateTab(tabName)
             tween(tab.Button, 0.15, {BackgroundTransparency = 1, TextColor3 = self.Theme.Muted})
         end
         view.Visible = true
-        tween(btn, 0.15, {BackgroundTransparency = 0, TextColor3 = self.Theme.Text})
+        tween(btn, 0.15, {BackgroundTransparency = 1, TextColor3 = self.Theme.Text})
         self.ActiveTab = tabData
     end
 
@@ -393,33 +392,33 @@ function PhantomLib:CreateTab(tabName)
     if #self.Tabs == 0 then selectTab() end
     table.insert(self.Tabs, tabData)
 
-    -- Button Element
+    -- BUTTON ELEMENT (Background Transparency = 1)
     function tabData:CreateButton(cfg)
         cfg = cfg or {}
         local b = Instance.new("TextButton", view)
-        b.Size = UDim2.new(1, 0, 0, 26)
-        b.BackgroundColor3 = self.Window.Theme.Card
+        b.Size = UDim2.new(1, 0, 0, 28)
+        b.BackgroundColor3 = self.Window.Theme.ButtonGradTop
+        b.BackgroundTransparency = 1 -- Button Background Transparency = 1
         b.Text = cfg.Name or "Button"
-        b.TextColor3 = self.Window.Theme.Text; b.TextSize = 11; b.Font = Enum.Font.GothamMedium
+        b.TextColor3 = self.Window.Theme.Accent
+        b.TextSize = 11
+        b.Font = Enum.Font.GothamBold
+        b.AutoButtonColor = false
         Instance.new("UICorner", b).CornerRadius = UDim.new(0, 4)
         
         local stroke = Instance.new("UIStroke", b)
-        stroke.Color = self.Window.Theme.Border
+        stroke.Color = self.Window.Theme.Accent
+        stroke.Thickness = 1
         stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
-        local grad = Instance.new("UIGradient", b)
-        grad.Rotation = 90
-        grad.Color = ColorSequence.new({
-            ColorSequenceKeypoint.new(0, self.Window.Theme.ButtonGradTop),
-            ColorSequenceKeypoint.new(1, self.Window.Theme.ButtonGradBottom)
-        })
-
         b.MouseEnter:Connect(function()
-            tween(stroke, 0.15, { Color = self.Window.Theme.Accent })
+            tween(stroke, 0.15, { Color = self.Window.Theme.GradientAccent })
+            tween(b, 0.15, { TextColor3 = self.Window.Theme.Text })
         end)
 
         b.MouseLeave:Connect(function()
-            tween(stroke, 0.15, { Color = self.Window.Theme.Border })
+            tween(stroke, 0.15, { Color = self.Window.Theme.Accent })
+            tween(b, 0.15, { TextColor3 = self.Window.Theme.Accent })
         end)
 
         b.MouseButton1Click:Connect(function()
@@ -442,7 +441,8 @@ function PhantomLib:CreateTab(tabName)
 
         local label = Instance.new("TextLabel", frame)
         label.Size = UDim2.new(1, -40, 1, 0); label.Position = UDim2.new(0, 6, 0, 0)
-        label.BackgroundTransparency = 1; label.Text = cfg.Name or "Toggle"
+        label.BackgroundTransparency = 1 -- TextLabel Background Transparency = 1
+        label.Text = cfg.Name or "Toggle"
         label.TextColor3 = self.Window.Theme.Text; label.TextSize = 11; label.Font = Enum.Font.Gotham; label.TextXAlignment = Enum.TextXAlignment.Left
 
         local track = Instance.new("Frame", frame)
@@ -504,12 +504,14 @@ function PhantomLib:CreateTab(tabName)
 
         local title = Instance.new("TextLabel", frame)
         title.Size = UDim2.new(1, -12, 0, 14); title.Position = UDim2.new(0, 6, 0, 3)
-        title.BackgroundTransparency = 1; title.Text = cfg.Name or "Slider"; title.TextColor3 = self.Window.Theme.Text
+        title.BackgroundTransparency = 1 -- TextLabel Background Transparency = 1
+        title.Text = cfg.Name or "Slider"; title.TextColor3 = self.Window.Theme.Text
         title.TextSize = 11; title.Font = Enum.Font.Gotham; title.TextXAlignment = Enum.TextXAlignment.Left
 
         local valDisplay = Instance.new("TextLabel", frame)
         valDisplay.Size = UDim2.new(1, -12, 0, 14); valDisplay.Position = UDim2.new(0, 6, 0, 3)
-        valDisplay.BackgroundTransparency = 1; valDisplay.Text = tostring(val) .. (cfg.Suffix or ""); valDisplay.TextColor3 = self.Window.Theme.Accent
+        valDisplay.BackgroundTransparency = 1 -- TextLabel Background Transparency = 1
+        valDisplay.Text = tostring(val) .. (cfg.Suffix or ""); valDisplay.TextColor3 = self.Window.Theme.Accent
         valDisplay.TextSize = 11; valDisplay.Font = Enum.Font.GothamBold; valDisplay.TextXAlignment = Enum.TextXAlignment.Right
 
         local track = Instance.new("Frame", frame)
@@ -561,7 +563,8 @@ function PhantomLib:CreateTab(tabName)
 
         local label = Instance.new("TextLabel", frame)
         label.Size = UDim2.new(0.45, 0, 1, 0); label.Position = UDim2.new(0, 6, 0, 0)
-        label.BackgroundTransparency = 1; label.Text = cfg.Name or "Input"; label.TextColor3 = self.Window.Theme.Text
+        label.BackgroundTransparency = 1 -- TextLabel Background Transparency = 1
+        label.Text = cfg.Name or "Input"; label.TextColor3 = self.Window.Theme.Text
         label.TextSize = 11; label.Font = Enum.Font.Gotham; label.TextXAlignment = Enum.TextXAlignment.Left
 
         local boxBg = Instance.new("Frame", frame)
@@ -571,7 +574,8 @@ function PhantomLib:CreateTab(tabName)
 
         local input = Instance.new("TextBox", boxBg)
         input.Size = UDim2.new(1, -6, 1, 0); input.Position = UDim2.new(0, 3, 0, 0)
-        input.BackgroundTransparency = 1; input.Text = cfg.CurrentValue or ""; input.PlaceholderText = cfg.PlaceholderText or "Type..."
+        input.BackgroundTransparency = 1
+        input.Text = cfg.CurrentValue or ""; input.PlaceholderText = cfg.PlaceholderText or "Type..."
         input.TextColor3 = self.Window.Theme.Text; input.PlaceholderColor3 = self.Window.Theme.Muted
         input.TextSize = 10; input.Font = Enum.Font.Gotham; input.TextXAlignment = Enum.TextXAlignment.Left; input.ClearTextOnFocus = false
 
@@ -597,7 +601,8 @@ function PhantomLib:CreateTab(tabName)
 
         local title = Instance.new("TextLabel", frame)
         title.Size = UDim2.new(1, -40, 0, 28); title.Position = UDim2.new(0, 6, 0, 0)
-        title.BackgroundTransparency = 1; title.Text = cfg.Name or "Color Picker"; title.TextColor3 = self.Window.Theme.Text
+        title.BackgroundTransparency = 1 -- TextLabel Background Transparency = 1
+        title.Text = cfg.Name or "Color Picker"; title.TextColor3 = self.Window.Theme.Text
         title.TextSize = 11; title.Font = Enum.Font.Gotham; title.TextXAlignment = Enum.TextXAlignment.Left
 
         local preview = Instance.new("TextButton", frame)
