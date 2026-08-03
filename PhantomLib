@@ -1,6 +1,9 @@
 --[[
     PhantomLib Framework (Rayfield-Style API)
-    Polished Edition — Better themes + FPS/Ping next to settings
+    Final Polished Edition
+    - Better themes
+    - FPS + Ping next to settings
+    - Premium close animation
 ]]
 
 local PhantomLib = {}
@@ -16,7 +19,7 @@ local HttpService      = game:GetService("HttpService")
 local LocalPlayer      = Players.LocalPlayer
 
 -- ─────────────────────────────────────────────
--- Improved Themes
+-- Themes
 -- ─────────────────────────────────────────────
 PhantomLib.Themes = {
     Default = {
@@ -225,7 +228,7 @@ function PhantomLib:CreateWindow(options)
     headerAccent.BorderSizePixel = 0
     headerAccent.Parent = header
 
-    -- Title (left)
+    -- Title
     local title = Instance.new("TextLabel")
     title.Size = UDim2.new(0, 160, 1, 0)
     title.Position = UDim2.new(0, 12, 0, 0)
@@ -237,14 +240,14 @@ function PhantomLib:CreateWindow(options)
     title.TextXAlignment = Enum.TextXAlignment.Left
     title.Parent = header
 
-    -- ── Right side: FPS + Ping + Controls ─────
+    -- Right side: FPS + Ping + Controls
     local rightSide = Instance.new("Frame")
     rightSide.Size = UDim2.new(0, 210, 1, 0)
     rightSide.Position = UDim2.new(1, -218, 0, 0)
     rightSide.BackgroundTransparency = 1
     rightSide.Parent = header
 
-    -- FPS + Ping (next to settings)
+    -- FPS + Ping
     local statsFrame = Instance.new("Frame")
     statsFrame.Size = UDim2.new(0, 115, 1, 0)
     statsFrame.Position = UDim2.new(0, 0, 0, 0)
@@ -305,7 +308,7 @@ function PhantomLib:CreateWindow(options)
         end
     end)
 
-    -- Controls (Gear + Minimize + Close)
+    -- Controls
     local controls = Instance.new("Frame")
     controls.Size = UDim2.new(0, 90, 1, 0)
     controls.Position = UDim2.new(1, -92, 0, 0)
@@ -340,7 +343,7 @@ function PhantomLib:CreateWindow(options)
     local closeBtn    = makeControlBtn("×", self.Theme.Danger, 60)
     closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 
-    -- ── Theme Switcher Panel ─────────────────
+    -- Theme Switcher Panel
     local themePanel = Instance.new("Frame")
     themePanel.Name = "ThemePanel"
     themePanel.Size = UDim2.fromOffset(148, 0)
@@ -791,7 +794,7 @@ function PhantomLib:CreateTab(tabName)
     if #self.Tabs == 0 then selectTab() end
     table.insert(self.Tabs, tabData)
 
-    -- ─── Button ───────────────────────────────
+    -- Button
     function tabData:CreateButton(cfg)
         cfg = cfg or {}
         local b = Instance.new("TextButton")
@@ -831,7 +834,7 @@ function PhantomLib:CreateTab(tabName)
         end)
     end
 
-    -- ─── Toggle ───────────────────────────────
+    -- Toggle
     function tabData:CreateToggle(cfg)
         cfg = cfg or {}
         local state = cfg.CurrentValue or false
@@ -897,7 +900,7 @@ function PhantomLib:CreateTab(tabName)
         return toggleObj
     end
 
-    -- ─── Slider ───────────────────────────────
+    -- Slider
     function tabData:CreateSlider(cfg)
         cfg = cfg or {}
         local min = cfg.Range and cfg.Range[1] or 0
@@ -996,7 +999,7 @@ function PhantomLib:CreateTab(tabName)
         if cfg.Flag then self.Window.Flags[cfg.Flag] = val end
     end
 
-    -- ─── Input ────────────────────────────────
+    -- Input
     function tabData:CreateInput(cfg)
         cfg = cfg or {}
         local frame = Instance.new("Frame")
@@ -1049,7 +1052,7 @@ function PhantomLib:CreateTab(tabName)
         end)
     end
 
-    -- ─── Color Picker ─────────────────────────
+    -- Color Picker
     function tabData:CreateColorPicker(cfg)
         cfg = cfg or {}
         local currentColor = cfg.Color or Color3.fromRGB(255, 255, 255)
@@ -1148,7 +1151,7 @@ function PhantomLib:CreateTab(tabName)
 end
 
 -- ─────────────────────────────────────────────
--- Cleanup
+-- Cleanup (Premium close animation)
 -- ─────────────────────────────────────────────
 function PhantomLib:DisableAllAndDestroy()
     if self.ToggleObjects then
@@ -1169,36 +1172,49 @@ function PhantomLib:Destroy()
 
     local main = self.Main
     local glow = self.Glow
+    local stroke = self.MainStroke
 
+    -- Create UIScale for smooth scaling
+    local scale = Instance.new("UIScale")
+    scale.Scale = 1
+    scale.Parent = main
+
+    -- Stage 1: Fade glow & stroke quickly
     if glow then
-        tween(glow, 0.3, { ImageTransparency = 1 })
+        tween(glow, 0.22, { ImageTransparency = 1 })
+    end
+    if stroke then
+        tween(stroke, 0.2, { Transparency = 1 })
     end
 
-    tween(main, 0.32, {
-        Size = UDim2.fromOffset(main.AbsoluteSize.X * 0.85, main.AbsoluteSize.Y * 0.85),
-        BackgroundTransparency = 0.4,
+    -- Stage 2: Scale down + fade + slight drift toward close button
+    tween(scale, 0.28, { Scale = 0.88 }, Enum.EasingStyle.Back, Enum.EasingDirection.In)
+    tween(main, 0.28, {
+        BackgroundTransparency = 0.35,
         Position = UDim2.new(
             main.Position.X.Scale,
-            main.Position.X.Offset + 20,
+            main.Position.X.Offset + 18,
             main.Position.Y.Scale,
-            main.Position.Y.Offset - 25
-        )
-    }, Enum.EasingStyle.Back, Enum.EasingDirection.In)
-
-    task.wait(0.18)
-
-    tween(main, 0.22, {
-        Size = UDim2.fromOffset(0, 0),
-        BackgroundTransparency = 1,
-        Position = UDim2.new(
-            main.Position.X.Scale,
-            main.Position.X.Offset + 40,
-            main.Position.Y.Scale,
-            main.Position.Y.Offset - 40
+            main.Position.Y.Offset - 12
         )
     }, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
 
-    task.wait(0.25)
+    task.wait(0.18)
+
+    -- Stage 3: Final collapse
+    tween(scale, 0.22, { Scale = 0 }, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
+    tween(main, 0.22, {
+        BackgroundTransparency = 1,
+        Position = UDim2.new(
+            main.Position.X.Scale,
+            main.Position.X.Offset + 35,
+            main.Position.Y.Scale,
+            main.Position.Y.Offset - 28
+        )
+    }, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
+
+    task.wait(0.24)
+
     if self.Screen then
         self.Screen:Destroy()
     end
