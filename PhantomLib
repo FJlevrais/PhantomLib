@@ -659,6 +659,7 @@ function PhantomLib:CreateTab(name)
 	end)
 	if #self.Tabs == 0 then select() end
 	table.insert(self.Tabs, tab)
+
 	function tab:CreateButton(cfg)
 		cfg = cfg or {}
 		local b = Instance.new("TextButton")
@@ -695,6 +696,7 @@ function PhantomLib:CreateTab(name)
 			if cfg.Callback then pcall(cfg.Callback) end
 		end)
 	end
+
 	function tab:CreateToggle(cfg)
 		cfg = cfg or {}
 		local state = cfg.CurrentValue or false
@@ -749,16 +751,15 @@ function PhantomLib:CreateTab(name)
 		table.insert(self.Window.ToggleObjects, obj)
 		return obj
 	end
+
 	function tab:CreateSlider(cfg)
 		cfg = cfg or {}
 		local min = cfg.Range and cfg.Range[1] or 0
 		local max = cfg.Range and cfg.Range[2] or 100
-		local range = math.max(max - min, 1e-9) -- avoid div/0
+		local range = math.max(max - min, 1e-9)
 
-		-- Increment support (cfg.Increment or cfg.Step)
 		local increment = cfg.Increment or cfg.Step
 		if not increment then
-			-- auto-detect sensible step from the range
 			if range <= 1 then
 				increment = 0.01
 			elseif range <= 10 then
@@ -770,9 +771,7 @@ function PhantomLib:CreateTab(name)
 
 		local function snap(v)
 			v = math.clamp(v, min, max)
-			-- snap to nearest increment
 			v = math.floor(v / increment + 0.5) * increment
-			-- clean floating-point noise
 			local decimals = math.max(0, math.ceil(-math.log10(increment)))
 			local mult = 10 ^ decimals
 			return math.floor(v * mult + 0.5) / mult
@@ -810,7 +809,6 @@ function PhantomLib:CreateTab(name)
 		valLbl.Parent = frame
 
 		local function formatValue(v)
-			-- nice display: strip unnecessary trailing zeros
 			if v == math.floor(v) then
 				return tostring(math.floor(v))
 			end
@@ -885,6 +883,7 @@ function PhantomLib:CreateTab(name)
 
 		if cfg.Flag then self.Window.Flags[cfg.Flag] = val end
 	end
+
 	function tab:CreateInput(cfg)
 		cfg = cfg or {}
 		local frame = Instance.new("Frame")
@@ -932,6 +931,7 @@ function PhantomLib:CreateTab(name)
 			if cfg.Callback then pcall(cfg.Callback, input.Text) end
 		end)
 	end
+
 	function tab:CreateColorPicker(cfg)
 		cfg = cfg or {}
 		local col = cfg.Color or Color3.fromRGB(255, 255, 255)
@@ -1015,6 +1015,266 @@ function PhantomLib:CreateTab(name)
 		end)
 		if cfg.Flag then self.Window.Flags[cfg.Flag] = col end
 	end
+
+	function tab:CreateMultiDropdown(cfg)
+		cfg = cfg or {}
+		local options = cfg.Options or {}
+		local selected = {}
+		local isOpen = false
+		local maxVisible = cfg.MaxVisible or 5
+		local itemHeight = 26
+
+		if cfg.CurrentOptions then
+			for _, v in ipairs(cfg.CurrentOptions) do
+				selected[v] = true
+			end
+		end
+
+		local frame = Instance.new("Frame")
+		frame.Size = UDim2.new(1, 0, 0, 32)
+		frame.BackgroundColor3 = self.Window.Theme.Card
+		frame.BackgroundTransparency = 0.3
+		frame.ClipsDescendants = true
+		frame.Parent = view
+		corner(frame, 6)
+		stroke(frame, self.Window.Theme.Border, 1, 0.5)
+
+		local title = Instance.new("TextLabel")
+		title.Size = UDim2.new(1, -36, 0, 32)
+		title.Position = UDim2.new(0, 10, 0, 0)
+		title.BackgroundTransparency = 1
+		title.Text = cfg.Name or "Multi Select"
+		title.TextColor3 = self.Window.Theme.Text
+		title.TextSize = 12
+		title.Font = Enum.Font.Gotham
+		title.TextXAlignment = Enum.TextXAlignment.Left
+		title.TextTruncate = Enum.TextTruncate.AtEnd
+		title.Parent = frame
+
+		local arrow = Instance.new("TextLabel")
+		arrow.Size = UDim2.fromOffset(20, 32)
+		arrow.Position = UDim2.new(1, -26, 0, 0)
+		arrow.BackgroundTransparency = 1
+		arrow.Text = "▼"
+		arrow.TextColor3 = self.Window.Theme.Muted
+		arrow.TextSize = 10
+		arrow.Font = Enum.Font.GothamBold
+		arrow.Parent = frame
+
+		local trigger = Instance.new("TextButton")
+		trigger.Size = UDim2.new(1, 0, 0, 32)
+		trigger.BackgroundTransparency = 1
+		trigger.Text = ""
+		trigger.Parent = frame
+
+		local list = Instance.new("ScrollingFrame")
+		list.Size = UDim2.new(1, -12, 0, 0)
+		list.Position = UDim2.new(0, 6, 0, 34)
+		list.BackgroundColor3 = self.Window.Theme.Sidebar
+		list.BackgroundTransparency = 0.15
+		list.BorderSizePixel = 0
+		list.ScrollBarThickness = 3
+		list.ScrollBarImageColor3 = self.Window.Theme.Accent
+		list.ScrollBarImageTransparency = 0.4
+		list.CanvasSize = UDim2.new(0, 0, 0, 0)
+		list.Visible = false
+		list.ClipsDescendants = true
+		list.Parent = frame
+		corner(list, 5)
+
+		local listLayout = Instance.new("UIListLayout")
+		listLayout.Padding = UDim.new(0, 2)
+		listLayout.Parent = list
+
+		local listPad = Instance.new("UIPadding")
+		listPad.PaddingTop = UDim.new(0, 4)
+		listPad.PaddingBottom = UDim.new(0, 4)
+		listPad.PaddingLeft = UDim.new(0, 4)
+		listPad.PaddingRight = UDim.new(0, 4)
+		listPad.Parent = list
+
+		local optionButtons = {}
+
+		local function getSelectedList()
+			local t = {}
+			for _, opt in ipairs(options) do
+				if selected[opt] then
+					table.insert(t, opt)
+				end
+			end
+			return t
+		end
+
+		local function updateTitle()
+			local sel = getSelectedList()
+			if #sel == 0 then
+				title.Text = cfg.Name or "Multi Select"
+				title.TextColor3 = self.Window.Theme.Muted
+			elseif #sel == 1 then
+				title.Text = (cfg.Name and (cfg.Name .. ": ") or "") .. sel[1]
+				title.TextColor3 = self.Window.Theme.Text
+			else
+				title.Text = (cfg.Name and (cfg.Name .. ": ") or "") .. #sel .. " selected"
+				title.TextColor3 = self.Window.Theme.Text
+			end
+		end
+
+		local function refreshOptions()
+			for _, btn in pairs(optionButtons) do
+				btn:Destroy()
+			end
+			table.clear(optionButtons)
+
+			for _, opt in ipairs(options) do
+				local isSelected = selected[opt] == true
+
+				local btn = Instance.new("TextButton")
+				btn.Size = UDim2.new(1, 0, 0, itemHeight - 2)
+				btn.BackgroundColor3 = isSelected and self.Window.Theme.Accent or self.Window.Theme.Card
+				btn.BackgroundTransparency = isSelected and 0.35 or 0.7
+				btn.Text = ""
+				btn.AutoButtonColor = false
+				btn.Parent = list
+				corner(btn, 4)
+
+				local lbl = Instance.new("TextLabel")
+				lbl.Size = UDim2.new(1, -28, 1, 0)
+				lbl.Position = UDim2.new(0, 8, 0, 0)
+				lbl.BackgroundTransparency = 1
+				lbl.Text = tostring(opt)
+				lbl.TextColor3 = self.Window.Theme.Text
+				lbl.TextSize = 12
+				lbl.Font = Enum.Font.Gotham
+				lbl.TextXAlignment = Enum.TextXAlignment.Left
+				lbl.Parent = btn
+
+				local check = Instance.new("TextLabel")
+				check.Size = UDim2.fromOffset(18, 18)
+				check.Position = UDim2.new(1, -24, 0.5, -9)
+				check.BackgroundTransparency = 1
+				check.Text = isSelected and "✓" or ""
+				check.TextColor3 = self.Window.Theme.Accent
+				check.TextSize = 14
+				check.Font = Enum.Font.GothamBold
+				check.Parent = btn
+
+				btn.MouseEnter:Connect(function()
+					if not selected[opt] then
+						tween(btn, 0.12, {BackgroundTransparency = 0.4})
+					end
+				end)
+				btn.MouseLeave:Connect(function()
+					if not selected[opt] then
+						tween(btn, 0.12, {BackgroundTransparency = 0.7})
+					end
+				end)
+
+				btn.MouseButton1Click:Connect(function()
+					selected[opt] = not selected[opt]
+					local nowSelected = selected[opt]
+
+					tween(btn, 0.15, {
+						BackgroundColor3 = nowSelected and self.Window.Theme.Accent or self.Window.Theme.Card,
+						BackgroundTransparency = nowSelected and 0.35 or 0.7
+					})
+					check.Text = nowSelected and "✓" or ""
+
+					updateTitle()
+
+					if cfg.Flag then
+						self.Window.Flags[cfg.Flag] = getSelectedList()
+					end
+					if cfg.Callback then
+						pcall(cfg.Callback, getSelectedList())
+					end
+				end)
+
+				optionButtons[opt] = btn
+			end
+
+			list.CanvasSize = UDim2.new(0, 0, 0, listLayout.AbsoluteContentSize.Y + 8)
+		end
+
+		local function setOpen(state)
+			isOpen = state
+			if isOpen then
+				list.Visible = true
+				local visibleCount = math.min(#options, maxVisible)
+				local targetH = 32 + 8 + (visibleCount * itemHeight)
+				spring(frame, 0.28, {Size = UDim2.new(1, 0, 0, targetH)})
+				tween(arrow, 0.2, {Rotation = 180})
+				refreshOptions()
+			else
+				spring(frame, 0.25, {Size = UDim2.new(1, 0, 0, 32)})
+				tween(arrow, 0.2, {Rotation = 0})
+				task.delay(0.2, function()
+					if not isOpen then
+						list.Visible = false
+					end
+				end)
+			end
+		end
+
+		trigger.MouseButton1Click:Connect(function()
+			setOpen(not isOpen)
+		end)
+
+		local obj = {}
+
+		function obj:SetOptions(newOptions)
+			options = newOptions or {}
+			for k in pairs(selected) do
+				if not table.find(options, k) then
+					selected[k] = nil
+				end
+			end
+			updateTitle()
+			if isOpen then
+				refreshOptions()
+				local visibleCount = math.min(#options, maxVisible)
+				spring(frame, 0.2, {Size = UDim2.new(1, 0, 0, 32 + 8 + (visibleCount * itemHeight))})
+			end
+		end
+
+		function obj:Get()
+			return getSelectedList()
+		end
+
+		function obj:Set(values)
+			selected = {}
+			if type(values) == "table" then
+				for _, v in ipairs(values) do
+					selected[v] = true
+				end
+			end
+			updateTitle()
+			if isOpen then
+				refreshOptions()
+			end
+			if cfg.Flag then
+				self.Window.Flags[cfg.Flag] = getSelectedList()
+			end
+		end
+
+		function obj:Clear()
+			selected = {}
+			updateTitle()
+			if isOpen then
+				refreshOptions()
+			end
+			if cfg.Flag then
+				self.Window.Flags[cfg.Flag] = {}
+			end
+		end
+
+		updateTitle()
+		if cfg.Flag then
+			self.Window.Flags[cfg.Flag] = getSelectedList()
+		end
+
+		return obj
+	end
+
 	return tab
 end
 function PhantomLib:DisableAllAndDestroy()
