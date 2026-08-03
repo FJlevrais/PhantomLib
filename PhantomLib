@@ -1,7 +1,6 @@
 --[[
 	PhantomLib
-	Rayfield-style UI lib
-]]
+--]]
 
 local PhantomLib = {}
 PhantomLib.__index = PhantomLib
