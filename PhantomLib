@@ -1065,9 +1065,11 @@ function PhantomLib:CreateTab(name)
 		trigger.Size = UDim2.new(1, 0, 0, 32)
 		trigger.BackgroundTransparency = 1
 		trigger.Text = ""
+		trigger.ZIndex = 2
 		trigger.Parent = frame
 
 		local list = Instance.new("ScrollingFrame")
+		list.Name = "List"
 		list.Size = UDim2.new(1, -12, 0, 0)
 		list.Position = UDim2.new(0, 6, 0, 34)
 		list.BackgroundColor3 = self.Window.Theme.Sidebar
@@ -1079,10 +1081,12 @@ function PhantomLib:CreateTab(name)
 		list.CanvasSize = UDim2.new(0, 0, 0, 0)
 		list.Visible = false
 		list.ClipsDescendants = true
+		list.ZIndex = 3
 		list.Parent = frame
 		corner(list, 5)
 
 		local listLayout = Instance.new("UIListLayout")
+		listLayout.SortOrder = Enum.SortOrder.LayoutOrder
 		listLayout.Padding = UDim.new(0, 2)
 		listLayout.Parent = list
 
@@ -1092,6 +1096,10 @@ function PhantomLib:CreateTab(name)
 		listPad.PaddingLeft = UDim.new(0, 4)
 		listPad.PaddingRight = UDim.new(0, 4)
 		listPad.Parent = list
+
+		listLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+			list.CanvasSize = UDim2.new(0, 0, 0, listLayout.AbsoluteContentSize.Y + 8)
+		end)
 
 		local optionButtons = {}
 
@@ -1123,17 +1131,20 @@ function PhantomLib:CreateTab(name)
 			for _, btn in pairs(optionButtons) do
 				btn:Destroy()
 			end
-			table.clear(optionButtons)
+			optionButtons = {}
 
-			for _, opt in ipairs(options) do
+			for i, opt in ipairs(options) do
 				local isSelected = selected[opt] == true
 
 				local btn = Instance.new("TextButton")
+				btn.Name = "Option_" .. tostring(opt)
 				btn.Size = UDim2.new(1, 0, 0, itemHeight - 2)
 				btn.BackgroundColor3 = isSelected and self.Window.Theme.Accent or self.Window.Theme.Card
 				btn.BackgroundTransparency = isSelected and 0.35 or 0.7
 				btn.Text = ""
 				btn.AutoButtonColor = false
+				btn.LayoutOrder = i
+				btn.ZIndex = 4
 				btn.Parent = list
 				corner(btn, 4)
 
@@ -1146,6 +1157,7 @@ function PhantomLib:CreateTab(name)
 				lbl.TextSize = 12
 				lbl.Font = Enum.Font.Gotham
 				lbl.TextXAlignment = Enum.TextXAlignment.Left
+				lbl.ZIndex = 5
 				lbl.Parent = btn
 
 				local check = Instance.new("TextLabel")
@@ -1156,6 +1168,7 @@ function PhantomLib:CreateTab(name)
 				check.TextColor3 = self.Window.Theme.Accent
 				check.TextSize = 14
 				check.Font = Enum.Font.GothamBold
+				check.ZIndex = 5
 				check.Parent = btn
 
 				btn.MouseEnter:Connect(function()
@@ -1191,25 +1204,29 @@ function PhantomLib:CreateTab(name)
 
 				optionButtons[opt] = btn
 			end
-
-			list.CanvasSize = UDim2.new(0, 0, 0, listLayout.AbsoluteContentSize.Y + 8)
 		end
 
 		local function setOpen(state)
 			isOpen = state
 			if isOpen then
-				list.Visible = true
+				refreshOptions()
+
 				local visibleCount = math.min(#options, maxVisible)
-				local targetH = 32 + 8 + (visibleCount * itemHeight)
+				local listHeight = visibleCount * itemHeight + 8
+				local targetH = 32 + 6 + listHeight
+
+				list.Size = UDim2.new(1, -12, 0, listHeight)
+				list.Visible = true
+
 				spring(frame, 0.28, {Size = UDim2.new(1, 0, 0, targetH)})
 				tween(arrow, 0.2, {Rotation = 180})
-				refreshOptions()
 			else
 				spring(frame, 0.25, {Size = UDim2.new(1, 0, 0, 32)})
 				tween(arrow, 0.2, {Rotation = 0})
-				task.delay(0.2, function()
+				task.delay(0.22, function()
 					if not isOpen then
 						list.Visible = false
+						list.Size = UDim2.new(1, -12, 0, 0)
 					end
 				end)
 			end
@@ -1232,7 +1249,9 @@ function PhantomLib:CreateTab(name)
 			if isOpen then
 				refreshOptions()
 				local visibleCount = math.min(#options, maxVisible)
-				spring(frame, 0.2, {Size = UDim2.new(1, 0, 0, 32 + 8 + (visibleCount * itemHeight))})
+				local listHeight = visibleCount * itemHeight + 8
+				list.Size = UDim2.new(1, -12, 0, listHeight)
+				spring(frame, 0.2, {Size = UDim2.new(1, 0, 0, 32 + 6 + listHeight)})
 			end
 		end
 
