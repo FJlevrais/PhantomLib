@@ -1,6 +1,6 @@
 --[[
     PhantomLib Framework (Rayfield-Style API)
-    Polished Edition — Modern style, smooth animations, theme switcher, FPS/Ping
+    Polished Edition — Better themes + FPS/Ping next to settings
 ]]
 
 local PhantomLib = {}
@@ -16,64 +16,64 @@ local HttpService      = game:GetService("HttpService")
 local LocalPlayer      = Players.LocalPlayer
 
 -- ─────────────────────────────────────────────
--- Themes
+-- Improved Themes
 -- ─────────────────────────────────────────────
 PhantomLib.Themes = {
     Default = {
-        Background       = Color3.fromRGB(16, 16, 20),
-        Sidebar          = Color3.fromRGB(12, 12, 15),
-        Card             = Color3.fromRGB(24, 24, 30),
-        ButtonGradTop    = Color3.fromRGB(38, 40, 52),
-        ButtonGradBottom = Color3.fromRGB(28, 30, 40),
-        Accent           = Color3.fromRGB(99, 102, 241),
-        GradientAccent   = Color3.fromRGB(139, 92, 246),
-        Text             = Color3.fromRGB(245, 245, 250),
-        Muted            = Color3.fromRGB(130, 132, 148),
-        Border           = Color3.fromRGB(48, 50, 68),
-        Success          = Color3.fromRGB(34, 197, 94),
-        Danger           = Color3.fromRGB(239, 68, 68)
+        Background       = Color3.fromRGB(14, 14, 18),
+        Sidebar          = Color3.fromRGB(10, 10, 14),
+        Card             = Color3.fromRGB(22, 22, 28),
+        ButtonGradTop    = Color3.fromRGB(36, 38, 52),
+        ButtonGradBottom = Color3.fromRGB(26, 28, 40),
+        Accent           = Color3.fromRGB(105, 110, 255),
+        GradientAccent   = Color3.fromRGB(155, 100, 255),
+        Text             = Color3.fromRGB(245, 246, 255),
+        Muted            = Color3.fromRGB(135, 138, 160),
+        Border           = Color3.fromRGB(45, 48, 70),
+        Success          = Color3.fromRGB(52, 211, 153),
+        Danger           = Color3.fromRGB(248, 113, 113)
     },
     Light = {
-        Background       = Color3.fromRGB(248, 248, 252),
-        Sidebar          = Color3.fromRGB(235, 236, 242),
+        Background       = Color3.fromRGB(250, 250, 253),
+        Sidebar          = Color3.fromRGB(240, 241, 246),
         Card             = Color3.fromRGB(255, 255, 255),
-        ButtonGradTop    = Color3.fromRGB(242, 243, 250),
-        ButtonGradBottom = Color3.fromRGB(228, 230, 242),
+        ButtonGradTop    = Color3.fromRGB(245, 246, 252),
+        ButtonGradBottom = Color3.fromRGB(232, 234, 245),
         Accent           = Color3.fromRGB(79, 70, 229),
         GradientAccent   = Color3.fromRGB(124, 58, 237),
-        Text             = Color3.fromRGB(20, 20, 28),
-        Muted            = Color3.fromRGB(100, 102, 120),
-        Border           = Color3.fromRGB(200, 204, 220),
-        Success          = Color3.fromRGB(22, 163, 74),
-        Danger           = Color3.fromRGB(220, 38, 38)
+        Text             = Color3.fromRGB(15, 15, 25),
+        Muted            = Color3.fromRGB(95, 98, 120),
+        Border           = Color3.fromRGB(210, 214, 230),
+        Success          = Color3.fromRGB(16, 185, 129),
+        Danger           = Color3.fromRGB(239, 68, 68)
     },
     Cyber = {
-        Background       = Color3.fromRGB(10, 10, 18),
-        Sidebar          = Color3.fromRGB(6, 6, 12),
-        Card             = Color3.fromRGB(18, 18, 32),
-        ButtonGradTop    = Color3.fromRGB(40, 30, 70),
-        ButtonGradBottom = Color3.fromRGB(25, 20, 50),
-        Accent           = Color3.fromRGB(255, 0, 140),
-        GradientAccent   = Color3.fromRGB(0, 230, 255),
-        Text             = Color3.fromRGB(0, 240, 255),
-        Muted            = Color3.fromRGB(120, 120, 170),
-        Border           = Color3.fromRGB(80, 40, 120),
-        Success          = Color3.fromRGB(0, 255, 170),
-        Danger           = Color3.fromRGB(255, 40, 80)
+        Background       = Color3.fromRGB(6, 6, 12),
+        Sidebar          = Color3.fromRGB(4, 4, 9),
+        Card             = Color3.fromRGB(14, 14, 26),
+        ButtonGradTop    = Color3.fromRGB(35, 25, 60),
+        ButtonGradBottom = Color3.fromRGB(20, 15, 40),
+        Accent           = Color3.fromRGB(255, 20, 147),
+        GradientAccent   = Color3.fromRGB(0, 255, 255),
+        Text             = Color3.fromRGB(0, 255, 255),
+        Muted            = Color3.fromRGB(120, 130, 180),
+        Border           = Color3.fromRGB(90, 40, 140),
+        Success          = Color3.fromRGB(0, 255, 180),
+        Danger           = Color3.fromRGB(255, 50, 100)
     },
     Ocean = {
-        Background       = Color3.fromRGB(8, 12, 20),
-        Sidebar          = Color3.fromRGB(5, 8, 14),
-        Card             = Color3.fromRGB(16, 24, 38),
-        ButtonGradTop    = Color3.fromRGB(30, 48, 78),
-        ButtonGradBottom = Color3.fromRGB(18, 32, 54),
-        Accent           = Color3.fromRGB(14, 165, 233),
-        GradientAccent   = Color3.fromRGB(56, 189, 248),
-        Text             = Color3.fromRGB(226, 242, 254),
-        Muted            = Color3.fromRGB(100, 130, 165),
-        Border           = Color3.fromRGB(40, 70, 110),
-        Success          = Color3.fromRGB(34, 197, 94),
-        Danger           = Color3.fromRGB(239, 68, 68)
+        Background       = Color3.fromRGB(7, 12, 20),
+        Sidebar          = Color3.fromRGB(4, 8, 14),
+        Card             = Color3.fromRGB(14, 22, 36),
+        ButtonGradTop    = Color3.fromRGB(25, 45, 75),
+        ButtonGradBottom = Color3.fromRGB(15, 30, 52),
+        Accent           = Color3.fromRGB(6, 182, 212),
+        GradientAccent   = Color3.fromRGB(34, 211, 238),
+        Text             = Color3.fromRGB(224, 242, 254),
+        Muted            = Color3.fromRGB(100, 140, 170),
+        Border           = Color3.fromRGB(35, 70, 110),
+        Success          = Color3.fromRGB(45, 212, 191),
+        Danger           = Color3.fromRGB(251, 113, 133)
     }
 }
 
@@ -164,7 +164,7 @@ function PhantomLib:CreateWindow(options)
     notifLayout.Padding = UDim.new(0, 8)
     notifLayout.Parent = notifContainer
 
-    local targetSize = options.Size or UDim2.fromOffset(500, 310)
+    local targetSize = options.Size or UDim2.fromOffset(510, 315)
 
     -- Main window
     local main = Instance.new("Frame")
@@ -221,12 +221,13 @@ function PhantomLib:CreateWindow(options)
     headerAccent.Size = UDim2.new(1, 0, 0, 1)
     headerAccent.Position = UDim2.new(0, 0, 1, -1)
     headerAccent.BackgroundColor3 = self.Theme.Accent
-    headerAccent.BackgroundTransparency = 0.65
+    headerAccent.BackgroundTransparency = 0.6
     headerAccent.BorderSizePixel = 0
     headerAccent.Parent = header
 
+    -- Title (left)
     local title = Instance.new("TextLabel")
-    title.Size = UDim2.new(0, 140, 1, 0)
+    title.Size = UDim2.new(0, 160, 1, 0)
     title.Position = UDim2.new(0, 12, 0, 0)
     title.BackgroundTransparency = 1
     title.Text = windowName
@@ -236,62 +237,68 @@ function PhantomLib:CreateWindow(options)
     title.TextXAlignment = Enum.TextXAlignment.Left
     title.Parent = header
 
-    -- FPS + Ping labels
+    -- ── Right side: FPS + Ping + Controls ─────
+    local rightSide = Instance.new("Frame")
+    rightSide.Size = UDim2.new(0, 210, 1, 0)
+    rightSide.Position = UDim2.new(1, -218, 0, 0)
+    rightSide.BackgroundTransparency = 1
+    rightSide.Parent = header
+
+    -- FPS + Ping (next to settings)
     local statsFrame = Instance.new("Frame")
-    statsFrame.Size = UDim2.new(0, 110, 1, 0)
-    statsFrame.Position = UDim2.new(0, 155, 0, 0)
+    statsFrame.Size = UDim2.new(0, 115, 1, 0)
+    statsFrame.Position = UDim2.new(0, 0, 0, 0)
     statsFrame.BackgroundTransparency = 1
-    statsFrame.Parent = header
+    statsFrame.Parent = rightSide
 
     local fpsLabel = Instance.new("TextLabel")
-    fpsLabel.Size = UDim2.new(0.5, 0, 1, 0)
+    fpsLabel.Size = UDim2.new(0.5, -2, 1, 0)
     fpsLabel.BackgroundTransparency = 1
-    fpsLabel.Text = "FPS: --"
+    fpsLabel.Text = "FPS --"
     fpsLabel.TextColor3 = self.Theme.Muted
     fpsLabel.TextSize = 11
     fpsLabel.Font = Enum.Font.GothamMedium
-    fpsLabel.TextXAlignment = Enum.TextXAlignment.Left
+    fpsLabel.TextXAlignment = Enum.TextXAlignment.Right
     fpsLabel.Parent = statsFrame
 
     local pingLabel = Instance.new("TextLabel")
-    pingLabel.Size = UDim2.new(0.5, 0, 1, 0)
-    pingLabel.Position = UDim2.new(0.5, 0, 0, 0)
+    pingLabel.Size = UDim2.new(0.5, -2, 1, 0)
+    pingLabel.Position = UDim2.new(0.5, 2, 0, 0)
     pingLabel.BackgroundTransparency = 1
-    pingLabel.Text = "PING: --"
+    pingLabel.Text = "ms --"
     pingLabel.TextColor3 = self.Theme.Muted
     pingLabel.TextSize = 11
     pingLabel.Font = Enum.Font.GothamMedium
     pingLabel.TextXAlignment = Enum.TextXAlignment.Left
     pingLabel.Parent = statsFrame
 
-    -- Live FPS + Ping updater
+    -- Live FPS + Ping
     local fpsValue = 60
     local lastUpdate = 0
     RunService.RenderStepped:Connect(function(dt)
         fpsValue = math.floor(1 / math.max(dt, 0.001))
-        if tick() - lastUpdate > 0.4 then
+        if tick() - lastUpdate > 0.35 then
             lastUpdate = tick()
-            fpsLabel.Text = "FPS: " .. tostring(fpsValue)
+            fpsLabel.Text = "FPS " .. tostring(fpsValue)
 
             local pingMs = 0
             pcall(function()
                 pingMs = math.floor(LocalPlayer:GetNetworkPing() * 1000)
             end)
-            pingLabel.Text = "PING: " .. tostring(pingMs) .. "ms"
+            pingLabel.Text = pingMs .. "ms"
 
-            -- Color feedback
-            if fpsValue >= 50 then
+            if fpsValue >= 55 then
                 fpsLabel.TextColor3 = self.Theme.Success
-            elseif fpsValue >= 30 then
-                fpsLabel.TextColor3 = Color3.fromRGB(250, 180, 50)
+            elseif fpsValue >= 35 then
+                fpsLabel.TextColor3 = Color3.fromRGB(250, 190, 60)
             else
                 fpsLabel.TextColor3 = self.Theme.Danger
             end
 
-            if pingMs <= 80 then
+            if pingMs <= 70 then
                 pingLabel.TextColor3 = self.Theme.Success
-            elseif pingMs <= 150 then
-                pingLabel.TextColor3 = Color3.fromRGB(250, 180, 50)
+            elseif pingMs <= 130 then
+                pingLabel.TextColor3 = Color3.fromRGB(250, 190, 60)
             else
                 pingLabel.TextColor3 = self.Theme.Danger
             end
@@ -300,10 +307,10 @@ function PhantomLib:CreateWindow(options)
 
     -- Controls (Gear + Minimize + Close)
     local controls = Instance.new("Frame")
-    controls.Size = UDim2.new(0, 86, 1, 0)
-    controls.Position = UDim2.new(1, -94, 0, 0)
+    controls.Size = UDim2.new(0, 90, 1, 0)
+    controls.Position = UDim2.new(1, -92, 0, 0)
     controls.BackgroundTransparency = 1
-    controls.Parent = header
+    controls.Parent = rightSide
 
     local function makeControlBtn(text, color, posX, textSize)
         local btn = Instance.new("TextButton")
@@ -320,7 +327,7 @@ function PhantomLib:CreateWindow(options)
         createCorner(btn, 6)
 
         btn.MouseEnter:Connect(function()
-            tween(btn, 0.15, { BackgroundTransparency = 0.65 })
+            tween(btn, 0.15, { BackgroundTransparency = 0.6 })
         end)
         btn.MouseLeave:Connect(function()
             tween(btn, 0.15, { BackgroundTransparency = 1 })
@@ -328,25 +335,24 @@ function PhantomLib:CreateWindow(options)
         return btn
     end
 
-    -- Gear (Settings)
-    local gearBtn = makeControlBtn("⚙", self.Theme.Card, 0, 15)
-    local minimizeBtn = makeControlBtn("–", self.Theme.Card, 28)
-    local closeBtn = makeControlBtn("×", self.Theme.Danger, 56)
+    local gearBtn     = makeControlBtn("⚙", self.Theme.Card, 0, 15)
+    local minimizeBtn = makeControlBtn("–", self.Theme.Card, 30)
+    local closeBtn    = makeControlBtn("×", self.Theme.Danger, 60)
     closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 
     -- ── Theme Switcher Panel ─────────────────
     local themePanel = Instance.new("Frame")
     themePanel.Name = "ThemePanel"
-    themePanel.Size = UDim2.fromOffset(150, 0)
-    themePanel.Position = UDim2.new(1, -160, 0, 38)
+    themePanel.Size = UDim2.fromOffset(148, 0)
+    themePanel.Position = UDim2.new(1, -158, 0, 38)
     themePanel.BackgroundColor3 = self.Theme.Card
-    themePanel.BackgroundTransparency = 0.05
+    themePanel.BackgroundTransparency = 0.04
     themePanel.Visible = false
     themePanel.ClipsDescendants = true
     themePanel.ZIndex = 20
     themePanel.Parent = main
     createCorner(themePanel, 8)
-    local themeStroke = createStroke(themePanel, self.Theme.Accent, 1, 0.4)
+    local themeStroke = createStroke(themePanel, self.Theme.Accent, 1, 0.35)
 
     local themeLayout = Instance.new("UIListLayout")
     themeLayout.Padding = UDim.new(0, 4)
@@ -368,7 +374,6 @@ function PhantomLib:CreateWindow(options)
         self.Theme = newTheme
         self.CurrentTheme = themeName
 
-        -- Update main window colors
         tween(main, 0.3, { BackgroundColor3 = newTheme.Background })
         tween(header, 0.3, { BackgroundColor3 = newTheme.Sidebar })
         tween(headerFill, 0.3, { BackgroundColor3 = newTheme.Sidebar })
@@ -379,13 +384,11 @@ function PhantomLib:CreateWindow(options)
         tween(themePanel, 0.25, { BackgroundColor3 = newTheme.Card })
         tween(themeStroke, 0.25, { Color = newTheme.Accent })
 
-        -- Update sidebar
         if self.Sidebar then
             tween(self.Sidebar, 0.3, { BackgroundColor3 = newTheme.Sidebar })
             self.Sidebar.ScrollBarImageColor3 = newTheme.Accent
         end
 
-        -- Update tabs
         for _, tab in ipairs(self.Tabs) do
             if tab.Label then
                 local isActive = (self.ActiveTab == tab)
@@ -399,11 +402,10 @@ function PhantomLib:CreateWindow(options)
             end
         end
 
-        -- Update theme buttons highlight
         for name, btnData in pairs(themeButtons) do
             local isSelected = (name == themeName)
             tween(btnData.btn, 0.2, {
-                BackgroundTransparency = isSelected and 0.3 or 1,
+                BackgroundTransparency = isSelected and 0.25 or 1,
                 BackgroundColor3 = isSelected and newTheme.Accent or newTheme.Card
             })
             tween(btnData.label, 0.2, {
@@ -423,7 +425,7 @@ function PhantomLib:CreateWindow(options)
         local tBtn = Instance.new("TextButton")
         tBtn.Size = UDim2.new(1, 0, 0, 26)
         tBtn.BackgroundColor3 = self.Theme.Accent
-        tBtn.BackgroundTransparency = (themeName == self.CurrentTheme) and 0.3 or 1
+        tBtn.BackgroundTransparency = (themeName == self.CurrentTheme) and 0.25 or 1
         tBtn.Text = ""
         tBtn.AutoButtonColor = false
         tBtn.ZIndex = 21
@@ -444,7 +446,7 @@ function PhantomLib:CreateWindow(options)
 
         tBtn.MouseEnter:Connect(function()
             if themeName ~= self.CurrentTheme then
-                tween(tBtn, 0.15, { BackgroundTransparency = 0.7 })
+                tween(tBtn, 0.15, { BackgroundTransparency = 0.65 })
             end
         end)
         tBtn.MouseLeave:Connect(function()
@@ -461,10 +463,10 @@ function PhantomLib:CreateWindow(options)
         themeOpen = not themeOpen
         if themeOpen then
             themePanel.Visible = true
-            themePanel.Size = UDim2.fromOffset(150, 0)
-            spring(themePanel, 0.32, { Size = UDim2.fromOffset(150, 128) })
+            themePanel.Size = UDim2.fromOffset(148, 0)
+            spring(themePanel, 0.32, { Size = UDim2.fromOffset(148, 128) })
         else
-            tween(themePanel, 0.22, { Size = UDim2.fromOffset(150, 0) }, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
+            tween(themePanel, 0.22, { Size = UDim2.fromOffset(148, 0) }, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
             task.delay(0.23, function()
                 if not themeOpen then themePanel.Visible = false end
             end)
@@ -487,7 +489,7 @@ function PhantomLib:CreateWindow(options)
         end
     end)
 
-    -- Close (improved animation)
+    -- Close
     closeBtn.MouseButton1Click:Connect(function()
         self:DisableAllAndDestroy()
     end)
@@ -1146,7 +1148,7 @@ function PhantomLib:CreateTab(tabName)
 end
 
 -- ─────────────────────────────────────────────
--- Cleanup (improved close animation)
+-- Cleanup
 -- ─────────────────────────────────────────────
 function PhantomLib:DisableAllAndDestroy()
     if self.ToggleObjects then
@@ -1168,7 +1170,6 @@ function PhantomLib:Destroy()
     local main = self.Main
     local glow = self.Glow
 
-    -- Nice close animation: scale down + fade + slight upward drift
     if glow then
         tween(glow, 0.3, { ImageTransparency = 1 })
     end
