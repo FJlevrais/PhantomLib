@@ -194,7 +194,7 @@ You can set it when creating the window, or just click the gear icon in the top 
 ## Full Example
 
 ```lua
-local PhantomLib = loadstring(game:HttpGet("YOUR_LINK"))()
+local PhantomLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/FJlevrais/PhantomLib/refs/heads/main/PhantomLib"))()
 
 local Window = PhantomLib:CreateWindow({
     Name = "Example Hub",
