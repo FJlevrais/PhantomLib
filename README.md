@@ -26,7 +26,7 @@ Has decent animations, theme support, FPS + Ping counter, and a gear icon to swi
 ### Load the library
 
 ```lua
-local PhantomLib = loadstring(game:HttpGet("YOUR_RAW_LINK_HERE"))()
+local PhantomLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/FJlevrais/PhantomLib/refs/heads/main/PhantomLib"))()
 ```
 
 ---
