@@ -2124,7 +2124,7 @@ function PhantomLib:CreateTab(name)
         return obj
     end
 
-    -- NEW: SEARCHABLE LIST ELEMENT
+    -- NEW: SEARCHABLE LIST ELEMENT (FIXED - No variable shadowing)
     function tab:CreateSearchableList(cfg)
         cfg = cfg or {}
         local options = cfg.Options or {}
@@ -2151,22 +2151,21 @@ function PhantomLib:CreateTab(name)
         title.TextXAlignment = Enum.TextXAlignment.Left
         title.Parent = frame
 
-        -- Create searchable list
+        -- Create searchable list using the utility function
         local listData = createSearchableList(frame, options, {
             Theme = self.Window.Theme,
             ItemHeight = itemHeight,
             MaxVisible = maxVisible,
             SearchPlaceholder = cfg.SearchPlaceholder or "Search items...",
             OnSelect = function(opt, btn, check)
-                if cfg.OnSelect then
-                    pcall(cfg.OnSelect, opt)
+                -- Toggle selection
+                local currentlySelected = listData.SelectedItems[opt] == true
+                if currentlySelected then
+                    listData.SelectedItems[opt] = nil
+                else
+                    listData.SelectedItems[opt] = true
                 end
-                if cfg.Flag then
-                    self.Window.Flags[cfg.Flag] = listData:GetSelected()
-                end
-                if cfg.Callback then
-                    pcall(cfg.Callback, listData:GetSelected())
-                end
+                
                 -- Update visual
                 local isSelected = listData.SelectedItems[opt] == true
                 tween(btn, 0.15, {
@@ -2174,6 +2173,30 @@ function PhantomLib:CreateTab(name)
                     BackgroundTransparency = isSelected and 0.3 or 0.65
                 })
                 check.Text = isSelected and "✓" or ""
+                
+                -- Update title
+                local selectedList = listData:GetSelected()
+                if #selectedList == 0 then
+                    title.Text = cfg.Name or "List"
+                    title.TextColor3 = self.Window.Theme.Muted
+                elseif #selectedList == 1 then
+                    title.Text = (cfg.Name and (cfg.Name .. ": ") or "") .. tostring(selectedList[1])
+                    title.TextColor3 = self.Window.Theme.Text
+                else
+                    title.Text = (cfg.Name and (cfg.Name .. ": ") or "") .. #selectedList .. " selected"
+                    title.TextColor3 = self.Window.Theme.Text
+                end
+                
+                if cfg.Flag then
+                    self.Window.Flags[cfg.Flag] = listData:GetSelected()
+                end
+                if cfg.Callback then
+                    pcall(cfg.Callback, listData:GetSelected())
+                end
+                
+                -- Update frame height (slight delay to let layout settle)
+                task.wait(0.05)
+                updateFrameHeight()
             end
         })
 
@@ -2185,6 +2208,18 @@ function PhantomLib:CreateTab(name)
         -- Set initial selected
         if cfg.CurrentOptions then
             listData:SetSelected(cfg.CurrentOptions)
+            -- Update title
+            local selectedList = listData:GetSelected()
+            if #selectedList == 0 then
+                title.Text = cfg.Name or "List"
+                title.TextColor3 = self.Window.Theme.Muted
+            elseif #selectedList == 1 then
+                title.Text = (cfg.Name and (cfg.Name .. ": ") or "") .. tostring(selectedList[1])
+                title.TextColor3 = self.Window.Theme.Text
+            else
+                title.Text = (cfg.Name and (cfg.Name .. ": ") or "") .. #selectedList .. " selected"
+                title.TextColor3 = self.Window.Theme.Text
+            end
         end
 
         -- Update frame height
@@ -2194,26 +2229,69 @@ function PhantomLib:CreateTab(name)
         end
 
         -- Hook into container size changes
-        local connection
-        connection = listData.Container:GetPropertyChangedSignal("Size"):Connect(updateFrameHeight)
-        task.wait(0.1)
+        local sizeConnection
+        sizeConnection = listData.Container:GetPropertyChangedSignal("Size"):Connect(function()
+            updateFrameHeight()
+        end)
+        
+        -- Initial height update
+        task.wait(0.05)
         updateFrameHeight()
+
+        -- Store connection for cleanup
+        frame._sizeConnection = sizeConnection
 
         local obj = {}
         function obj:SetOptions(newOptions)
+            options = newOptions or {}
             listData:SetOptions(newOptions)
+            -- Update title
+            local selectedList = listData:GetSelected()
+            if #selectedList == 0 then
+                title.Text = cfg.Name or "List"
+                title.TextColor3 = self.Window.Theme.Muted
+            elseif #selectedList == 1 then
+                title.Text = (cfg.Name and (cfg.Name .. ": ") or "") .. tostring(selectedList[1])
+                title.TextColor3 = self.Window.Theme.Text
+            else
+                title.Text = (cfg.Name and (cfg.Name .. ": ") or "") .. #selectedList .. " selected"
+                title.TextColor3 = self.Window.Theme.Text
+            end
+            task.wait(0.05)
             updateFrameHeight()
         end
-        function obj:Get() return listData:GetSelected() end
+        function obj:Get() 
+            local result = listData:GetSelected()
+            -- Ensure we return a table, not nil
+            return result or {}
+        end
         function obj:Set(values)
-            listData:SetSelected(values)
+            listData:SetSelected(values or {})
+            -- Update title
+            local selectedList = listData:GetSelected()
+            if #selectedList == 0 then
+                title.Text = cfg.Name or "List"
+                title.TextColor3 = self.Window.Theme.Muted
+            elseif #selectedList == 1 then
+                title.Text = (cfg.Name and (cfg.Name .. ": ") or "") .. tostring(selectedList[1])
+                title.TextColor3 = self.Window.Theme.Text
+            else
+                title.Text = (cfg.Name and (cfg.Name .. ": ") or "") .. #selectedList .. " selected"
+                title.TextColor3 = self.Window.Theme.Text
+            end
             if cfg.Flag then self.Window.Flags[cfg.Flag] = listData:GetSelected() end
             if cfg.Callback then pcall(cfg.Callback, listData:GetSelected()) end
+            task.wait(0.05)
+            updateFrameHeight()
         end
         function obj:Clear()
             listData:Clear()
+            title.Text = cfg.Name or "List"
+            title.TextColor3 = self.Window.Theme.Muted
             if cfg.Flag then self.Window.Flags[cfg.Flag] = {} end
             if cfg.Callback then pcall(cfg.Callback, {}) end
+            task.wait(0.05)
+            updateFrameHeight()
         end
         function obj:Search(text)
             listData.SearchInput.Text = text or ""
