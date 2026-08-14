@@ -1,6 +1,6 @@
 --[[
-    PhantomLib v3.2 — Wind Edition
-    Modern dark glass UI inspired by WindUI
+    PhantomLib v3.3 — Clean Modern
+    Solid dark, compact, WindUI-inspired
 ]]
 
 local PhantomLib = {}
@@ -15,60 +15,48 @@ local TeleportService = game:GetService("TeleportService")
 local HttpService = game:GetService("HttpService")
 local LP = Players.LocalPlayer
 
--- ─────────────────────────────────────────────
--- THEMES
--- ─────────────────────────────────────────────
 PhantomLib.Themes = {
     Default = {
-        Background   = Color3.fromRGB(13, 13, 17),
-        Surface      = Color3.fromRGB(18, 18, 24),
-        Elevated     = Color3.fromRGB(24, 24, 32),
-        Button       = Color3.fromRGB(30, 30, 40),
-        Accent       = Color3.fromRGB(114, 120, 255),
-        AccentHover  = Color3.fromRGB(140, 146, 255),
-        Text         = Color3.fromRGB(245, 246, 252),
-        Muted        = Color3.fromRGB(140, 144, 165),
-        Border       = Color3.fromRGB(255, 255, 255),
-        Success      = Color3.fromRGB(52, 211, 153),
-        Danger       = Color3.fromRGB(248, 113, 113),
-        Warning      = Color3.fromRGB(251, 191, 36),
-        Glass        = 0.18,
-        GlassSoft    = 0.32,
-        GlassBorder  = 0.84,
+        Background = Color3.fromRGB(18, 18, 24),
+        Surface    = Color3.fromRGB(24, 24, 32),
+        Elevated   = Color3.fromRGB(32, 32, 42),
+        Button     = Color3.fromRGB(40, 40, 52),
+        Accent     = Color3.fromRGB(114, 120, 255),
+        AccentHover= Color3.fromRGB(140, 146, 255),
+        Text       = Color3.fromRGB(245, 246, 252),
+        Muted      = Color3.fromRGB(140, 144, 165),
+        Border     = Color3.fromRGB(45, 45, 58),
+        Success    = Color3.fromRGB(52, 211, 153),
+        Danger     = Color3.fromRGB(248, 113, 113),
+        Warning    = Color3.fromRGB(251, 191, 36),
     },
     Midnight = {
-        Background   = Color3.fromRGB(8, 10, 16),
-        Surface      = Color3.fromRGB(13, 16, 24),
-        Elevated     = Color3.fromRGB(19, 23, 34),
-        Button       = Color3.fromRGB(26, 32, 46),
-        Accent       = Color3.fromRGB(56, 189, 248),
-        AccentHover  = Color3.fromRGB(125, 211, 252),
-        Text         = Color3.fromRGB(240, 249, 255),
-        Muted        = Color3.fromRGB(100, 116, 145),
-        Border       = Color3.fromRGB(255, 255, 255),
-        Success      = Color3.fromRGB(34, 197, 94),
-        Danger       = Color3.fromRGB(248, 113, 113),
-        Warning      = Color3.fromRGB(251, 191, 36),
-        Glass        = 0.20,
-        GlassSoft    = 0.36,
-        GlassBorder  = 0.85,
+        Background = Color3.fromRGB(12, 14, 20),
+        Surface    = Color3.fromRGB(18, 21, 30),
+        Elevated   = Color3.fromRGB(26, 30, 42),
+        Button     = Color3.fromRGB(34, 40, 56),
+        Accent     = Color3.fromRGB(56, 189, 248),
+        AccentHover= Color3.fromRGB(125, 211, 252),
+        Text       = Color3.fromRGB(240, 249, 255),
+        Muted      = Color3.fromRGB(100, 116, 145),
+        Border     = Color3.fromRGB(35, 42, 58),
+        Success    = Color3.fromRGB(34, 197, 94),
+        Danger     = Color3.fromRGB(248, 113, 113),
+        Warning    = Color3.fromRGB(251, 191, 36),
     },
     Ember = {
-        Background   = Color3.fromRGB(14, 11, 13),
-        Surface      = Color3.fromRGB(21, 16, 18),
-        Elevated     = Color3.fromRGB(30, 22, 26),
-        Button       = Color3.fromRGB(40, 28, 34),
-        Accent       = Color3.fromRGB(251, 113, 133),
-        AccentHover  = Color3.fromRGB(253, 164, 175),
-        Text         = Color3.fromRGB(255, 247, 248),
-        Muted        = Color3.fromRGB(170, 145, 152),
-        Border       = Color3.fromRGB(255, 255, 255),
-        Success      = Color3.fromRGB(52, 211, 153),
-        Danger       = Color3.fromRGB(248, 113, 113),
-        Warning      = Color3.fromRGB(251, 191, 36),
-        Glass        = 0.19,
-        GlassSoft    = 0.34,
-        GlassBorder  = 0.84,
+        Background = Color3.fromRGB(20, 14, 16),
+        Surface    = Color3.fromRGB(28, 20, 24),
+        Elevated   = Color3.fromRGB(38, 28, 34),
+        Button     = Color3.fromRGB(48, 36, 42),
+        Accent     = Color3.fromRGB(251, 113, 133),
+        AccentHover= Color3.fromRGB(253, 164, 175),
+        Text       = Color3.fromRGB(255, 247, 248),
+        Muted      = Color3.fromRGB(170, 145, 152),
+        Border     = Color3.fromRGB(55, 40, 46),
+        Success    = Color3.fromRGB(52, 211, 153),
+        Danger     = Color3.fromRGB(248, 113, 113),
+        Warning    = Color3.fromRGB(251, 191, 36),
     },
 }
 
@@ -93,7 +81,7 @@ end
 
 local function corner(parent, r)
     local c = Instance.new("UICorner")
-    c.CornerRadius = UDim.new(0, r or 10)
+    c.CornerRadius = UDim.new(0, r or 8)
     c.Parent = parent
     return c
 end
@@ -148,28 +136,27 @@ function PhantomLib:CreateKeySystem(cfg, onSuccess)
     card.Size = UDim2.fromOffset(0, 0)
     card.Position = UDim2.fromScale(0.5, 0.5)
     card.AnchorPoint = Vector2.new(0.5, 0.5)
-    card.BackgroundColor3 = Color3.fromRGB(16, 16, 22)
-    card.BackgroundTransparency = 0.15
+    card.BackgroundColor3 = Color3.fromRGB(22, 22, 30)
     card.BorderSizePixel = 0
     card.ClipsDescendants = true
     card.Parent = overlay
-    corner(card, 16)
-    stroke(card, Color3.fromRGB(255, 255, 255), 1.1, 0.86)
+    corner(card, 12)
+    stroke(card, Color3.fromRGB(50, 50, 65), 1)
 
     local title = Instance.new("TextLabel")
-    title.Size = UDim2.new(1, -48, 0, 26)
-    title.Position = UDim2.new(0, 24, 0, 22)
+    title.Size = UDim2.new(1, -40, 0, 24)
+    title.Position = UDim2.new(0, 20, 0, 18)
     title.BackgroundTransparency = 1
     title.Text = cfg.Title or "Key System"
     title.TextColor3 = Color3.fromRGB(245, 246, 252)
-    title.TextSize = 17
+    title.TextSize = 16
     title.Font = Enum.Font.GothamBold
     title.TextXAlignment = Enum.TextXAlignment.Left
     title.Parent = card
 
     local desc = Instance.new("TextLabel")
-    desc.Size = UDim2.new(1, -48, 0, 36)
-    desc.Position = UDim2.new(0, 24, 0, 52)
+    desc.Size = UDim2.new(1, -40, 0, 32)
+    desc.Position = UDim2.new(0, 20, 0, 46)
     desc.BackgroundTransparency = 1
     desc.Text = cfg.Note or cfg.Description or "Enter a valid key to continue"
     desc.TextColor3 = Color3.fromRGB(140, 144, 165)
@@ -180,17 +167,16 @@ function PhantomLib:CreateKeySystem(cfg, onSuccess)
     desc.Parent = card
 
     local box = Instance.new("Frame")
-    box.Size = UDim2.new(1, -48, 0, 40)
-    box.Position = UDim2.new(0, 24, 0, 100)
-    box.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    box.BackgroundTransparency = 0.93
+    box.Size = UDim2.new(1, -40, 0, 36)
+    box.Position = UDim2.new(0, 20, 0, 90)
+    box.BackgroundColor3 = Color3.fromRGB(32, 32, 42)
     box.Parent = card
-    corner(box, 10)
-    stroke(box, Color3.fromRGB(255, 255, 255), 1, 0.88)
+    corner(box, 8)
+    stroke(box, Color3.fromRGB(50, 50, 65), 1)
 
     local input = Instance.new("TextBox")
-    input.Size = UDim2.new(1, -18, 1, 0)
-    input.Position = UDim2.new(0, 12, 0, 0)
+    input.Size = UDim2.new(1, -16, 1, 0)
+    input.Position = UDim2.new(0, 10, 0, 0)
     input.BackgroundTransparency = 1
     input.PlaceholderText = "Enter key..."
     input.PlaceholderColor3 = Color3.fromRGB(120, 124, 145)
@@ -202,23 +188,22 @@ function PhantomLib:CreateKeySystem(cfg, onSuccess)
     input.Parent = box
 
     local submit = Instance.new("TextButton")
-    submit.Size = UDim2.new(1, -48, 0, 38)
-    submit.Position = UDim2.new(0, 24, 0, 154)
+    submit.Size = UDim2.new(1, -40, 0, 34)
+    submit.Position = UDim2.new(0, 20, 0, 138)
     submit.BackgroundColor3 = Color3.fromRGB(114, 120, 255)
-    submit.BackgroundTransparency = 0.1
     submit.Text = "Unlock"
     submit.TextColor3 = Color3.new(1, 1, 1)
     submit.TextSize = 14
     submit.Font = Enum.Font.GothamBold
     submit.AutoButtonColor = false
     submit.Parent = card
-    corner(submit, 10)
+    corner(submit, 8)
 
     local getKey
     if cfg.URL then
         getKey = Instance.new("TextButton")
-        getKey.Size = UDim2.new(1, -48, 0, 26)
-        getKey.Position = UDim2.new(0, 24, 0, 202)
+        getKey.Size = UDim2.new(1, -40, 0, 24)
+        getKey.Position = UDim2.new(0, 20, 0, 182)
         getKey.BackgroundTransparency = 1
         getKey.Text = "Get Key"
         getKey.TextColor3 = Color3.fromRGB(140, 146, 255)
@@ -237,8 +222,8 @@ function PhantomLib:CreateKeySystem(cfg, onSuccess)
     end
 
     local status = Instance.new("TextLabel")
-    status.Size = UDim2.new(1, -48, 0, 18)
-    status.Position = UDim2.new(0, 24, 1, -32)
+    status.Size = UDim2.new(1, -40, 0, 18)
+    status.Position = UDim2.new(0, 20, 1, -28)
     status.BackgroundTransparency = 1
     status.Text = ""
     status.TextColor3 = Color3.fromRGB(248, 113, 113)
@@ -246,8 +231,8 @@ function PhantomLib:CreateKeySystem(cfg, onSuccess)
     status.Font = Enum.Font.Gotham
     status.Parent = card
 
-    tween(overlay, 0.32, {BackgroundTransparency = 0.48})
-    spring(card, 0.48, {Size = UDim2.fromOffset(350, cfg.URL and 255 or 218)})
+    tween(overlay, 0.3, {BackgroundTransparency = 0.55})
+    spring(card, 0.45, {Size = UDim2.fromOffset(320, cfg.URL and 230 or 200)})
 
     local function checkKey(val)
         val = tostring(val or ""):gsub("%s+", "")
@@ -281,20 +266,20 @@ function PhantomLib:CreateKeySystem(cfg, onSuccess)
             if cfg.SaveKey and writefile then
                 pcall(writefile, savePath, val)
             end
-            tween(overlay, 0.26, {BackgroundTransparency = 1})
-            tween(card, 0.24, {
-                Size = UDim2.fromOffset(330, 0),
+            tween(overlay, 0.25, {BackgroundTransparency = 1})
+            tween(card, 0.22, {
+                Size = UDim2.fromOffset(300, 0),
                 BackgroundTransparency = 1
             }, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
-            task.delay(0.28, function()
+            task.delay(0.26, function()
                 screen:Destroy()
                 onSuccess()
             end)
         else
             status.Text = "Invalid key"
-            spring(card, 0.15, {Position = UDim2.new(0.5, 8, 0.5, 0)})
-            task.delay(0.07, function()
-                spring(card, 0.18, {Position = UDim2.fromScale(0.5, 0.5)})
+            spring(card, 0.14, {Position = UDim2.new(0.5, 8, 0.5, 0)})
+            task.delay(0.06, function()
+                spring(card, 0.16, {Position = UDim2.fromScale(0.5, 0.5)})
             end)
         end
     end
@@ -305,10 +290,10 @@ function PhantomLib:CreateKeySystem(cfg, onSuccess)
     end)
 
     submit.MouseEnter:Connect(function()
-        tween(submit, 0.15, {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(140, 146, 255)})
+        tween(submit, 0.14, {BackgroundColor3 = Color3.fromRGB(140, 146, 255)})
     end)
     submit.MouseLeave:Connect(function()
-        tween(submit, 0.15, {BackgroundTransparency = 0.1, BackgroundColor3 = Color3.fromRGB(114, 120, 255)})
+        tween(submit, 0.14, {BackgroundColor3 = Color3.fromRGB(114, 120, 255)})
     end)
 end
 
@@ -338,7 +323,6 @@ function PhantomLib:CreateWindow(opts)
     self.Flags = {}
     self.ToggleObjects = {}
     self.Minimized = false
-    self.Scale = 1
     getgenv()._PhantomLib_Instances[screenName] = self
 
     local function finishCreate()
@@ -349,32 +333,23 @@ function PhantomLib:CreateWindow(opts)
         screen.IgnoreGuiInset = true
         screen.Parent = parent
 
-        local scaleRoot = Instance.new("Frame")
-        scaleRoot.Name = "ScaleRoot"
-        scaleRoot.Size = UDim2.fromScale(1, 1)
-        scaleRoot.BackgroundTransparency = 1
-        scaleRoot.Parent = screen
-
-        local uiScale = Instance.new("UIScale")
-        uiScale.Scale = 1
-        uiScale.Parent = scaleRoot
-
         local notifHolder = Instance.new("Frame")
-        notifHolder.Size = UDim2.new(0, 290, 1, -20)
-        notifHolder.Position = UDim2.new(1, -14, 1, -14)
+        notifHolder.Size = UDim2.new(0, 280, 1, -16)
+        notifHolder.Position = UDim2.new(1, -12, 1, -12)
         notifHolder.AnchorPoint = Vector2.new(1, 1)
         notifHolder.BackgroundTransparency = 1
-        notifHolder.Parent = scaleRoot
+        notifHolder.Parent = screen
 
         local notifLayout = Instance.new("UIListLayout")
         notifLayout.VerticalAlignment = Enum.VerticalAlignment.Bottom
         notifLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
-        notifLayout.Padding = UDim.new(0, 9)
+        notifLayout.Padding = UDim.new(0, 8)
         notifLayout.Parent = notifHolder
 
-        local baseW, baseH = 520, 360
+        -- COMPACT SIZE
+        local baseW, baseH = 460, 320
         if isMobile() then
-            baseW, baseH = 350, 500
+            baseW, baseH = 340, 420
         end
         local size = opts.Size or UDim2.fromOffset(baseW, baseH)
 
@@ -384,28 +359,13 @@ function PhantomLib:CreateWindow(opts)
         main.Position = UDim2.fromScale(0.5, 0.5)
         main.AnchorPoint = Vector2.new(0.5, 0.5)
         main.BackgroundColor3 = self.Theme.Background
-        main.BackgroundTransparency = self.Theme.Glass
         main.BorderSizePixel = 0
         main.ClipsDescendants = true
-        main.Parent = scaleRoot
-        corner(main, 14)
-        local mainStroke = stroke(main, self.Theme.Border, 1.1, self.Theme.GlassBorder)
+        main.Parent = screen
+        corner(main, 12)
+        local mainStroke = stroke(main, self.Theme.Border, 1)
 
-        local glow = Instance.new("ImageLabel")
-        glow.Name = "Glow"
-        glow.Size = UDim2.new(1, 60, 1, 60)
-        glow.Position = UDim2.fromScale(0.5, 0.5)
-        glow.AnchorPoint = Vector2.new(0.5, 0.5)
-        glow.BackgroundTransparency = 1
-        glow.Image = "rbxassetid://5028857084"
-        glow.ImageColor3 = self.Theme.Accent
-        glow.ImageTransparency = 0.90
-        glow.ScaleType = Enum.ScaleType.Slice
-        glow.SliceCenter = Rect.new(24, 24, 276, 276)
-        glow.ZIndex = 0
-        glow.Parent = main
-
-        spring(main, 0.52, {
+        spring(main, 0.45, {
             Size = size,
             Position = UDim2.new(0.5, -size.X.Offset / 2, 0.5, -size.Y.Offset / 2),
             AnchorPoint = Vector2.new(0, 0)
@@ -413,18 +373,16 @@ function PhantomLib:CreateWindow(opts)
 
         -- Header
         local header = Instance.new("Frame")
-        header.Size = UDim2.new(1, 0, 0, 46)
+        header.Size = UDim2.new(1, 0, 0, 42)
         header.BackgroundColor3 = self.Theme.Surface
-        header.BackgroundTransparency = self.Theme.GlassSoft - 0.06
         header.BorderSizePixel = 0
         header.Parent = main
-        corner(header, 14)
+        corner(header, 12)
 
         local headerFill = Instance.new("Frame")
-        headerFill.Size = UDim2.new(1, 0, 0, 18)
-        headerFill.Position = UDim2.new(0, 0, 1, -18)
+        headerFill.Size = UDim2.new(1, 0, 0, 16)
+        headerFill.Position = UDim2.new(0, 0, 1, -16)
         headerFill.BackgroundColor3 = self.Theme.Surface
-        headerFill.BackgroundTransparency = self.Theme.GlassSoft - 0.06
         headerFill.BorderSizePixel = 0
         headerFill.Parent = header
 
@@ -432,29 +390,29 @@ function PhantomLib:CreateWindow(opts)
         headerLine.Size = UDim2.new(1, 0, 0, 1)
         headerLine.Position = UDim2.new(0, 0, 1, -1)
         headerLine.BackgroundColor3 = self.Theme.Accent
-        headerLine.BackgroundTransparency = 0.72
+        headerLine.BackgroundTransparency = 0.7
         headerLine.BorderSizePixel = 0
         headerLine.Parent = header
 
         local title = Instance.new("TextLabel")
-        title.Size = UDim2.new(0, 200, 1, 0)
-        title.Position = UDim2.new(0, 16, 0, 0)
+        title.Size = UDim2.new(0, 180, 1, 0)
+        title.Position = UDim2.new(0, 14, 0, 0)
         title.BackgroundTransparency = 1
         title.Text = name
         title.TextColor3 = self.Theme.Text
-        title.TextSize = 15
+        title.TextSize = 14
         title.Font = Enum.Font.GothamBold
         title.TextXAlignment = Enum.TextXAlignment.Left
         title.Parent = header
 
         local right = Instance.new("Frame")
-        right.Size = UDim2.new(0, 200, 1, 0)
-        right.Position = UDim2.new(1, -208, 0, 0)
+        right.Size = UDim2.new(0, 190, 1, 0)
+        right.Position = UDim2.new(1, -198, 0, 0)
         right.BackgroundTransparency = 1
         right.Parent = header
 
         local stats = Instance.new("Frame")
-        stats.Size = UDim2.new(0, 105, 1, 0)
+        stats.Size = UDim2.new(0, 100, 1, 0)
         stats.BackgroundTransparency = 1
         stats.Parent = right
 
@@ -496,55 +454,54 @@ function PhantomLib:CreateWindow(opts)
         end)
 
         local controls = Instance.new("Frame")
-        controls.Size = UDim2.new(0, 90, 1, 0)
-        controls.Position = UDim2.new(1, -94, 0, 0)
+        controls.Size = UDim2.new(0, 86, 1, 0)
+        controls.Position = UDim2.new(1, -90, 0, 0)
         controls.BackgroundTransparency = 1
         controls.Parent = right
 
         local function makeBtn(txt, x)
             local b = Instance.new("TextButton")
-            b.Size = UDim2.fromOffset(27, 27)
-            b.Position = UDim2.new(0, x, 0.5, -13.5)
-            b.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            b.BackgroundTransparency = 0.93
+            b.Size = UDim2.fromOffset(26, 26)
+            b.Position = UDim2.new(0, x, 0.5, -13)
+            b.BackgroundColor3 = self.Theme.Elevated
+            b.BackgroundTransparency = 1
             b.Text = txt
             b.TextColor3 = self.Theme.Text
             b.TextSize = 14
             b.Font = Enum.Font.GothamBold
             b.AutoButtonColor = false
             b.Parent = controls
-            corner(b, 7)
+            corner(b, 6)
             b.MouseEnter:Connect(function()
-                tween(b, 0.13, {BackgroundTransparency = 0.78})
+                tween(b, 0.12, {BackgroundTransparency = 0.4})
             end)
             b.MouseLeave:Connect(function()
-                tween(b, 0.13, {BackgroundTransparency = 0.93})
+                tween(b, 0.12, {BackgroundTransparency = 1})
             end)
             return b
         end
 
         local gear = makeBtn("⚙", 0)
-        local minBtn = makeBtn("–", 31)
-        local closeBtn = makeBtn("×", 62)
+        local minBtn = makeBtn("–", 30)
+        local closeBtn = makeBtn("×", 60)
         closeBtn.TextColor3 = Color3.new(1, 1, 1)
 
         -- Theme panel
         local themePanel = Instance.new("Frame")
-        themePanel.Size = UDim2.fromOffset(142, 0)
-        themePanel.Position = UDim2.new(1, -154, 0, 52)
+        themePanel.Size = UDim2.fromOffset(130, 0)
+        themePanel.Position = UDim2.new(1, -142, 0, 48)
         themePanel.BackgroundColor3 = self.Theme.Elevated
-        themePanel.BackgroundTransparency = self.Theme.GlassSoft
         themePanel.Visible = false
         themePanel.ClipsDescendants = true
         themePanel.ZIndex = 40
         themePanel.Parent = main
-        corner(themePanel, 11)
-        local tStroke = stroke(themePanel, self.Theme.Border, 1, self.Theme.GlassBorder)
+        corner(themePanel, 9)
+        stroke(themePanel, self.Theme.Border, 1)
 
         local tLayout = Instance.new("UIListLayout")
         tLayout.Padding = UDim.new(0, 4)
         tLayout.Parent = themePanel
-        padding(themePanel, 7, 7, 7, 7)
+        padding(themePanel, 6, 6, 6, 6)
 
         local themeOpen = false
         local themeBtns = {}
@@ -555,29 +512,27 @@ function PhantomLib:CreateWindow(opts)
             self.Theme = th
             self.CurrentTheme = themeName
 
-            tween(main, 0.3, {BackgroundColor3 = th.Background, BackgroundTransparency = th.Glass})
-            tween(header, 0.3, {BackgroundColor3 = th.Surface, BackgroundTransparency = th.GlassSoft - 0.06})
-            tween(headerFill, 0.3, {BackgroundColor3 = th.Surface, BackgroundTransparency = th.GlassSoft - 0.06})
-            tween(headerLine, 0.26, {BackgroundColor3 = th.Accent})
-            tween(title, 0.2, {TextColor3 = th.Text})
-            tween(mainStroke, 0.26, {Color = th.Border, Transparency = th.GlassBorder})
-            tween(glow, 0.3, {ImageColor3 = th.Accent})
-            tween(themePanel, 0.2, {BackgroundColor3 = th.Elevated, BackgroundTransparency = th.GlassSoft})
-            tween(tStroke, 0.2, {Color = th.Border, Transparency = th.GlassBorder})
+            tween(main, 0.25, {BackgroundColor3 = th.Background})
+            tween(header, 0.25, {BackgroundColor3 = th.Surface})
+            tween(headerFill, 0.25, {BackgroundColor3 = th.Surface})
+            tween(headerLine, 0.22, {BackgroundColor3 = th.Accent})
+            tween(title, 0.18, {TextColor3 = th.Text})
+            tween(mainStroke, 0.22, {Color = th.Border})
+            tween(themePanel, 0.18, {BackgroundColor3 = th.Elevated})
 
             if self.Sidebar then
-                tween(self.Sidebar, 0.26, {BackgroundColor3 = th.Surface, BackgroundTransparency = th.GlassSoft - 0.04})
+                tween(self.Sidebar, 0.22, {BackgroundColor3 = th.Surface})
                 self.Sidebar.ScrollBarImageColor3 = th.Accent
             end
 
             for _, tab in ipairs(self.Tabs) do
                 if tab.Label then
-                    tween(tab.Label, 0.2, {
+                    tween(tab.Label, 0.18, {
                         TextColor3 = (self.ActiveTab == tab) and th.Text or th.Muted
                     })
                 end
                 if tab.Indicator then
-                    tween(tab.Indicator, 0.2, {BackgroundColor3 = th.Accent})
+                    tween(tab.Indicator, 0.18, {BackgroundColor3 = th.Accent})
                 end
                 if tab.View then
                     tab.View.ScrollBarImageColor3 = th.Accent
@@ -586,28 +541,28 @@ function PhantomLib:CreateWindow(opts)
 
             for n, data in pairs(themeBtns) do
                 local sel = n == themeName
-                tween(data.btn, 0.16, {
-                    BackgroundTransparency = sel and 0.18 or 0.88,
-                    BackgroundColor3 = sel and th.Accent or Color3.fromRGB(255, 255, 255)
+                tween(data.btn, 0.14, {
+                    BackgroundTransparency = sel and 0 or 1,
+                    BackgroundColor3 = sel and th.Accent or th.Elevated
                 })
-                tween(data.label, 0.16, {
+                tween(data.label, 0.14, {
                     TextColor3 = sel and Color3.new(1, 1, 1) or th.Text
                 })
             end
 
-            self:Notify({Title = "Theme", Content = "Switched to " .. themeName, Duration = 1.6})
+            self:Notify({Title = "Theme", Content = "Switched to " .. themeName, Duration = 1.5})
         end
 
         for _, tName in ipairs({"Default", "Midnight", "Ember"}) do
             local b = Instance.new("TextButton")
-            b.Size = UDim2.new(1, 0, 0, 28)
+            b.Size = UDim2.new(1, 0, 0, 26)
             b.BackgroundColor3 = self.Theme.Accent
-            b.BackgroundTransparency = (tName == self.CurrentTheme) and 0.18 or 0.88
+            b.BackgroundTransparency = (tName == self.CurrentTheme) and 0 or 1
             b.Text = ""
             b.AutoButtonColor = false
             b.ZIndex = 41
             b.Parent = themePanel
-            corner(b, 7)
+            corner(b, 6)
 
             local lbl = Instance.new("TextLabel")
             lbl.Size = UDim2.new(1, 0, 1, 0)
@@ -623,12 +578,12 @@ function PhantomLib:CreateWindow(opts)
 
             b.MouseEnter:Connect(function()
                 if tName ~= self.CurrentTheme then
-                    tween(b, 0.11, {BackgroundTransparency = 0.72})
+                    tween(b, 0.1, {BackgroundTransparency = 0.7})
                 end
             end)
             b.MouseLeave:Connect(function()
                 if tName ~= self.CurrentTheme then
-                    tween(b, 0.11, {BackgroundTransparency = 0.88})
+                    tween(b, 0.1, {BackgroundTransparency = 1})
                 end
             end)
             b.MouseButton1Click:Connect(function()
@@ -640,11 +595,11 @@ function PhantomLib:CreateWindow(opts)
             themeOpen = not themeOpen
             if themeOpen then
                 themePanel.Visible = true
-                themePanel.Size = UDim2.fromOffset(142, 0)
-                spring(themePanel, 0.3, {Size = UDim2.fromOffset(142, 118)})
+                themePanel.Size = UDim2.fromOffset(130, 0)
+                spring(themePanel, 0.28, {Size = UDim2.fromOffset(130, 110)})
             else
-                tween(themePanel, 0.18, {Size = UDim2.fromOffset(142, 0)}, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
-                task.delay(0.2, function()
+                tween(themePanel, 0.16, {Size = UDim2.fromOffset(130, 0)}, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
+                task.delay(0.18, function()
                     if not themeOpen then themePanel.Visible = false end
                 end)
             end
@@ -657,11 +612,9 @@ function PhantomLib:CreateWindow(opts)
                     themeOpen = false
                     themePanel.Visible = false
                 end
-                tween(main, 0.26, {Size = UDim2.new(size.X.Scale, size.X.Offset, 0, 46)})
-                tween(glow, 0.22, {ImageTransparency = 1})
+                tween(main, 0.24, {Size = UDim2.new(size.X.Scale, size.X.Offset, 0, 42)})
             else
-                tween(main, 0.32, {Size = size}, Enum.EasingStyle.Back)
-                tween(glow, 0.3, {ImageTransparency = 0.90})
+                tween(main, 0.3, {Size = size}, Enum.EasingStyle.Back)
             end
         end)
 
@@ -691,50 +644,32 @@ function PhantomLib:CreateWindow(opts)
         end)
 
         -- Sidebar
-        local sidebarWidth = isMobile() and 108 or 126
+        local sidebarWidth = isMobile() and 100 or 118
         local sidebar = Instance.new("ScrollingFrame")
-        sidebar.Size = UDim2.new(0, sidebarWidth, 1, -46)
-        sidebar.Position = UDim2.new(0, 0, 0, 46)
+        sidebar.Size = UDim2.new(0, sidebarWidth, 1, -42)
+        sidebar.Position = UDim2.new(0, 0, 0, 42)
         sidebar.BackgroundColor3 = self.Theme.Surface
-        sidebar.BackgroundTransparency = self.Theme.GlassSoft - 0.04
         sidebar.BorderSizePixel = 0
         sidebar.ScrollBarThickness = 2
         sidebar.ScrollBarImageColor3 = self.Theme.Accent
-        sidebar.ScrollBarImageTransparency = 0.45
+        sidebar.ScrollBarImageTransparency = 0.4
         sidebar.CanvasSize = UDim2.new(0, 0, 0, 0)
         sidebar.Parent = main
 
         local sLayout = Instance.new("UIListLayout")
         sLayout.Padding = UDim.new(0, 3)
         sLayout.Parent = sidebar
-        padding(sidebar, 9, 7, 11, 7)
+        padding(sidebar, 8, 6, 10, 6)
 
         sLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-            sidebar.CanvasSize = UDim2.new(0, 0, 0, sLayout.AbsoluteContentSize.Y + 14)
+            sidebar.CanvasSize = UDim2.new(0, 0, 0, sLayout.AbsoluteContentSize.Y + 12)
         end)
 
         local container = Instance.new("Frame")
-        container.Size = UDim2.new(1, -sidebarWidth, 1, -46)
-        container.Position = UDim2.new(0, sidebarWidth, 0, 46)
+        container.Size = UDim2.new(1, -sidebarWidth, 1, -42)
+        container.Position = UDim2.new(0, sidebarWidth, 0, 42)
         container.BackgroundTransparency = 1
         container.Parent = main
-
-        -- Auto scale
-        local function updateScale()
-            local cam = workspace.CurrentCamera
-            if not cam then return end
-            local vp = cam.ViewportSize
-            local s
-            if isMobile() then
-                s = math.clamp(vp.X / 390, 0.88, 1.22)
-            else
-                s = math.clamp(math.min(vp.X, vp.Y) / 1080, 0.75, 1.3)
-            end
-            uiScale.Scale = s
-            self.Scale = s
-        end
-        updateScale()
-        workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(updateScale)
 
         self.ScreenName = screenName
         self.Screen = screen
@@ -743,12 +678,10 @@ function PhantomLib:CreateWindow(opts)
         self.Container = container
         self.Sidebar = sidebar
         self.TargetSize = size
-        self.Glow = glow
         self.MainStroke = mainStroke
-        self.UIScale = uiScale
 
-        task.delay(0.48, function()
-            self:Notify({Title = "PhantomLib", Content = "Ready", Duration = 1.8})
+        task.delay(0.4, function()
+            self:Notify({Title = "PhantomLib", Content = "Ready", Duration = 1.6})
         end)
 
         return self
@@ -769,15 +702,15 @@ end
 -- ─────────────────────────────────────────────
 function PhantomLib:Notify(cfg)
     cfg = cfg or {}
-    local dur = cfg.Duration or 2.8
+    local dur = cfg.Duration or 2.6
 
     local toast = Instance.new("Frame")
-    toast.Size = UDim2.new(0, 260, 0, 0)
+    toast.Size = UDim2.new(0, 250, 0, 0)
     toast.BackgroundColor3 = self.Theme.Elevated
     toast.BackgroundTransparency = 1
     toast.ClipsDescendants = true
     toast.Parent = self.NotifContainer
-    corner(toast, 11)
+    corner(toast, 9)
     local s = stroke(toast, self.Theme.Border, 1, 1)
 
     local bar = Instance.new("Frame")
@@ -788,8 +721,8 @@ function PhantomLib:Notify(cfg)
     corner(bar, 2)
 
     local t = Instance.new("TextLabel")
-    t.Size = UDim2.new(1, -20, 0, 17)
-    t.Position = UDim2.new(0, 13, 0, 9)
+    t.Size = UDim2.new(1, -18, 0, 16)
+    t.Position = UDim2.new(0, 12, 0, 8)
     t.BackgroundTransparency = 1
     t.Text = cfg.Title or "Notification"
     t.TextColor3 = self.Theme.Text
@@ -800,8 +733,8 @@ function PhantomLib:Notify(cfg)
     t.Parent = toast
 
     local d = Instance.new("TextLabel")
-    d.Size = UDim2.new(1, -20, 0, 16)
-    d.Position = UDim2.new(0, 13, 0, 28)
+    d.Size = UDim2.new(1, -18, 0, 15)
+    d.Position = UDim2.new(0, 12, 0, 26)
     d.BackgroundTransparency = 1
     d.Text = cfg.Content or ""
     d.TextColor3 = self.Theme.Muted
@@ -811,21 +744,21 @@ function PhantomLib:Notify(cfg)
     d.TextTransparency = 1
     d.Parent = toast
 
-    tween(toast, 0.34, {
-        Size = UDim2.new(0, 260, 0, 52),
-        BackgroundTransparency = self.Theme.GlassSoft
+    tween(toast, 0.3, {
+        Size = UDim2.new(0, 250, 0, 48),
+        BackgroundTransparency = 0
     }, Enum.EasingStyle.Back)
-    tween(s, 0.26, {Transparency = self.Theme.GlassBorder})
-    tween(t, 0.24, {TextTransparency = 0})
-    tween(d, 0.28, {TextTransparency = 0})
+    tween(s, 0.22, {Transparency = 0})
+    tween(t, 0.2, {TextTransparency = 0})
+    tween(d, 0.24, {TextTransparency = 0})
 
     task.delay(dur, function()
         if not toast or not toast.Parent then return end
-        tween(toast, 0.22, {BackgroundTransparency = 1, Size = UDim2.new(0, 260, 0, 0)})
-        tween(s, 0.16, {Transparency = 1})
-        tween(t, 0.16, {TextTransparency = 1})
-        tween(d, 0.16, {TextTransparency = 1})
-        task.wait(0.24)
+        tween(toast, 0.2, {BackgroundTransparency = 1, Size = UDim2.new(0, 250, 0, 0)})
+        tween(s, 0.14, {Transparency = 1})
+        tween(t, 0.14, {TextTransparency = 1})
+        tween(d, 0.14, {TextTransparency = 1})
+        task.wait(0.22)
         if toast then toast:Destroy() end
     end)
 end
@@ -889,16 +822,16 @@ function PhantomLib:CreateTab(name)
     local tab = {Name = name, Window = self}
 
     local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(1, 0, 0, isMobile() and 36 or 32)
-    btn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    btn.Size = UDim2.new(1, 0, 0, isMobile() and 34 or 30)
+    btn.BackgroundColor3 = self.Theme.Elevated
     btn.BackgroundTransparency = 1
     btn.Text = ""
     btn.AutoButtonColor = false
     btn.Parent = self.Sidebar
-    corner(btn, 8)
+    corner(btn, 7)
 
     local ind = Instance.new("Frame")
-    ind.Size = UDim2.new(0, 3, 0.52, 0)
+    ind.Size = UDim2.new(0, 3, 0.5, 0)
     ind.Position = UDim2.new(0, 0, 0.5, 0)
     ind.AnchorPoint = Vector2.new(0, 0.5)
     ind.BackgroundColor3 = self.Theme.Accent
@@ -908,8 +841,8 @@ function PhantomLib:CreateTab(name)
     corner(ind, 2)
 
     local lbl = Instance.new("TextLabel")
-    lbl.Size = UDim2.new(1, -16, 1, 0)
-    lbl.Position = UDim2.new(0, 12, 0, 0)
+    lbl.Size = UDim2.new(1, -14, 1, 0)
+    lbl.Position = UDim2.new(0, 11, 0, 0)
     lbl.BackgroundTransparency = 1
     lbl.Text = name
     lbl.TextColor3 = self.Theme.Muted
@@ -924,19 +857,19 @@ function PhantomLib:CreateTab(name)
     view.Visible = false
     view.ScrollBarThickness = 3
     view.ScrollBarImageColor3 = self.Theme.Accent
-    view.ScrollBarImageTransparency = 0.4
+    view.ScrollBarImageTransparency = 0.35
     view.BorderSizePixel = 0
     view.ClipsDescendants = true
     view.CanvasSize = UDim2.new(0, 0, 0, 0)
     view.Parent = self.Container
 
     local layout = Instance.new("UIListLayout")
-    layout.Padding = UDim.new(0, 7)
+    layout.Padding = UDim.new(0, 6)
     layout.Parent = view
-    padding(view, 11, 11, 14, 11)
+    padding(view, 10, 10, 12, 10)
 
     layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-        view.CanvasSize = UDim2.new(0, 0, 0, layout.AbsoluteContentSize.Y + 16)
+        view.CanvasSize = UDim2.new(0, 0, 0, layout.AbsoluteContentSize.Y + 14)
     end)
 
     tab.Button = btn
@@ -947,28 +880,28 @@ function PhantomLib:CreateTab(name)
     local function select()
         for _, t in ipairs(self.Tabs) do
             t.View.Visible = false
-            tween(t.Button, 0.16, {BackgroundTransparency = 1})
-            tween(t.Indicator, 0.16, {BackgroundTransparency = 1})
-            tween(t.Label, 0.16, {TextColor3 = self.Theme.Muted})
+            tween(t.Button, 0.14, {BackgroundTransparency = 1})
+            tween(t.Indicator, 0.14, {BackgroundTransparency = 1})
+            tween(t.Label, 0.14, {TextColor3 = self.Theme.Muted})
         end
         view.Visible = true
-        tween(btn, 0.18, {BackgroundTransparency = 0.86})
-        tween(ind, 0.18, {BackgroundTransparency = 0})
-        tween(lbl, 0.18, {TextColor3 = self.Theme.Text})
+        tween(btn, 0.16, {BackgroundTransparency = 0.3})
+        tween(ind, 0.16, {BackgroundTransparency = 0})
+        tween(lbl, 0.16, {TextColor3 = self.Theme.Text})
         self.ActiveTab = tab
     end
 
     btn.MouseButton1Click:Connect(select)
     btn.MouseEnter:Connect(function()
         if self.ActiveTab ~= tab then
-            tween(btn, 0.12, {BackgroundTransparency = 0.9})
-            tween(lbl, 0.12, {TextColor3 = self.Theme.Text})
+            tween(btn, 0.11, {BackgroundTransparency = 0.6})
+            tween(lbl, 0.11, {TextColor3 = self.Theme.Text})
         end
     end)
     btn.MouseLeave:Connect(function()
         if self.ActiveTab ~= tab then
-            tween(btn, 0.12, {BackgroundTransparency = 1})
-            tween(lbl, 0.12, {TextColor3 = self.Theme.Muted})
+            tween(btn, 0.11, {BackgroundTransparency = 1})
+            tween(lbl, 0.11, {TextColor3 = self.Theme.Muted})
         end
     end)
 
@@ -978,45 +911,26 @@ function PhantomLib:CreateTab(name)
     -- BUTTON
     function tab:CreateButton(cfg)
         cfg = cfg or {}
-        local h = isMobile() and 40 or 36
+        local h = isMobile() and 36 or 34
         local b = Instance.new("TextButton")
         b.Size = UDim2.new(1, 0, 0, h)
         b.BackgroundColor3 = self.Window.Theme.Button
-        b.BackgroundTransparency = self.Window.Theme.GlassSoft
         b.Text = cfg.Name or "Button"
         b.TextColor3 = self.Window.Theme.Text
         b.TextSize = 13
         b.Font = Enum.Font.GothamBold
         b.AutoButtonColor = false
         b.Parent = view
-        corner(b, 10)
-        local st = stroke(b, self.Window.Theme.Border, 1, self.Window.Theme.GlassBorder)
-
-        b.BackgroundTransparency = 1
-        b.TextTransparency = 1
-        tween(b, 0.28, {BackgroundTransparency = self.Window.Theme.GlassSoft, TextTransparency = 0})
+        corner(b, 8)
+        local st = stroke(b, self.Window.Theme.Border, 1)
 
         b.MouseEnter:Connect(function()
-            tween(b, 0.14, {
-                BackgroundTransparency = 0.12,
-                BackgroundColor3 = self.Window.Theme.Accent
-            })
-            tween(st, 0.14, {Transparency = 0.6, Color = self.Window.Theme.AccentHover})
-            spring(b, 0.18, {Size = UDim2.new(1, 0, 0, h + 1)})
+            tween(b, 0.13, {BackgroundColor3 = self.Window.Theme.Accent})
+            tween(st, 0.13, {Color = self.Window.Theme.AccentHover})
         end)
         b.MouseLeave:Connect(function()
-            tween(b, 0.16, {
-                BackgroundTransparency = self.Window.Theme.GlassSoft,
-                BackgroundColor3 = self.Window.Theme.Button,
-                Size = UDim2.new(1, 0, 0, h)
-            })
-            tween(st, 0.16, {Transparency = self.Window.Theme.GlassBorder, Color = self.Window.Theme.Border})
-        end)
-        b.MouseButton1Down:Connect(function()
-            tween(b, 0.06, {Size = UDim2.new(1, 0, 0, h - 2)})
-        end)
-        b.MouseButton1Up:Connect(function()
-            spring(b, 0.16, {Size = UDim2.new(1, 0, 0, h + 1)})
+            tween(b, 0.13, {BackgroundColor3 = self.Window.Theme.Button})
+            tween(st, 0.13, {Color = self.Window.Theme.Border})
         end)
         b.MouseButton1Click:Connect(function()
             if cfg.Callback then pcall(cfg.Callback) end
@@ -1027,19 +941,18 @@ function PhantomLib:CreateTab(name)
     function tab:CreateToggle(cfg)
         cfg = cfg or {}
         local state = cfg.CurrentValue or false
-        local h = isMobile() and 40 or 36
+        local h = isMobile() and 36 or 34
 
         local frame = Instance.new("Frame")
         frame.Size = UDim2.new(1, 0, 0, h)
         frame.BackgroundColor3 = self.Window.Theme.Elevated
-        frame.BackgroundTransparency = self.Window.Theme.GlassSoft
         frame.Parent = view
-        corner(frame, 10)
-        stroke(frame, self.Window.Theme.Border, 1, self.Window.Theme.GlassBorder)
+        corner(frame, 8)
+        stroke(frame, self.Window.Theme.Border, 1)
 
         local label = Instance.new("TextLabel")
-        label.Size = UDim2.new(1, -58, 1, 0)
-        label.Position = UDim2.new(0, 13, 0, 0)
+        label.Size = UDim2.new(1, -54, 1, 0)
+        label.Position = UDim2.new(0, 12, 0, 0)
         label.BackgroundTransparency = 1
         label.Text = cfg.Name or "Toggle"
         label.TextColor3 = self.Window.Theme.Text
@@ -1049,16 +962,15 @@ function PhantomLib:CreateTab(name)
         label.Parent = frame
 
         local track = Instance.new("Frame")
-        track.Size = UDim2.fromOffset(40, 22)
-        track.Position = UDim2.new(1, -50, 0.5, -11)
-        track.BackgroundColor3 = state and self.Window.Theme.Accent or Color3.fromRGB(255, 255, 255)
-        track.BackgroundTransparency = state and 0.12 or 0.9
+        track.Size = UDim2.fromOffset(38, 20)
+        track.Position = UDim2.new(1, -48, 0.5, -10)
+        track.BackgroundColor3 = state and self.Window.Theme.Accent or Color3.fromRGB(50, 50, 65)
         track.Parent = frame
-        corner(track, 11)
+        corner(track, 10)
 
         local knob = Instance.new("Frame")
         knob.Size = UDim2.fromOffset(16, 16)
-        knob.Position = state and UDim2.new(1, -19, 0.5, -8) or UDim2.new(0, 3, 0.5, -8)
+        knob.Position = state and UDim2.new(1, -18, 0.5, -8) or UDim2.new(0, 2, 0.5, -8)
         knob.BackgroundColor3 = Color3.new(1, 1, 1)
         knob.Parent = track
         corner(knob, 8)
@@ -1072,12 +984,9 @@ function PhantomLib:CreateTab(name)
         local obj = {}
         local function update(v)
             state = v
-            tween(track, 0.2, {
-                BackgroundColor3 = state and self.Window.Theme.Accent or Color3.fromRGB(255, 255, 255),
-                BackgroundTransparency = state and 0.12 or 0.9
-            })
-            spring(knob, 0.26, {
-                Position = state and UDim2.new(1, -19, 0.5, -8) or UDim2.new(0, 3, 0.5, -8)
+            tween(track, 0.18, {BackgroundColor3 = state and self.Window.Theme.Accent or Color3.fromRGB(50, 50, 65)})
+            spring(knob, 0.22, {
+                Position = state and UDim2.new(1, -18, 0.5, -8) or UDim2.new(0, 2, 0.5, -8)
             })
             if cfg.Flag then self.Window.Flags[cfg.Flag] = state end
             if cfg.Callback then pcall(cfg.Callback, state) end
@@ -1114,16 +1023,15 @@ function PhantomLib:CreateTab(name)
         local val = snap(cfg.CurrentValue or min)
 
         local frame = Instance.new("Frame")
-        frame.Size = UDim2.new(1, 0, 0, 52)
+        frame.Size = UDim2.new(1, 0, 0, 48)
         frame.BackgroundColor3 = self.Window.Theme.Elevated
-        frame.BackgroundTransparency = self.Window.Theme.GlassSoft
         frame.Parent = view
-        corner(frame, 10)
-        stroke(frame, self.Window.Theme.Border, 1, self.Window.Theme.GlassBorder)
+        corner(frame, 8)
+        stroke(frame, self.Window.Theme.Border, 1)
 
         local title = Instance.new("TextLabel")
-        title.Size = UDim2.new(0.62, 0, 0, 16)
-        title.Position = UDim2.new(0, 13, 0, 9)
+        title.Size = UDim2.new(0.6, 0, 0, 16)
+        title.Position = UDim2.new(0, 12, 0, 8)
         title.BackgroundTransparency = 1
         title.Text = cfg.Name or "Slider"
         title.TextColor3 = self.Window.Theme.Text
@@ -1133,8 +1041,8 @@ function PhantomLib:CreateTab(name)
         title.Parent = frame
 
         local valLbl = Instance.new("TextLabel")
-        valLbl.Size = UDim2.new(0.38, -13, 0, 16)
-        valLbl.Position = UDim2.new(0.62, 0, 0, 9)
+        valLbl.Size = UDim2.new(0.4, -12, 0, 16)
+        valLbl.Position = UDim2.new(0.6, 0, 0, 8)
         valLbl.BackgroundTransparency = 1
         valLbl.TextColor3 = self.Window.Theme.Accent
         valLbl.TextSize = 13
@@ -1149,30 +1057,28 @@ function PhantomLib:CreateTab(name)
         valLbl.Text = formatValue(val) .. (cfg.Suffix or "")
 
         local track = Instance.new("Frame")
-        track.Size = UDim2.new(1, -26, 0, 5)
-        track.Position = UDim2.new(0, 13, 0, 35)
-        track.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        track.BackgroundTransparency = 0.9
+        track.Size = UDim2.new(1, -24, 0, 4)
+        track.Position = UDim2.new(0, 12, 0, 32)
+        track.BackgroundColor3 = Color3.fromRGB(50, 50, 65)
         track.Parent = frame
-        corner(track, 3)
+        corner(track, 2)
 
         local fill = Instance.new("Frame")
         fill.Size = UDim2.new((val - min) / range, 0, 1, 0)
         fill.BackgroundColor3 = self.Window.Theme.Accent
-        fill.BackgroundTransparency = 0.08
         fill.Parent = track
-        corner(fill, 3)
+        corner(fill, 2)
 
         local handle = Instance.new("Frame")
-        handle.Size = UDim2.fromOffset(14, 14)
-        handle.Position = UDim2.new((val - min) / range, -7, 0.5, -7)
+        handle.Size = UDim2.fromOffset(12, 12)
+        handle.Position = UDim2.new((val - min) / range, -6, 0.5, -6)
         handle.BackgroundColor3 = Color3.new(1, 1, 1)
         handle.Parent = track
-        corner(handle, 7)
-        stroke(handle, self.Window.Theme.Accent, 1.4, 0.25)
+        corner(handle, 6)
+        stroke(handle, self.Window.Theme.Accent, 1.2)
 
         local trigger = Instance.new("TextButton")
-        trigger.Size = UDim2.new(1, 0, 1, 18)
+        trigger.Size = UDim2.new(1, 0, 1, 16)
         trigger.Position = UDim2.new(0, 0, 0, -6)
         trigger.BackgroundTransparency = 1
         trigger.Text = ""
@@ -1184,7 +1090,7 @@ function PhantomLib:CreateTab(name)
             val = snap(min + range * pct)
             valLbl.Text = formatValue(val) .. (cfg.Suffix or "")
             tween(fill, 0.05, {Size = UDim2.new((val - min) / range, 0, 1, 0)})
-            tween(handle, 0.05, {Position = UDim2.new((val - min) / range, -7, 0.5, -7)})
+            tween(handle, 0.05, {Position = UDim2.new((val - min) / range, -6, 0.5, -6)})
             if cfg.Flag then self.Window.Flags[cfg.Flag] = val end
             if cfg.Callback then pcall(cfg.Callback, val) end
         end
@@ -1193,13 +1099,11 @@ function PhantomLib:CreateTab(name)
             if inp.UserInputType == Enum.UserInputType.MouseButton1 or inp.UserInputType == Enum.UserInputType.Touch then
                 drag = true
                 update(inp)
-                spring(handle, 0.16, {Size = UDim2.fromOffset(16, 16)})
             end
         end)
         UIS.InputEnded:Connect(function(inp)
             if inp.UserInputType == Enum.UserInputType.MouseButton1 or inp.UserInputType == Enum.UserInputType.Touch then
                 drag = false
-                spring(handle, 0.16, {Size = UDim2.fromOffset(14, 14)})
             end
         end)
         UIS.InputChanged:Connect(function(inp)
@@ -1214,19 +1118,18 @@ function PhantomLib:CreateTab(name)
     -- INPUT
     function tab:CreateInput(cfg)
         cfg = cfg or {}
-        local h = isMobile() and 40 or 36
+        local h = isMobile() and 36 or 34
 
         local frame = Instance.new("Frame")
         frame.Size = UDim2.new(1, 0, 0, h)
         frame.BackgroundColor3 = self.Window.Theme.Elevated
-        frame.BackgroundTransparency = self.Window.Theme.GlassSoft
         frame.Parent = view
-        corner(frame, 10)
-        stroke(frame, self.Window.Theme.Border, 1, self.Window.Theme.GlassBorder)
+        corner(frame, 8)
+        stroke(frame, self.Window.Theme.Border, 1)
 
         local label = Instance.new("TextLabel")
-        label.Size = UDim2.new(0.36, 0, 1, 0)
-        label.Position = UDim2.new(0, 13, 0, 0)
+        label.Size = UDim2.new(0.35, 0, 1, 0)
+        label.Position = UDim2.new(0, 12, 0, 0)
         label.BackgroundTransparency = 1
         label.Text = cfg.Name or "Input"
         label.TextColor3 = self.Window.Theme.Text
@@ -1236,16 +1139,15 @@ function PhantomLib:CreateTab(name)
         label.Parent = frame
 
         local box = Instance.new("Frame")
-        box.Size = UDim2.new(0.6, -12, 0, 26)
-        box.Position = UDim2.new(0.4, 0, 0.5, -13)
-        box.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        box.BackgroundTransparency = 0.92
+        box.Size = UDim2.new(0.6, -10, 0, 24)
+        box.Position = UDim2.new(0.4, 0, 0.5, -12)
+        box.BackgroundColor3 = self.Window.Theme.Background
         box.Parent = frame
-        corner(box, 7)
+        corner(box, 6)
 
         local input = Instance.new("TextBox")
-        input.Size = UDim2.new(1, -12, 1, 0)
-        input.Position = UDim2.new(0, 7, 0, 0)
+        input.Size = UDim2.new(1, -10, 1, 0)
+        input.Position = UDim2.new(0, 6, 0, 0)
         input.BackgroundTransparency = 1
         input.Text = cfg.CurrentValue or ""
         input.PlaceholderText = cfg.PlaceholderText or "Type here..."
@@ -1257,11 +1159,7 @@ function PhantomLib:CreateTab(name)
         input.ClearTextOnFocus = false
         input.Parent = box
 
-        input.Focused:Connect(function()
-            tween(box, 0.14, {BackgroundTransparency = 0.84})
-        end)
         input.FocusLost:Connect(function()
-            tween(box, 0.14, {BackgroundTransparency = 0.92})
             if cfg.Flag then self.Window.Flags[cfg.Flag] = input.Text end
             if cfg.Callback then pcall(cfg.Callback, input.Text) end
         end)
@@ -1272,20 +1170,19 @@ function PhantomLib:CreateTab(name)
         cfg = cfg or {}
         local col = cfg.Color or Color3.fromRGB(255, 255, 255)
         local open = false
-        local h = isMobile() and 40 or 36
+        local h = isMobile() and 36 or 34
 
         local frame = Instance.new("Frame")
         frame.Size = UDim2.new(1, 0, 0, h)
         frame.BackgroundColor3 = self.Window.Theme.Elevated
-        frame.BackgroundTransparency = self.Window.Theme.GlassSoft
         frame.ClipsDescendants = true
         frame.Parent = view
-        corner(frame, 10)
-        stroke(frame, self.Window.Theme.Border, 1, self.Window.Theme.GlassBorder)
+        corner(frame, 8)
+        stroke(frame, self.Window.Theme.Border, 1)
 
         local title = Instance.new("TextLabel")
-        title.Size = UDim2.new(1, -52, 0, h)
-        title.Position = UDim2.new(0, 13, 0, 0)
+        title.Size = UDim2.new(1, -48, 0, h)
+        title.Position = UDim2.new(0, 12, 0, 0)
         title.BackgroundTransparency = 1
         title.Text = cfg.Name or "Color"
         title.TextColor3 = self.Window.Theme.Text
@@ -1295,21 +1192,21 @@ function PhantomLib:CreateTab(name)
         title.Parent = frame
 
         local preview = Instance.new("TextButton")
-        preview.Size = UDim2.fromOffset(24, 18)
-        preview.Position = UDim2.new(1, -40, 0, (h - 18) / 2)
+        preview.Size = UDim2.fromOffset(22, 16)
+        preview.Position = UDim2.new(1, -36, 0, (h - 16) / 2)
         preview.BackgroundColor3 = col
         preview.Text = ""
         preview.AutoButtonColor = false
         preview.Parent = frame
-        corner(preview, 5)
-        stroke(preview, Color3.new(1, 1, 1), 1, 0.65)
+        corner(preview, 4)
+        stroke(preview, Color3.new(1, 1, 1), 1, 0.5)
 
         local hue = Instance.new("Frame")
-        hue.Size = UDim2.new(1, -26, 0, 14)
-        hue.Position = UDim2.new(0, 13, 0, h + 7)
+        hue.Size = UDim2.new(1, -24, 0, 12)
+        hue.Position = UDim2.new(0, 12, 0, h + 6)
         hue.BackgroundColor3 = Color3.new(1, 1, 1)
         hue.Parent = frame
-        corner(hue, 5)
+        corner(hue, 4)
 
         local grad = Instance.new("UIGradient")
         grad.Color = ColorSequence.new({
@@ -1357,23 +1254,23 @@ function PhantomLib:CreateTab(name)
 
         preview.MouseButton1Click:Connect(function()
             open = not open
-            spring(frame, 0.26, {Size = UDim2.new(1, 0, 0, open and (h + 32) or h)})
+            spring(frame, 0.22, {Size = UDim2.new(1, 0, 0, open and (h + 28) or h)})
         end)
 
         if cfg.Flag then self.Window.Flags[cfg.Flag] = col end
     end
 
-    -- DROPDOWNS (compact + modern)
+    -- DROPDOWNS (compact)
     local function createDropdownBase(cfg, isMulti)
         cfg = cfg or {}
         local options = cfg.Options or {}
         local selected = {}
         local singleValue = cfg.CurrentValue or options[1] or ""
         local isOpen = false
-        local maxVisible = cfg.MaxVisible or (isMobile() and 5 or 6)
-        local itemHeight = isMobile() and 30 or 27
-        local baseH = isMobile() and 40 or 36
-        local maxOpenHeight = 148
+        local maxVisible = cfg.MaxVisible or 5
+        local itemHeight = 26
+        local baseH = isMobile() and 36 or 34
+        local maxOpenHeight = 140
 
         if isMulti and cfg.CurrentOptions then
             for _, v in ipairs(cfg.CurrentOptions) do
@@ -1384,15 +1281,14 @@ function PhantomLib:CreateTab(name)
         local frame = Instance.new("Frame")
         frame.Size = UDim2.new(1, 0, 0, baseH)
         frame.BackgroundColor3 = self.Window.Theme.Elevated
-        frame.BackgroundTransparency = self.Window.Theme.GlassSoft
         frame.ClipsDescendants = true
         frame.Parent = view
-        corner(frame, 10)
-        stroke(frame, self.Window.Theme.Border, 1, self.Window.Theme.GlassBorder)
+        corner(frame, 8)
+        stroke(frame, self.Window.Theme.Border, 1)
 
         local title = Instance.new("TextLabel")
-        title.Size = UDim2.new(1, -36, 0, baseH)
-        title.Position = UDim2.new(0, 13, 0, 0)
+        title.Size = UDim2.new(1, -32, 0, baseH)
+        title.Position = UDim2.new(0, 12, 0, 0)
         title.BackgroundTransparency = 1
         title.Text = cfg.Name or (isMulti and "Multi Select" or "Select")
         title.TextColor3 = self.Window.Theme.Muted
@@ -1405,8 +1301,8 @@ function PhantomLib:CreateTab(name)
         local valueLbl
         if not isMulti then
             valueLbl = Instance.new("TextLabel")
-            valueLbl.Size = UDim2.new(0.42, -32, 1, 0)
-            valueLbl.Position = UDim2.new(0.58, 0, 0, 0)
+            valueLbl.Size = UDim2.new(0.4, -28, 1, 0)
+            valueLbl.Position = UDim2.new(0.6, 0, 0, 0)
             valueLbl.BackgroundTransparency = 1
             valueLbl.Text = tostring(singleValue)
             valueLbl.TextColor3 = self.Window.Theme.Text
@@ -1417,8 +1313,8 @@ function PhantomLib:CreateTab(name)
         end
 
         local arrow = Instance.new("TextLabel")
-        arrow.Size = UDim2.fromOffset(20, baseH)
-        arrow.Position = UDim2.new(1, -26, 0, 0)
+        arrow.Size = UDim2.fromOffset(18, baseH)
+        arrow.Position = UDim2.new(1, -24, 0, 0)
         arrow.BackgroundTransparency = 1
         arrow.Text = "▼"
         arrow.TextColor3 = self.Window.Theme.Muted
@@ -1434,8 +1330,8 @@ function PhantomLib:CreateTab(name)
         trigger.Parent = frame
 
         local content = Instance.new("Frame")
-        content.Size = UDim2.new(1, -10, 0, 0)
-        content.Position = UDim2.new(0, 5, 0, baseH + 3)
+        content.Size = UDim2.new(1, -8, 0, 0)
+        content.Position = UDim2.new(0, 4, 0, baseH + 2)
         content.BackgroundTransparency = 1
         content.ClipsDescendants = true
         content.Visible = false
@@ -1443,16 +1339,14 @@ function PhantomLib:CreateTab(name)
         content.Parent = frame
 
         local searchBox = Instance.new("Frame")
-        searchBox.Size = UDim2.new(1, 0, 0, 26)
-        searchBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        searchBox.BackgroundTransparency = 0.92
+        searchBox.Size = UDim2.new(1, 0, 0, 24)
+        searchBox.BackgroundColor3 = self.Window.Theme.Background
         searchBox.Parent = content
-        corner(searchBox, 7)
-        stroke(searchBox, self.Window.Theme.Border, 1, 0.88)
+        corner(searchBox, 6)
 
         local searchInput = Instance.new("TextBox")
-        searchInput.Size = UDim2.new(1, -24, 1, 0)
-        searchInput.Position = UDim2.new(0, 10, 0, 0)
+        searchInput.Size = UDim2.new(1, -16, 1, 0)
+        searchInput.Position = UDim2.new(0, 8, 0, 0)
         searchInput.BackgroundTransparency = 1
         searchInput.PlaceholderText = "Search..."
         searchInput.PlaceholderColor3 = self.Window.Theme.Muted
@@ -1465,9 +1359,8 @@ function PhantomLib:CreateTab(name)
 
         local list = Instance.new("ScrollingFrame")
         list.Size = UDim2.new(1, 0, 0, 0)
-        list.Position = UDim2.new(0, 0, 0, 30)
-        list.BackgroundColor3 = self.Window.Theme.Surface
-        list.BackgroundTransparency = 0.12
+        list.Position = UDim2.new(0, 0, 0, 28)
+        list.BackgroundColor3 = self.Window.Theme.Background
         list.BorderSizePixel = 0
         list.ScrollBarThickness = 3
         list.ScrollBarImageColor3 = self.Window.Theme.Accent
@@ -1475,7 +1368,7 @@ function PhantomLib:CreateTab(name)
         list.ClipsDescendants = true
         list.ZIndex = 6
         list.Parent = content
-        corner(list, 7)
+        corner(list, 6)
 
         local listLayout = Instance.new("UIListLayout")
         listLayout.SortOrder = Enum.SortOrder.LayoutOrder
@@ -1519,9 +1412,9 @@ function PhantomLib:CreateTab(name)
 
         local function updateDropdownHeight(count)
             local visibleCount = math.min(count or #filteredOptions, maxVisible)
-            local searchH = 30
+            local searchH = 28
             local listH = math.min(visibleCount * (itemHeight + 2) + 6, maxOpenHeight - searchH)
-            content.Size = UDim2.new(1, -10, 0, searchH + listH)
+            content.Size = UDim2.new(1, -8, 0, searchH + listH)
             list.Size = UDim2.new(1, 0, 0, listH)
         end
 
@@ -1545,18 +1438,18 @@ function PhantomLib:CreateTab(name)
                 local isSel = isMulti and selected[opt] or (opt == singleValue)
                 local b = Instance.new("TextButton")
                 b.Size = UDim2.new(1, 0, 0, itemHeight)
-                b.BackgroundColor3 = isSel and self.Window.Theme.Accent or Color3.fromRGB(255, 255, 255)
-                b.BackgroundTransparency = isSel and 0.22 or 0.9
+                b.BackgroundColor3 = isSel and self.Window.Theme.Accent or self.Window.Theme.Elevated
+                b.BackgroundTransparency = isSel and 0.15 or 0
                 b.Text = ""
                 b.AutoButtonColor = false
                 b.LayoutOrder = i
                 b.ZIndex = 7
                 b.Parent = list
-                corner(b, 6)
+                corner(b, 5)
 
                 local lbl = Instance.new("TextLabel")
-                lbl.Size = UDim2.new(1, -28, 1, 0)
-                lbl.Position = UDim2.new(0, 9, 0, 0)
+                lbl.Size = UDim2.new(1, -26, 1, 0)
+                lbl.Position = UDim2.new(0, 8, 0, 0)
                 lbl.BackgroundTransparency = 1
                 lbl.Text = tostring(opt)
                 lbl.TextColor3 = self.Window.Theme.Text
@@ -1568,20 +1461,20 @@ function PhantomLib:CreateTab(name)
 
                 local check = Instance.new("TextLabel")
                 check.Size = UDim2.fromOffset(16, 16)
-                check.Position = UDim2.new(1, -22, 0.5, -8)
+                check.Position = UDim2.new(1, -20, 0.5, -8)
                 check.BackgroundTransparency = 1
                 check.Text = isSel and "✓" or ""
                 check.TextColor3 = self.Window.Theme.Accent
-                check.TextSize = 13
+                check.TextSize = 12
                 check.Font = Enum.Font.GothamBold
                 check.ZIndex = 8
                 check.Parent = b
 
                 b.MouseEnter:Connect(function()
-                    if not isSel then tween(b, 0.1, {BackgroundTransparency = 0.78}) end
+                    if not isSel then tween(b, 0.1, {BackgroundColor3 = Color3.fromRGB(45, 45, 58)}) end
                 end)
                 b.MouseLeave:Connect(function()
-                    if not isSel then tween(b, 0.1, {BackgroundTransparency = 0.9}) end
+                    if not isSel then tween(b, 0.1, {BackgroundColor3 = self.Window.Theme.Elevated}) end
                 end)
 
                 b.MouseButton1Click:Connect(function()
@@ -1589,8 +1482,8 @@ function PhantomLib:CreateTab(name)
                         selected[opt] = not selected[opt]
                         local now = selected[opt]
                         tween(b, 0.12, {
-                            BackgroundColor3 = now and self.Window.Theme.Accent or Color3.fromRGB(255, 255, 255),
-                            BackgroundTransparency = now and 0.22 or 0.9
+                            BackgroundColor3 = now and self.Window.Theme.Accent or self.Window.Theme.Elevated,
+                            BackgroundTransparency = now and 0.15 or 0
                         })
                         check.Text = now and "✓" or ""
                         updateTitle()
@@ -1619,21 +1512,21 @@ function PhantomLib:CreateTab(name)
             if isOpen then
                 buildOptions("")
                 content.Visible = true
-                content.Size = UDim2.new(1, -10, 0, 0)
-                local targetH = math.min(maxOpenHeight, 30 + (math.min(#filteredOptions, maxVisible) * (itemHeight + 2) + 6))
-                spring(content, 0.24, {Size = UDim2.new(1, -10, 0, targetH)})
-                tween(arrow, 0.16, {Rotation = 180})
-                spring(frame, 0.24, {Size = UDim2.new(1, 0, 0, baseH + 5 + targetH)})
-                task.wait(0.05)
+                content.Size = UDim2.new(1, -8, 0, 0)
+                local targetH = math.min(maxOpenHeight, 28 + (math.min(#filteredOptions, maxVisible) * (itemHeight + 2) + 6))
+                spring(content, 0.22, {Size = UDim2.new(1, -8, 0, targetH)})
+                tween(arrow, 0.14, {Rotation = 180})
+                spring(frame, 0.22, {Size = UDim2.new(1, 0, 0, baseH + 4 + targetH)})
+                task.wait(0.04)
                 searchInput:CaptureFocus()
             else
-                spring(frame, 0.2, {Size = UDim2.new(1, 0, 0, baseH)})
-                tween(arrow, 0.16, {Rotation = 0})
-                tween(content, 0.16, {Size = UDim2.new(1, -10, 0, 0)}, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
-                task.delay(0.18, function()
+                spring(frame, 0.18, {Size = UDim2.new(1, 0, 0, baseH)})
+                tween(arrow, 0.14, {Rotation = 0})
+                tween(content, 0.14, {Size = UDim2.new(1, -8, 0, 0)}, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
+                task.delay(0.16, function()
                     if not isOpen then
                         content.Visible = false
-                        content.Size = UDim2.new(1, -10, 0, 0)
+                        content.Size = UDim2.new(1, -8, 0, 0)
                     end
                 end)
             end
@@ -1734,30 +1627,28 @@ end
 function PhantomLib:Destroy()
     if not self.Screen or not self.Main then return end
     local main = self.Main
-    local glow = self.Glow
     local stroke = self.MainStroke
 
     local scale = Instance.new("UIScale")
     scale.Scale = 1
     scale.Parent = main
 
-    if glow then tween(glow, 0.18, {ImageTransparency = 1}) end
-    if stroke then tween(stroke, 0.16, {Transparency = 1}) end
+    if stroke then tween(stroke, 0.14, {Transparency = 1}) end
 
-    tween(scale, 0.24, {Scale = 0.93}, Enum.EasingStyle.Back, Enum.EasingDirection.In)
-    tween(main, 0.24, {
-        BackgroundTransparency = 0.55,
-        Position = UDim2.new(main.Position.X.Scale, main.Position.X.Offset + 14, main.Position.Y.Scale, main.Position.Y.Offset - 10)
+    tween(scale, 0.2, {Scale = 0.94}, Enum.EasingStyle.Back, Enum.EasingDirection.In)
+    tween(main, 0.2, {
+        BackgroundTransparency = 0.4,
+        Position = UDim2.new(main.Position.X.Scale, main.Position.X.Offset + 12, main.Position.Y.Scale, main.Position.Y.Offset - 8)
     }, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
 
-    task.wait(0.15)
-    tween(scale, 0.18, {Scale = 0}, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
-    tween(main, 0.18, {
+    task.wait(0.14)
+    tween(scale, 0.16, {Scale = 0}, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
+    tween(main, 0.16, {
         BackgroundTransparency = 1,
-        Position = UDim2.new(main.Position.X.Scale, main.Position.X.Offset + 26, main.Position.Y.Scale, main.Position.Y.Offset - 20)
+        Position = UDim2.new(main.Position.X.Scale, main.Position.X.Offset + 22, main.Position.Y.Scale, main.Position.Y.Offset - 16)
     }, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
 
-    task.wait(0.2)
+    task.wait(0.18)
     if self.Screen then self.Screen:Destroy() end
 end
 
