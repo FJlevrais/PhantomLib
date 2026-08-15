@@ -1,6 +1,6 @@
 --[[
-    PhantomLib v3.2 — Wind Edition
-    Modern dark glass UI inspired by WindUI
+    PhantomLib v2 — Smooth Edition (WindUI-inspired)
+    Enhanced with Search, Multi-Select with Search, and Select Dropdowns
 ]]
 
 local PhantomLib = {}
@@ -15,61 +15,63 @@ local TeleportService = game:GetService("TeleportService")
 local HttpService = game:GetService("HttpService")
 local LP = Players.LocalPlayer
 
--- ─────────────────────────────────────────────
--- THEMES
--- ─────────────────────────────────────────────
 PhantomLib.Themes = {
     Default = {
-        Background   = Color3.fromRGB(13, 13, 17),
-        Surface      = Color3.fromRGB(18, 18, 24),
-        Elevated     = Color3.fromRGB(24, 24, 32),
-        Button       = Color3.fromRGB(30, 30, 40),
-        Accent       = Color3.fromRGB(114, 120, 255),
-        AccentHover  = Color3.fromRGB(140, 146, 255),
-        Text         = Color3.fromRGB(245, 246, 252),
-        Muted        = Color3.fromRGB(140, 144, 165),
-        Border       = Color3.fromRGB(255, 255, 255),
-        Success      = Color3.fromRGB(52, 211, 153),
-        Danger       = Color3.fromRGB(248, 113, 113),
-        Warning      = Color3.fromRGB(251, 191, 36),
-        Glass        = 0.18,
-        GlassSoft    = 0.32,
-        GlassBorder  = 0.84,
+        Background = Color3.fromRGB(16, 16, 22),
+        Sidebar = Color3.fromRGB(12, 12, 17),
+        Card = Color3.fromRGB(24, 24, 32),
+        Button = Color3.fromRGB(32, 34, 48),
+        Accent = Color3.fromRGB(105, 110, 255),
+        Accent2 = Color3.fromRGB(155, 100, 255),
+        Text = Color3.fromRGB(245, 246, 255),
+        Muted = Color3.fromRGB(130, 134, 160),
+        Border = Color3.fromRGB(48, 52, 75),
+        Success = Color3.fromRGB(52, 211, 153),
+        Danger = Color3.fromRGB(248, 113, 113),
+        Glass = 0.12
     },
-    Midnight = {
-        Background   = Color3.fromRGB(8, 10, 16),
-        Surface      = Color3.fromRGB(13, 16, 24),
-        Elevated     = Color3.fromRGB(19, 23, 34),
-        Button       = Color3.fromRGB(26, 32, 46),
-        Accent       = Color3.fromRGB(56, 189, 248),
-        AccentHover  = Color3.fromRGB(125, 211, 252),
-        Text         = Color3.fromRGB(240, 249, 255),
-        Muted        = Color3.fromRGB(100, 116, 145),
-        Border       = Color3.fromRGB(255, 255, 255),
-        Success      = Color3.fromRGB(34, 197, 94),
-        Danger       = Color3.fromRGB(248, 113, 113),
-        Warning      = Color3.fromRGB(251, 191, 36),
-        Glass        = 0.20,
-        GlassSoft    = 0.36,
-        GlassBorder  = 0.85,
+    Light = {
+        Background = Color3.fromRGB(248, 249, 253),
+        Sidebar = Color3.fromRGB(238, 240, 246),
+        Card = Color3.fromRGB(255, 255, 255),
+        Button = Color3.fromRGB(240, 242, 250),
+        Accent = Color3.fromRGB(79, 70, 229),
+        Accent2 = Color3.fromRGB(124, 58, 237),
+        Text = Color3.fromRGB(15, 15, 28),
+        Muted = Color3.fromRGB(95, 100, 125),
+        Border = Color3.fromRGB(210, 214, 230),
+        Success = Color3.fromRGB(16, 185, 129),
+        Danger = Color3.fromRGB(239, 68, 68),
+        Glass = 0.08
     },
-    Ember = {
-        Background   = Color3.fromRGB(14, 11, 13),
-        Surface      = Color3.fromRGB(21, 16, 18),
-        Elevated     = Color3.fromRGB(30, 22, 26),
-        Button       = Color3.fromRGB(40, 28, 34),
-        Accent       = Color3.fromRGB(251, 113, 133),
-        AccentHover  = Color3.fromRGB(253, 164, 175),
-        Text         = Color3.fromRGB(255, 247, 248),
-        Muted        = Color3.fromRGB(170, 145, 152),
-        Border       = Color3.fromRGB(255, 255, 255),
-        Success      = Color3.fromRGB(52, 211, 153),
-        Danger       = Color3.fromRGB(248, 113, 113),
-        Warning      = Color3.fromRGB(251, 191, 36),
-        Glass        = 0.19,
-        GlassSoft    = 0.34,
-        GlassBorder  = 0.84,
+    Cyber = {
+        Background = Color3.fromRGB(6, 6, 14),
+        Sidebar = Color3.fromRGB(4, 4, 11),
+        Card = Color3.fromRGB(14, 14, 28),
+        Button = Color3.fromRGB(28, 20, 48),
+        Accent = Color3.fromRGB(255, 20, 147),
+        Accent2 = Color3.fromRGB(0, 255, 255),
+        Text = Color3.fromRGB(0, 255, 255),
+        Muted = Color3.fromRGB(110, 120, 170),
+        Border = Color3.fromRGB(90, 40, 140),
+        Success = Color3.fromRGB(0, 255, 180),
+        Danger = Color3.fromRGB(255, 50, 100),
+        Glass = 0.15
     },
+    Ocean = {
+        Background = Color3.fromRGB(7, 12, 22),
+        Sidebar = Color3.fromRGB(4, 9, 16),
+        Card = Color3.fromRGB(14, 22, 38),
+        Button = Color3.fromRGB(22, 40, 68),
+        Accent = Color3.fromRGB(6, 182, 212),
+        Accent2 = Color3.fromRGB(34, 211, 238),
+        Text = Color3.fromRGB(224, 242, 254),
+        Muted = Color3.fromRGB(100, 145, 175),
+        Border = Color3.fromRGB(35, 70, 115),
+        Success = Color3.fromRGB(45, 212, 191),
+        Danger = Color3.fromRGB(251, 113, 133),
+        Glass = 0.12
+    }
 }
 
 getgenv()._PhantomLib_Instances = getgenv()._PhantomLib_Instances or {}
@@ -93,7 +95,7 @@ end
 
 local function corner(parent, r)
     local c = Instance.new("UICorner")
-    c.CornerRadius = UDim.new(0, r or 10)
+    c.CornerRadius = UDim.new(0, r or 8)
     c.Parent = parent
     return c
 end
@@ -118,10 +120,6 @@ local function padding(parent, t, r, b, l)
     return p
 end
 
-local function isMobile()
-    return UIS.TouchEnabled and not UIS.KeyboardEnabled
-end
-
 -- ─────────────────────────────────────────────
 -- KEY SYSTEM
 -- ─────────────────────────────────────────────
@@ -135,7 +133,6 @@ function PhantomLib:CreateKeySystem(cfg, onSuccess)
     screen.Name = "PhantomKeySystem"
     screen.ResetOnSpawn = false
     screen.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-    screen.IgnoreGuiInset = true
     screen.Parent = parent
 
     local overlay = Instance.new("Frame")
@@ -148,31 +145,30 @@ function PhantomLib:CreateKeySystem(cfg, onSuccess)
     card.Size = UDim2.fromOffset(0, 0)
     card.Position = UDim2.fromScale(0.5, 0.5)
     card.AnchorPoint = Vector2.new(0.5, 0.5)
-    card.BackgroundColor3 = Color3.fromRGB(16, 16, 22)
-    card.BackgroundTransparency = 0.15
+    card.BackgroundColor3 = Color3.fromRGB(18, 18, 26)
     card.BorderSizePixel = 0
     card.ClipsDescendants = true
     card.Parent = overlay
-    corner(card, 16)
-    stroke(card, Color3.fromRGB(255, 255, 255), 1.1, 0.86)
+    corner(card, 14)
+    local cardStroke = stroke(card, Color3.fromRGB(105, 110, 255), 1.2, 0.4)
 
     local title = Instance.new("TextLabel")
-    title.Size = UDim2.new(1, -48, 0, 26)
-    title.Position = UDim2.new(0, 24, 0, 22)
+    title.Size = UDim2.new(1, -40, 0, 28)
+    title.Position = UDim2.new(0, 20, 0, 18)
     title.BackgroundTransparency = 1
     title.Text = cfg.Title or "Key System"
-    title.TextColor3 = Color3.fromRGB(245, 246, 252)
-    title.TextSize = 17
+    title.TextColor3 = Color3.fromRGB(245, 246, 255)
+    title.TextSize = 18
     title.Font = Enum.Font.GothamBold
     title.TextXAlignment = Enum.TextXAlignment.Left
     title.Parent = card
 
     local desc = Instance.new("TextLabel")
-    desc.Size = UDim2.new(1, -48, 0, 36)
-    desc.Position = UDim2.new(0, 24, 0, 52)
+    desc.Size = UDim2.new(1, -40, 0, 36)
+    desc.Position = UDim2.new(0, 20, 0, 48)
     desc.BackgroundTransparency = 1
     desc.Text = cfg.Note or cfg.Description or "Enter a valid key to continue"
-    desc.TextColor3 = Color3.fromRGB(140, 144, 165)
+    desc.TextColor3 = Color3.fromRGB(140, 145, 170)
     desc.TextSize = 13
     desc.Font = Enum.Font.Gotham
     desc.TextWrapped = true
@@ -180,21 +176,20 @@ function PhantomLib:CreateKeySystem(cfg, onSuccess)
     desc.Parent = card
 
     local box = Instance.new("Frame")
-    box.Size = UDim2.new(1, -48, 0, 40)
-    box.Position = UDim2.new(0, 24, 0, 100)
-    box.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    box.BackgroundTransparency = 0.93
+    box.Size = UDim2.new(1, -40, 0, 38)
+    box.Position = UDim2.new(0, 20, 0, 96)
+    box.BackgroundColor3 = Color3.fromRGB(28, 28, 40)
     box.Parent = card
-    corner(box, 10)
-    stroke(box, Color3.fromRGB(255, 255, 255), 1, 0.88)
+    corner(box, 8)
+    stroke(box, Color3.fromRGB(60, 65, 95), 1, 0.4)
 
     local input = Instance.new("TextBox")
-    input.Size = UDim2.new(1, -18, 1, 0)
-    input.Position = UDim2.new(0, 12, 0, 0)
+    input.Size = UDim2.new(1, -16, 1, 0)
+    input.Position = UDim2.new(0, 10, 0, 0)
     input.BackgroundTransparency = 1
     input.PlaceholderText = "Enter key..."
-    input.PlaceholderColor3 = Color3.fromRGB(120, 124, 145)
-    input.TextColor3 = Color3.fromRGB(245, 246, 252)
+    input.PlaceholderColor3 = Color3.fromRGB(110, 115, 140)
+    input.TextColor3 = Color3.fromRGB(245, 246, 255)
     input.TextSize = 14
     input.Font = Enum.Font.GothamMedium
     input.ClearTextOnFocus = false
@@ -202,26 +197,25 @@ function PhantomLib:CreateKeySystem(cfg, onSuccess)
     input.Parent = box
 
     local submit = Instance.new("TextButton")
-    submit.Size = UDim2.new(1, -48, 0, 38)
-    submit.Position = UDim2.new(0, 24, 0, 154)
-    submit.BackgroundColor3 = Color3.fromRGB(114, 120, 255)
-    submit.BackgroundTransparency = 0.1
+    submit.Size = UDim2.new(1, -40, 0, 36)
+    submit.Position = UDim2.new(0, 20, 0, 148)
+    submit.BackgroundColor3 = Color3.fromRGB(105, 110, 255)
     submit.Text = "Unlock"
     submit.TextColor3 = Color3.new(1, 1, 1)
     submit.TextSize = 14
     submit.Font = Enum.Font.GothamBold
     submit.AutoButtonColor = false
     submit.Parent = card
-    corner(submit, 10)
+    corner(submit, 8)
 
     local getKey
     if cfg.URL then
         getKey = Instance.new("TextButton")
-        getKey.Size = UDim2.new(1, -48, 0, 26)
-        getKey.Position = UDim2.new(0, 24, 0, 202)
+        getKey.Size = UDim2.new(1, -40, 0, 28)
+        getKey.Position = UDim2.new(0, 20, 0, 194)
         getKey.BackgroundTransparency = 1
         getKey.Text = "Get Key"
-        getKey.TextColor3 = Color3.fromRGB(140, 146, 255)
+        getKey.TextColor3 = Color3.fromRGB(105, 110, 255)
         getKey.TextSize = 13
         getKey.Font = Enum.Font.GothamMedium
         getKey.Parent = card
@@ -230,15 +224,15 @@ function PhantomLib:CreateKeySystem(cfg, onSuccess)
                 if setclipboard then setclipboard(cfg.URL) end
             end)
             getKey.Text = "Link copied!"
-            task.delay(1.4, function()
+            task.delay(1.6, function()
                 if getKey then getKey.Text = "Get Key" end
             end)
         end)
     end
 
     local status = Instance.new("TextLabel")
-    status.Size = UDim2.new(1, -48, 0, 18)
-    status.Position = UDim2.new(0, 24, 1, -32)
+    status.Size = UDim2.new(1, -40, 0, 20)
+    status.Position = UDim2.new(0, 20, 1, -32)
     status.BackgroundTransparency = 1
     status.Text = ""
     status.TextColor3 = Color3.fromRGB(248, 113, 113)
@@ -246,17 +240,21 @@ function PhantomLib:CreateKeySystem(cfg, onSuccess)
     status.Font = Enum.Font.Gotham
     status.Parent = card
 
-    tween(overlay, 0.32, {BackgroundTransparency = 0.48})
-    spring(card, 0.48, {Size = UDim2.fromOffset(350, cfg.URL and 255 or 218)})
+    -- Animate in
+    tween(overlay, 0.35, {BackgroundTransparency = 0.45})
+    spring(card, 0.45, {Size = UDim2.fromOffset(340, cfg.URL and 250 or 210)})
 
     local function checkKey(val)
         val = tostring(val or ""):gsub("%s+", "")
         for _, k in ipairs(keys) do
-            if tostring(k) == val then return true end
+            if tostring(k) == val then
+                return true
+            end
         end
         return false
     end
 
+    -- Save / load key
     local saveFolder = cfg.Folder or "PhantomLib"
     local savePath = saveFolder .. "/key.txt"
 
@@ -277,24 +275,24 @@ function PhantomLib:CreateKeySystem(cfg, onSuccess)
         local val = input.Text
         if checkKey(val) then
             status.TextColor3 = Color3.fromRGB(52, 211, 153)
-            status.Text = "Key accepted"
+            status.Text = "Key accepted!"
             if cfg.SaveKey and writefile then
                 pcall(writefile, savePath, val)
             end
-            tween(overlay, 0.26, {BackgroundTransparency = 1})
-            tween(card, 0.24, {
-                Size = UDim2.fromOffset(330, 0),
+            tween(overlay, 0.3, {BackgroundTransparency = 1})
+            tween(card, 0.28, {
+                Size = UDim2.fromOffset(320, 0),
                 BackgroundTransparency = 1
             }, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
-            task.delay(0.28, function()
+            task.delay(0.32, function()
                 screen:Destroy()
                 onSuccess()
             end)
         else
             status.Text = "Invalid key"
-            spring(card, 0.15, {Position = UDim2.new(0.5, 8, 0.5, 0)})
-            task.delay(0.07, function()
-                spring(card, 0.18, {Position = UDim2.fromScale(0.5, 0.5)})
+            spring(card, 0.18, {Position = UDim2.new(0.5, 8, 0.5, 0)})
+            task.delay(0.08, function()
+                spring(card, 0.22, {Position = UDim2.fromScale(0.5, 0.5)})
             end)
         end
     end
@@ -305,10 +303,10 @@ function PhantomLib:CreateKeySystem(cfg, onSuccess)
     end)
 
     submit.MouseEnter:Connect(function()
-        tween(submit, 0.15, {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(140, 146, 255)})
+        tween(submit, 0.18, {BackgroundColor3 = Color3.fromRGB(125, 130, 255)})
     end)
     submit.MouseLeave:Connect(function()
-        tween(submit, 0.15, {BackgroundTransparency = 0.1, BackgroundColor3 = Color3.fromRGB(114, 120, 255)})
+        tween(submit, 0.18, {BackgroundColor3 = Color3.fromRGB(105, 110, 255)})
     end)
 end
 
@@ -317,7 +315,7 @@ end
 -- ─────────────────────────────────────────────
 function PhantomLib:CreateWindow(opts)
     opts = opts or {}
-    local name = opts.Name or opts.Title or "Phantom"
+    local name = opts.Name or opts.Title or "Phantom Window"
     local parent = getParent()
     local screenName = "PhantomLib_" .. name:gsub("%s+", "_")
 
@@ -338,7 +336,6 @@ function PhantomLib:CreateWindow(opts)
     self.Flags = {}
     self.ToggleObjects = {}
     self.Minimized = false
-    self.Scale = 1
     getgenv()._PhantomLib_Instances[screenName] = self
 
     local function finishCreate()
@@ -346,37 +343,22 @@ function PhantomLib:CreateWindow(opts)
         screen.Name = screenName
         screen.ResetOnSpawn = false
         screen.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-        screen.IgnoreGuiInset = true
         screen.Parent = parent
 
-        local scaleRoot = Instance.new("Frame")
-        scaleRoot.Name = "ScaleRoot"
-        scaleRoot.Size = UDim2.fromScale(1, 1)
-        scaleRoot.BackgroundTransparency = 1
-        scaleRoot.Parent = screen
-
-        local uiScale = Instance.new("UIScale")
-        uiScale.Scale = 1
-        uiScale.Parent = scaleRoot
-
         local notifHolder = Instance.new("Frame")
-        notifHolder.Size = UDim2.new(0, 290, 1, -20)
-        notifHolder.Position = UDim2.new(1, -14, 1, -14)
+        notifHolder.Size = UDim2.new(0, 300, 1, -28)
+        notifHolder.Position = UDim2.new(1, -18, 1, -18)
         notifHolder.AnchorPoint = Vector2.new(1, 1)
         notifHolder.BackgroundTransparency = 1
-        notifHolder.Parent = scaleRoot
+        notifHolder.Parent = screen
 
         local notifLayout = Instance.new("UIListLayout")
         notifLayout.VerticalAlignment = Enum.VerticalAlignment.Bottom
         notifLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
-        notifLayout.Padding = UDim.new(0, 9)
+        notifLayout.Padding = UDim.new(0, 10)
         notifLayout.Parent = notifHolder
 
-        local baseW, baseH = 520, 360
-        if isMobile() then
-            baseW, baseH = 350, 500
-        end
-        local size = opts.Size or UDim2.fromOffset(baseW, baseH)
+        local size = opts.Size or UDim2.fromOffset(540, 360)
 
         local main = Instance.new("Frame")
         main.Name = "Main"
@@ -384,28 +366,28 @@ function PhantomLib:CreateWindow(opts)
         main.Position = UDim2.fromScale(0.5, 0.5)
         main.AnchorPoint = Vector2.new(0.5, 0.5)
         main.BackgroundColor3 = self.Theme.Background
-        main.BackgroundTransparency = self.Theme.Glass
         main.BorderSizePixel = 0
         main.ClipsDescendants = true
-        main.Parent = scaleRoot
-        corner(main, 14)
-        local mainStroke = stroke(main, self.Theme.Border, 1.1, self.Theme.GlassBorder)
+        main.Parent = screen
+        corner(main, 12)
+        local mainStroke = stroke(main, self.Theme.Border, 1.15, 0.35)
 
+        -- Soft glow
         local glow = Instance.new("ImageLabel")
         glow.Name = "Glow"
-        glow.Size = UDim2.new(1, 60, 1, 60)
+        glow.Size = UDim2.new(1, 50, 1, 50)
         glow.Position = UDim2.fromScale(0.5, 0.5)
         glow.AnchorPoint = Vector2.new(0.5, 0.5)
         glow.BackgroundTransparency = 1
         glow.Image = "rbxassetid://5028857084"
         glow.ImageColor3 = self.Theme.Accent
-        glow.ImageTransparency = 0.90
+        glow.ImageTransparency = 0.88
         glow.ScaleType = Enum.ScaleType.Slice
         glow.SliceCenter = Rect.new(24, 24, 276, 276)
         glow.ZIndex = 0
         glow.Parent = main
 
-        spring(main, 0.52, {
+        spring(main, 0.5, {
             Size = size,
             Position = UDim2.new(0.5, -size.X.Offset / 2, 0.5, -size.Y.Offset / 2),
             AnchorPoint = Vector2.new(0, 0)
@@ -413,18 +395,16 @@ function PhantomLib:CreateWindow(opts)
 
         -- Header
         local header = Instance.new("Frame")
-        header.Size = UDim2.new(1, 0, 0, 46)
-        header.BackgroundColor3 = self.Theme.Surface
-        header.BackgroundTransparency = self.Theme.GlassSoft - 0.06
+        header.Size = UDim2.new(1, 0, 0, 42)
+        header.BackgroundColor3 = self.Theme.Sidebar
         header.BorderSizePixel = 0
         header.Parent = main
-        corner(header, 14)
+        corner(header, 12)
 
         local headerFill = Instance.new("Frame")
-        headerFill.Size = UDim2.new(1, 0, 0, 18)
-        headerFill.Position = UDim2.new(0, 0, 1, -18)
-        headerFill.BackgroundColor3 = self.Theme.Surface
-        headerFill.BackgroundTransparency = self.Theme.GlassSoft - 0.06
+        headerFill.Size = UDim2.new(1, 0, 0, 16)
+        headerFill.Position = UDim2.new(0, 0, 1, -16)
+        headerFill.BackgroundColor3 = self.Theme.Sidebar
         headerFill.BorderSizePixel = 0
         headerFill.Parent = header
 
@@ -432,7 +412,7 @@ function PhantomLib:CreateWindow(opts)
         headerLine.Size = UDim2.new(1, 0, 0, 1)
         headerLine.Position = UDim2.new(0, 0, 1, -1)
         headerLine.BackgroundColor3 = self.Theme.Accent
-        headerLine.BackgroundTransparency = 0.72
+        headerLine.BackgroundTransparency = 0.55
         headerLine.BorderSizePixel = 0
         headerLine.Parent = header
 
@@ -447,104 +427,106 @@ function PhantomLib:CreateWindow(opts)
         title.TextXAlignment = Enum.TextXAlignment.Left
         title.Parent = header
 
+        -- Stats + controls
         local right = Instance.new("Frame")
-        right.Size = UDim2.new(0, 200, 1, 0)
-        right.Position = UDim2.new(1, -208, 0, 0)
+        right.Size = UDim2.new(0, 220, 1, 0)
+        right.Position = UDim2.new(1, -228, 0, 0)
         right.BackgroundTransparency = 1
         right.Parent = header
 
         local stats = Instance.new("Frame")
-        stats.Size = UDim2.new(0, 105, 1, 0)
+        stats.Size = UDim2.new(0, 120, 1, 0)
         stats.BackgroundTransparency = 1
         stats.Parent = right
 
         local fpsLbl = Instance.new("TextLabel")
-        fpsLbl.Size = UDim2.new(0.5, -2, 1, 0)
+        fpsLbl.Size = UDim2.new(0.5, -3, 1, 0)
         fpsLbl.BackgroundTransparency = 1
         fpsLbl.Text = "FPS --"
         fpsLbl.TextColor3 = self.Theme.Muted
-        fpsLbl.TextSize = 11
+        fpsLbl.TextSize = 12
         fpsLbl.Font = Enum.Font.GothamMedium
         fpsLbl.TextXAlignment = Enum.TextXAlignment.Right
         fpsLbl.Parent = stats
 
         local pingLbl = Instance.new("TextLabel")
-        pingLbl.Size = UDim2.new(0.5, -2, 1, 0)
-        pingLbl.Position = UDim2.new(0.5, 2, 0, 0)
+        pingLbl.Size = UDim2.new(0.5, -3, 1, 0)
+        pingLbl.Position = UDim2.new(0.5, 3, 0, 0)
         pingLbl.BackgroundTransparency = 1
-        pingLbl.Text = "--ms"
+        pingLbl.Text = "ms --"
         pingLbl.TextColor3 = self.Theme.Muted
-        pingLbl.TextSize = 11
+        pingLbl.TextSize = 12
         pingLbl.Font = Enum.Font.GothamMedium
         pingLbl.TextXAlignment = Enum.TextXAlignment.Left
         pingLbl.Parent = stats
 
         local last = 0
         RunService.RenderStepped:Connect(function(dt)
-            if tick() - last > 0.45 then
+            local fps = math.floor(1 / math.max(dt, 0.001))
+            if tick() - last > 0.4 then
                 last = tick()
-                local fps = math.floor(1 / math.max(dt, 0.001))
                 fpsLbl.Text = "FPS " .. fps
                 local ping = 0
                 pcall(function()
                     ping = math.floor(LP:GetNetworkPing() * 1000)
                 end)
                 pingLbl.Text = ping .. "ms"
-                fpsLbl.TextColor3 = fps >= 55 and self.Theme.Success or (fps >= 35 and self.Theme.Warning or self.Theme.Danger)
-                pingLbl.TextColor3 = ping <= 70 and self.Theme.Success or (ping <= 130 and self.Theme.Warning or self.Theme.Danger)
+
+                fpsLbl.TextColor3 = fps >= 55 and self.Theme.Success or (fps >= 35 and Color3.fromRGB(250, 190, 60) or self.Theme.Danger)
+                pingLbl.TextColor3 = ping <= 70 and self.Theme.Success or (ping <= 130 and Color3.fromRGB(250, 190, 60) or self.Theme.Danger)
             end
         end)
 
         local controls = Instance.new("Frame")
-        controls.Size = UDim2.new(0, 90, 1, 0)
-        controls.Position = UDim2.new(1, -94, 0, 0)
+        controls.Size = UDim2.new(0, 96, 1, 0)
+        controls.Position = UDim2.new(1, -98, 0, 0)
         controls.BackgroundTransparency = 1
         controls.Parent = right
 
-        local function makeBtn(txt, x)
+        local function makeBtn(txt, col, x, size)
             local b = Instance.new("TextButton")
-            b.Size = UDim2.fromOffset(27, 27)
-            b.Position = UDim2.new(0, x, 0.5, -13.5)
-            b.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            b.BackgroundTransparency = 0.93
+            b.Size = UDim2.fromOffset(26, 26)
+            b.Position = UDim2.new(0, x, 0.5, -13)
+            b.BackgroundColor3 = col
+            b.BackgroundTransparency = 1
             b.Text = txt
             b.TextColor3 = self.Theme.Text
-            b.TextSize = 14
+            b.TextSize = size or 15
             b.Font = Enum.Font.GothamBold
             b.AutoButtonColor = false
             b.Parent = controls
             corner(b, 7)
             b.MouseEnter:Connect(function()
-                tween(b, 0.13, {BackgroundTransparency = 0.78})
+                tween(b, 0.16, {BackgroundTransparency = 0.55})
             end)
             b.MouseLeave:Connect(function()
-                tween(b, 0.13, {BackgroundTransparency = 0.93})
+                tween(b, 0.16, {BackgroundTransparency = 1})
             end)
             return b
         end
 
-        local gear = makeBtn("⚙", 0)
-        local minBtn = makeBtn("–", 31)
-        local closeBtn = makeBtn("×", 62)
+        local gear = makeBtn("⚙", self.Theme.Card, 0, 15)
+        local minBtn = makeBtn("–", self.Theme.Card, 32)
+        local closeBtn = makeBtn("×", self.Theme.Danger, 64)
         closeBtn.TextColor3 = Color3.new(1, 1, 1)
 
         -- Theme panel
         local themePanel = Instance.new("Frame")
-        themePanel.Size = UDim2.fromOffset(142, 0)
-        themePanel.Position = UDim2.new(1, -154, 0, 52)
-        themePanel.BackgroundColor3 = self.Theme.Elevated
-        themePanel.BackgroundTransparency = self.Theme.GlassSoft
+        themePanel.Size = UDim2.fromOffset(152, 0)
+        themePanel.Position = UDim2.new(1, -164, 0, 48)
+        themePanel.BackgroundColor3 = self.Theme.Card
+        themePanel.BackgroundTransparency = 0.05
         themePanel.Visible = false
         themePanel.ClipsDescendants = true
-        themePanel.ZIndex = 40
+        themePanel.ZIndex = 30
         themePanel.Parent = main
-        corner(themePanel, 11)
-        local tStroke = stroke(themePanel, self.Theme.Border, 1, self.Theme.GlassBorder)
+        corner(themePanel, 10)
+        local tStroke = stroke(themePanel, self.Theme.Accent, 1, 0.4)
 
         local tLayout = Instance.new("UIListLayout")
-        tLayout.Padding = UDim.new(0, 4)
+        tLayout.Padding = UDim.new(0, 5)
         tLayout.Parent = themePanel
-        padding(themePanel, 7, 7, 7, 7)
+        padding(themePanel, 8, 8, 8, 8)
 
         local themeOpen = false
         local themeBtns = {}
@@ -555,29 +537,29 @@ function PhantomLib:CreateWindow(opts)
             self.Theme = th
             self.CurrentTheme = themeName
 
-            tween(main, 0.3, {BackgroundColor3 = th.Background, BackgroundTransparency = th.Glass})
-            tween(header, 0.3, {BackgroundColor3 = th.Surface, BackgroundTransparency = th.GlassSoft - 0.06})
-            tween(headerFill, 0.3, {BackgroundColor3 = th.Surface, BackgroundTransparency = th.GlassSoft - 0.06})
-            tween(headerLine, 0.26, {BackgroundColor3 = th.Accent})
-            tween(title, 0.2, {TextColor3 = th.Text})
-            tween(mainStroke, 0.26, {Color = th.Border, Transparency = th.GlassBorder})
-            tween(glow, 0.3, {ImageColor3 = th.Accent})
-            tween(themePanel, 0.2, {BackgroundColor3 = th.Elevated, BackgroundTransparency = th.GlassSoft})
-            tween(tStroke, 0.2, {Color = th.Border, Transparency = th.GlassBorder})
+            tween(main, 0.32, {BackgroundColor3 = th.Background})
+            tween(header, 0.32, {BackgroundColor3 = th.Sidebar})
+            tween(headerFill, 0.32, {BackgroundColor3 = th.Sidebar})
+            tween(headerLine, 0.32, {BackgroundColor3 = th.Accent})
+            tween(title, 0.25, {TextColor3 = th.Text})
+            tween(mainStroke, 0.3, {Color = th.Border})
+            tween(glow, 0.35, {ImageColor3 = th.Accent})
+            tween(themePanel, 0.25, {BackgroundColor3 = th.Card})
+            tween(tStroke, 0.25, {Color = th.Accent})
 
             if self.Sidebar then
-                tween(self.Sidebar, 0.26, {BackgroundColor3 = th.Surface, BackgroundTransparency = th.GlassSoft - 0.04})
+                tween(self.Sidebar, 0.3, {BackgroundColor3 = th.Sidebar})
                 self.Sidebar.ScrollBarImageColor3 = th.Accent
             end
 
             for _, tab in ipairs(self.Tabs) do
                 if tab.Label then
-                    tween(tab.Label, 0.2, {
+                    tween(tab.Label, 0.25, {
                         TextColor3 = (self.ActiveTab == tab) and th.Text or th.Muted
                     })
                 end
                 if tab.Indicator then
-                    tween(tab.Indicator, 0.2, {BackgroundColor3 = th.Accent})
+                    tween(tab.Indicator, 0.25, {BackgroundColor3 = th.Accent})
                 end
                 if tab.View then
                     tab.View.ScrollBarImageColor3 = th.Accent
@@ -586,26 +568,26 @@ function PhantomLib:CreateWindow(opts)
 
             for n, data in pairs(themeBtns) do
                 local sel = n == themeName
-                tween(data.btn, 0.16, {
-                    BackgroundTransparency = sel and 0.18 or 0.88,
-                    BackgroundColor3 = sel and th.Accent or Color3.fromRGB(255, 255, 255)
+                tween(data.btn, 0.2, {
+                    BackgroundTransparency = sel and 0.2 or 1,
+                    BackgroundColor3 = sel and th.Accent or th.Card
                 })
-                tween(data.label, 0.16, {
+                tween(data.label, 0.2, {
                     TextColor3 = sel and Color3.new(1, 1, 1) or th.Text
                 })
             end
 
-            self:Notify({Title = "Theme", Content = "Switched to " .. themeName, Duration = 1.6})
+            self:Notify({Title = "Theme", Content = "Switched to " .. themeName, Duration = 2})
         end
 
-        for _, tName in ipairs({"Default", "Midnight", "Ember"}) do
+        for _, tName in ipairs({"Default", "Light", "Cyber", "Ocean"}) do
             local b = Instance.new("TextButton")
             b.Size = UDim2.new(1, 0, 0, 28)
             b.BackgroundColor3 = self.Theme.Accent
-            b.BackgroundTransparency = (tName == self.CurrentTheme) and 0.18 or 0.88
+            b.BackgroundTransparency = (tName == self.CurrentTheme) and 0.2 or 1
             b.Text = ""
             b.AutoButtonColor = false
-            b.ZIndex = 41
+            b.ZIndex = 31
             b.Parent = themePanel
             corner(b, 7)
 
@@ -614,21 +596,21 @@ function PhantomLib:CreateWindow(opts)
             lbl.BackgroundTransparency = 1
             lbl.Text = tName
             lbl.TextColor3 = (tName == self.CurrentTheme) and Color3.new(1, 1, 1) or self.Theme.Text
-            lbl.TextSize = 12
+            lbl.TextSize = 13
             lbl.Font = Enum.Font.GothamMedium
-            lbl.ZIndex = 42
+            lbl.ZIndex = 32
             lbl.Parent = b
 
             themeBtns[tName] = {btn = b, label = lbl}
 
             b.MouseEnter:Connect(function()
                 if tName ~= self.CurrentTheme then
-                    tween(b, 0.11, {BackgroundTransparency = 0.72})
+                    tween(b, 0.14, {BackgroundTransparency = 0.65})
                 end
             end)
             b.MouseLeave:Connect(function()
                 if tName ~= self.CurrentTheme then
-                    tween(b, 0.11, {BackgroundTransparency = 0.88})
+                    tween(b, 0.14, {BackgroundTransparency = 1})
                 end
             end)
             b.MouseButton1Click:Connect(function()
@@ -640,11 +622,11 @@ function PhantomLib:CreateWindow(opts)
             themeOpen = not themeOpen
             if themeOpen then
                 themePanel.Visible = true
-                themePanel.Size = UDim2.fromOffset(142, 0)
-                spring(themePanel, 0.3, {Size = UDim2.fromOffset(142, 118)})
+                themePanel.Size = UDim2.fromOffset(152, 0)
+                spring(themePanel, 0.34, {Size = UDim2.fromOffset(152, 140)})
             else
-                tween(themePanel, 0.18, {Size = UDim2.fromOffset(142, 0)}, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
-                task.delay(0.2, function()
+                tween(themePanel, 0.22, {Size = UDim2.fromOffset(152, 0)}, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
+                task.delay(0.24, function()
                     if not themeOpen then themePanel.Visible = false end
                 end)
             end
@@ -657,11 +639,11 @@ function PhantomLib:CreateWindow(opts)
                     themeOpen = false
                     themePanel.Visible = false
                 end
-                tween(main, 0.26, {Size = UDim2.new(size.X.Scale, size.X.Offset, 0, 46)})
-                tween(glow, 0.22, {ImageTransparency = 1})
+                tween(main, 0.3, {Size = UDim2.new(size.X.Scale, size.X.Offset, 0, 42)})
+                tween(glow, 0.28, {ImageTransparency = 1})
             else
-                tween(main, 0.32, {Size = size}, Enum.EasingStyle.Back)
-                tween(glow, 0.3, {ImageTransparency = 0.90})
+                tween(main, 0.35, {Size = size}, Enum.EasingStyle.Back)
+                tween(glow, 0.35, {ImageTransparency = 0.88})
             end
         end)
 
@@ -691,12 +673,10 @@ function PhantomLib:CreateWindow(opts)
         end)
 
         -- Sidebar
-        local sidebarWidth = isMobile() and 108 or 126
         local sidebar = Instance.new("ScrollingFrame")
-        sidebar.Size = UDim2.new(0, sidebarWidth, 1, -46)
-        sidebar.Position = UDim2.new(0, 0, 0, 46)
-        sidebar.BackgroundColor3 = self.Theme.Surface
-        sidebar.BackgroundTransparency = self.Theme.GlassSoft - 0.04
+        sidebar.Size = UDim2.new(0, 128, 1, -42)
+        sidebar.Position = UDim2.new(0, 0, 0, 42)
+        sidebar.BackgroundColor3 = self.Theme.Sidebar
         sidebar.BorderSizePixel = 0
         sidebar.ScrollBarThickness = 2
         sidebar.ScrollBarImageColor3 = self.Theme.Accent
@@ -705,36 +685,19 @@ function PhantomLib:CreateWindow(opts)
         sidebar.Parent = main
 
         local sLayout = Instance.new("UIListLayout")
-        sLayout.Padding = UDim.new(0, 3)
+        sLayout.Padding = UDim.new(0, 5)
         sLayout.Parent = sidebar
-        padding(sidebar, 9, 7, 11, 7)
+        padding(sidebar, 10, 8, 10, 8)
 
         sLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-            sidebar.CanvasSize = UDim2.new(0, 0, 0, sLayout.AbsoluteContentSize.Y + 14)
+            sidebar.CanvasSize = UDim2.new(0, 0, 0, sLayout.AbsoluteContentSize.Y + 20)
         end)
 
         local container = Instance.new("Frame")
-        container.Size = UDim2.new(1, -sidebarWidth, 1, -46)
-        container.Position = UDim2.new(0, sidebarWidth, 0, 46)
+        container.Size = UDim2.new(1, -128, 1, -42)
+        container.Position = UDim2.new(0, 128, 0, 42)
         container.BackgroundTransparency = 1
         container.Parent = main
-
-        -- Auto scale
-        local function updateScale()
-            local cam = workspace.CurrentCamera
-            if not cam then return end
-            local vp = cam.ViewportSize
-            local s
-            if isMobile() then
-                s = math.clamp(vp.X / 390, 0.88, 1.22)
-            else
-                s = math.clamp(math.min(vp.X, vp.Y) / 1080, 0.75, 1.3)
-            end
-            uiScale.Scale = s
-            self.Scale = s
-        end
-        updateScale()
-        workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(updateScale)
 
         self.ScreenName = screenName
         self.Screen = screen
@@ -745,15 +708,15 @@ function PhantomLib:CreateWindow(opts)
         self.TargetSize = size
         self.Glow = glow
         self.MainStroke = mainStroke
-        self.UIScale = uiScale
 
-        task.delay(0.48, function()
-            self:Notify({Title = "PhantomLib", Content = "Ready", Duration = 1.8})
+        task.delay(0.45, function()
+            self:Notify({Title = "PhantomLib", Content = "Interface loaded", Duration = 2.4})
         end)
 
         return self
     end
 
+    -- Optional Key System
     if opts.KeySystem then
         self:CreateKeySystem(opts.KeySystem, function()
             finishCreate()
@@ -769,27 +732,27 @@ end
 -- ─────────────────────────────────────────────
 function PhantomLib:Notify(cfg)
     cfg = cfg or {}
-    local dur = cfg.Duration or 2.8
+    local dur = cfg.Duration or 3.2
 
     local toast = Instance.new("Frame")
-    toast.Size = UDim2.new(0, 260, 0, 0)
-    toast.BackgroundColor3 = self.Theme.Elevated
+    toast.Size = UDim2.new(0, 280, 0, 0)
+    toast.BackgroundColor3 = self.Theme.Card
     toast.BackgroundTransparency = 1
     toast.ClipsDescendants = true
     toast.Parent = self.NotifContainer
-    corner(toast, 11)
-    local s = stroke(toast, self.Theme.Border, 1, 1)
+    corner(toast, 10)
+    local s = stroke(toast, self.Theme.Accent, 1.1, 1)
 
     local bar = Instance.new("Frame")
-    bar.Size = UDim2.new(0, 3, 1, 0)
+    bar.Size = UDim2.new(0, 3.5, 1, 0)
     bar.BackgroundColor3 = self.Theme.Accent
     bar.BorderSizePixel = 0
     bar.Parent = toast
     corner(bar, 2)
 
     local t = Instance.new("TextLabel")
-    t.Size = UDim2.new(1, -20, 0, 17)
-    t.Position = UDim2.new(0, 13, 0, 9)
+    t.Size = UDim2.new(1, -24, 0, 18)
+    t.Position = UDim2.new(0, 16, 0, 10)
     t.BackgroundTransparency = 1
     t.Text = cfg.Title or "Notification"
     t.TextColor3 = self.Theme.Text
@@ -800,8 +763,8 @@ function PhantomLib:Notify(cfg)
     t.Parent = toast
 
     local d = Instance.new("TextLabel")
-    d.Size = UDim2.new(1, -20, 0, 16)
-    d.Position = UDim2.new(0, 13, 0, 28)
+    d.Size = UDim2.new(1, -24, 0, 18)
+    d.Position = UDim2.new(0, 16, 0, 30)
     d.BackgroundTransparency = 1
     d.Text = cfg.Content or ""
     d.TextColor3 = self.Theme.Muted
@@ -811,21 +774,18 @@ function PhantomLib:Notify(cfg)
     d.TextTransparency = 1
     d.Parent = toast
 
-    tween(toast, 0.34, {
-        Size = UDim2.new(0, 260, 0, 52),
-        BackgroundTransparency = self.Theme.GlassSoft
-    }, Enum.EasingStyle.Back)
-    tween(s, 0.26, {Transparency = self.Theme.GlassBorder})
-    tween(t, 0.24, {TextTransparency = 0})
-    tween(d, 0.28, {TextTransparency = 0})
+    tween(toast, 0.38, {Size = UDim2.new(0, 280, 0, 56), BackgroundTransparency = 0}, Enum.EasingStyle.Back)
+    tween(s, 0.3, {Transparency = 0.35})
+    tween(t, 0.28, {TextTransparency = 0})
+    tween(d, 0.32, {TextTransparency = 0})
 
     task.delay(dur, function()
         if not toast or not toast.Parent then return end
-        tween(toast, 0.22, {BackgroundTransparency = 1, Size = UDim2.new(0, 260, 0, 0)})
-        tween(s, 0.16, {Transparency = 1})
-        tween(t, 0.16, {TextTransparency = 1})
-        tween(d, 0.16, {TextTransparency = 1})
-        task.wait(0.24)
+        tween(toast, 0.26, {BackgroundTransparency = 1, Size = UDim2.new(0, 280, 0, 0)})
+        tween(s, 0.2, {Transparency = 1})
+        tween(t, 0.2, {TextTransparency = 1})
+        tween(d, 0.2, {TextTransparency = 1})
+        task.wait(0.28)
         if toast then toast:Destroy() end
     end)
 end
@@ -889,8 +849,8 @@ function PhantomLib:CreateTab(name)
     local tab = {Name = name, Window = self}
 
     local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(1, 0, 0, isMobile() and 36 or 32)
-    btn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    btn.Size = UDim2.new(1, 0, 0, 32)
+    btn.BackgroundColor3 = self.Theme.Card
     btn.BackgroundTransparency = 1
     btn.Text = ""
     btn.AutoButtonColor = false
@@ -898,7 +858,7 @@ function PhantomLib:CreateTab(name)
     corner(btn, 8)
 
     local ind = Instance.new("Frame")
-    ind.Size = UDim2.new(0, 3, 0.52, 0)
+    ind.Size = UDim2.new(0, 3.5, 0.55, 0)
     ind.Position = UDim2.new(0, 0, 0.5, 0)
     ind.AnchorPoint = Vector2.new(0, 0.5)
     ind.BackgroundColor3 = self.Theme.Accent
@@ -909,7 +869,7 @@ function PhantomLib:CreateTab(name)
 
     local lbl = Instance.new("TextLabel")
     lbl.Size = UDim2.new(1, -16, 1, 0)
-    lbl.Position = UDim2.new(0, 12, 0, 0)
+    lbl.Position = UDim2.new(0, 14, 0, 0)
     lbl.BackgroundTransparency = 1
     lbl.Text = name
     lbl.TextColor3 = self.Theme.Muted
@@ -931,12 +891,12 @@ function PhantomLib:CreateTab(name)
     view.Parent = self.Container
 
     local layout = Instance.new("UIListLayout")
-    layout.Padding = UDim.new(0, 7)
+    layout.Padding = UDim.new(0, 8)
     layout.Parent = view
-    padding(view, 11, 11, 14, 11)
+    padding(view, 12, 12, 14, 12)
 
     layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-        view.CanvasSize = UDim2.new(0, 0, 0, layout.AbsoluteContentSize.Y + 16)
+        view.CanvasSize = UDim2.new(0, 0, 0, layout.AbsoluteContentSize.Y + 20)
     end)
 
     tab.Button = btn
@@ -947,28 +907,28 @@ function PhantomLib:CreateTab(name)
     local function select()
         for _, t in ipairs(self.Tabs) do
             t.View.Visible = false
-            tween(t.Button, 0.16, {BackgroundTransparency = 1})
-            tween(t.Indicator, 0.16, {BackgroundTransparency = 1})
-            tween(t.Label, 0.16, {TextColor3 = self.Theme.Muted})
+            tween(t.Button, 0.2, {BackgroundTransparency = 1})
+            tween(t.Indicator, 0.2, {BackgroundTransparency = 1})
+            tween(t.Label, 0.2, {TextColor3 = self.Theme.Muted})
         end
         view.Visible = true
-        tween(btn, 0.18, {BackgroundTransparency = 0.86})
-        tween(ind, 0.18, {BackgroundTransparency = 0})
-        tween(lbl, 0.18, {TextColor3 = self.Theme.Text})
+        tween(btn, 0.22, {BackgroundTransparency = 0.5})
+        tween(ind, 0.22, {BackgroundTransparency = 0})
+        tween(lbl, 0.22, {TextColor3 = self.Theme.Text})
         self.ActiveTab = tab
     end
 
     btn.MouseButton1Click:Connect(select)
     btn.MouseEnter:Connect(function()
         if self.ActiveTab ~= tab then
-            tween(btn, 0.12, {BackgroundTransparency = 0.9})
-            tween(lbl, 0.12, {TextColor3 = self.Theme.Text})
+            tween(btn, 0.15, {BackgroundTransparency = 0.75})
+            tween(lbl, 0.15, {TextColor3 = self.Theme.Text})
         end
     end)
     btn.MouseLeave:Connect(function()
         if self.ActiveTab ~= tab then
-            tween(btn, 0.12, {BackgroundTransparency = 1})
-            tween(lbl, 0.12, {TextColor3 = self.Theme.Muted})
+            tween(btn, 0.15, {BackgroundTransparency = 1})
+            tween(lbl, 0.15, {TextColor3 = self.Theme.Muted})
         end
     end)
 
@@ -978,45 +938,41 @@ function PhantomLib:CreateTab(name)
     -- BUTTON
     function tab:CreateButton(cfg)
         cfg = cfg or {}
-        local h = isMobile() and 40 or 36
         local b = Instance.new("TextButton")
-        b.Size = UDim2.new(1, 0, 0, h)
+        b.Size = UDim2.new(1, 0, 0, 36)
         b.BackgroundColor3 = self.Window.Theme.Button
-        b.BackgroundTransparency = self.Window.Theme.GlassSoft
+        b.BackgroundTransparency = 0.1
         b.Text = cfg.Name or "Button"
         b.TextColor3 = self.Window.Theme.Text
         b.TextSize = 13
         b.Font = Enum.Font.GothamBold
         b.AutoButtonColor = false
         b.Parent = view
-        corner(b, 10)
-        local st = stroke(b, self.Window.Theme.Border, 1, self.Window.Theme.GlassBorder)
+        corner(b, 9)
+        local st = stroke(b, self.Window.Theme.Accent, 1, 0.55)
 
         b.BackgroundTransparency = 1
         b.TextTransparency = 1
-        tween(b, 0.28, {BackgroundTransparency = self.Window.Theme.GlassSoft, TextTransparency = 0})
+        tween(b, 0.32, {BackgroundTransparency = 0.1, TextTransparency = 0})
 
         b.MouseEnter:Connect(function()
-            tween(b, 0.14, {
-                BackgroundTransparency = 0.12,
-                BackgroundColor3 = self.Window.Theme.Accent
-            })
-            tween(st, 0.14, {Transparency = 0.6, Color = self.Window.Theme.AccentHover})
-            spring(b, 0.18, {Size = UDim2.new(1, 0, 0, h + 1)})
+            tween(b, 0.18, {BackgroundTransparency = 0, BackgroundColor3 = self.Window.Theme.Accent})
+            tween(st, 0.18, {Transparency = 0.15, Color = self.Window.Theme.Accent2})
+            spring(b, 0.22, {Size = UDim2.new(1, 0, 0, 38)})
         end)
         b.MouseLeave:Connect(function()
-            tween(b, 0.16, {
-                BackgroundTransparency = self.Window.Theme.GlassSoft,
+            tween(b, 0.2, {
+                BackgroundTransparency = 0.1,
                 BackgroundColor3 = self.Window.Theme.Button,
-                Size = UDim2.new(1, 0, 0, h)
+                Size = UDim2.new(1, 0, 0, 36)
             })
-            tween(st, 0.16, {Transparency = self.Window.Theme.GlassBorder, Color = self.Window.Theme.Border})
+            tween(st, 0.2, {Transparency = 0.55, Color = self.Window.Theme.Accent})
         end)
         b.MouseButton1Down:Connect(function()
-            tween(b, 0.06, {Size = UDim2.new(1, 0, 0, h - 2)})
+            tween(b, 0.08, {Size = UDim2.new(1, 0, 0, 33)})
         end)
         b.MouseButton1Up:Connect(function()
-            spring(b, 0.16, {Size = UDim2.new(1, 0, 0, h + 1)})
+            spring(b, 0.2, {Size = UDim2.new(1, 0, 0, 38)})
         end)
         b.MouseButton1Click:Connect(function()
             if cfg.Callback then pcall(cfg.Callback) end
@@ -1027,19 +983,18 @@ function PhantomLib:CreateTab(name)
     function tab:CreateToggle(cfg)
         cfg = cfg or {}
         local state = cfg.CurrentValue or false
-        local h = isMobile() and 40 or 36
 
         local frame = Instance.new("Frame")
-        frame.Size = UDim2.new(1, 0, 0, h)
-        frame.BackgroundColor3 = self.Window.Theme.Elevated
-        frame.BackgroundTransparency = self.Window.Theme.GlassSoft
+        frame.Size = UDim2.new(1, 0, 0, 36)
+        frame.BackgroundColor3 = self.Window.Theme.Card
+        frame.BackgroundTransparency = 0.25
         frame.Parent = view
-        corner(frame, 10)
-        stroke(frame, self.Window.Theme.Border, 1, self.Window.Theme.GlassBorder)
+        corner(frame, 9)
+        stroke(frame, self.Window.Theme.Border, 1, 0.45)
 
         local label = Instance.new("TextLabel")
-        label.Size = UDim2.new(1, -58, 1, 0)
-        label.Position = UDim2.new(0, 13, 0, 0)
+        label.Size = UDim2.new(1, -56, 1, 0)
+        label.Position = UDim2.new(0, 14, 0, 0)
         label.BackgroundTransparency = 1
         label.Text = cfg.Name or "Toggle"
         label.TextColor3 = self.Window.Theme.Text
@@ -1051,8 +1006,7 @@ function PhantomLib:CreateTab(name)
         local track = Instance.new("Frame")
         track.Size = UDim2.fromOffset(40, 22)
         track.Position = UDim2.new(1, -50, 0.5, -11)
-        track.BackgroundColor3 = state and self.Window.Theme.Accent or Color3.fromRGB(255, 255, 255)
-        track.BackgroundTransparency = state and 0.12 or 0.9
+        track.BackgroundColor3 = state and self.Window.Theme.Accent or self.Window.Theme.Sidebar
         track.Parent = frame
         corner(track, 11)
 
@@ -1072,11 +1026,8 @@ function PhantomLib:CreateTab(name)
         local obj = {}
         local function update(v)
             state = v
-            tween(track, 0.2, {
-                BackgroundColor3 = state and self.Window.Theme.Accent or Color3.fromRGB(255, 255, 255),
-                BackgroundTransparency = state and 0.12 or 0.9
-            })
-            spring(knob, 0.26, {
+            tween(track, 0.24, {BackgroundColor3 = state and self.Window.Theme.Accent or self.Window.Theme.Sidebar})
+            spring(knob, 0.3, {
                 Position = state and UDim2.new(1, -19, 0.5, -8) or UDim2.new(0, 3, 0.5, -8)
             })
             if cfg.Flag then self.Window.Flags[cfg.Flag] = state end
@@ -1115,15 +1066,15 @@ function PhantomLib:CreateTab(name)
 
         local frame = Instance.new("Frame")
         frame.Size = UDim2.new(1, 0, 0, 52)
-        frame.BackgroundColor3 = self.Window.Theme.Elevated
-        frame.BackgroundTransparency = self.Window.Theme.GlassSoft
+        frame.BackgroundColor3 = self.Window.Theme.Card
+        frame.BackgroundTransparency = 0.25
         frame.Parent = view
-        corner(frame, 10)
-        stroke(frame, self.Window.Theme.Border, 1, self.Window.Theme.GlassBorder)
+        corner(frame, 9)
+        stroke(frame, self.Window.Theme.Border, 1, 0.45)
 
         local title = Instance.new("TextLabel")
-        title.Size = UDim2.new(0.62, 0, 0, 16)
-        title.Position = UDim2.new(0, 13, 0, 9)
+        title.Size = UDim2.new(0.65, 0, 0, 18)
+        title.Position = UDim2.new(0, 14, 0, 8)
         title.BackgroundTransparency = 1
         title.Text = cfg.Name or "Slider"
         title.TextColor3 = self.Window.Theme.Text
@@ -1133,8 +1084,8 @@ function PhantomLib:CreateTab(name)
         title.Parent = frame
 
         local valLbl = Instance.new("TextLabel")
-        valLbl.Size = UDim2.new(0.38, -13, 0, 16)
-        valLbl.Position = UDim2.new(0.62, 0, 0, 9)
+        valLbl.Size = UDim2.new(0.35, -14, 0, 18)
+        valLbl.Position = UDim2.new(0.65, 0, 0, 8)
         valLbl.BackgroundTransparency = 1
         valLbl.TextColor3 = self.Window.Theme.Accent
         valLbl.TextSize = 13
@@ -1149,17 +1100,15 @@ function PhantomLib:CreateTab(name)
         valLbl.Text = formatValue(val) .. (cfg.Suffix or "")
 
         local track = Instance.new("Frame")
-        track.Size = UDim2.new(1, -26, 0, 5)
-        track.Position = UDim2.new(0, 13, 0, 35)
-        track.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        track.BackgroundTransparency = 0.9
+        track.Size = UDim2.new(1, -28, 0, 6)
+        track.Position = UDim2.new(0, 14, 0, 34)
+        track.BackgroundColor3 = self.Window.Theme.Sidebar
         track.Parent = frame
         corner(track, 3)
 
         local fill = Instance.new("Frame")
         fill.Size = UDim2.new((val - min) / range, 0, 1, 0)
         fill.BackgroundColor3 = self.Window.Theme.Accent
-        fill.BackgroundTransparency = 0.08
         fill.Parent = track
         corner(fill, 3)
 
@@ -1169,11 +1118,11 @@ function PhantomLib:CreateTab(name)
         handle.BackgroundColor3 = Color3.new(1, 1, 1)
         handle.Parent = track
         corner(handle, 7)
-        stroke(handle, self.Window.Theme.Accent, 1.4, 0.25)
+        stroke(handle, self.Window.Theme.Accent, 1.6, 0.15)
 
         local trigger = Instance.new("TextButton")
-        trigger.Size = UDim2.new(1, 0, 1, 18)
-        trigger.Position = UDim2.new(0, 0, 0, -6)
+        trigger.Size = UDim2.new(1, 0, 1, 16)
+        trigger.Position = UDim2.new(0, 0, 0, -5)
         trigger.BackgroundTransparency = 1
         trigger.Text = ""
         trigger.Parent = track
@@ -1183,8 +1132,8 @@ function PhantomLib:CreateTab(name)
             local pct = math.clamp((inp.Position.X - track.AbsolutePosition.X) / track.AbsoluteSize.X, 0, 1)
             val = snap(min + range * pct)
             valLbl.Text = formatValue(val) .. (cfg.Suffix or "")
-            tween(fill, 0.05, {Size = UDim2.new((val - min) / range, 0, 1, 0)})
-            tween(handle, 0.05, {Position = UDim2.new((val - min) / range, -7, 0.5, -7)})
+            tween(fill, 0.07, {Size = UDim2.new((val - min) / range, 0, 1, 0)})
+            tween(handle, 0.07, {Position = UDim2.new((val - min) / range, -7, 0.5, -7)})
             if cfg.Flag then self.Window.Flags[cfg.Flag] = val end
             if cfg.Callback then pcall(cfg.Callback, val) end
         end
@@ -1193,13 +1142,13 @@ function PhantomLib:CreateTab(name)
             if inp.UserInputType == Enum.UserInputType.MouseButton1 or inp.UserInputType == Enum.UserInputType.Touch then
                 drag = true
                 update(inp)
-                spring(handle, 0.16, {Size = UDim2.fromOffset(16, 16)})
+                spring(handle, 0.2, {Size = UDim2.fromOffset(16, 16)})
             end
         end)
         UIS.InputEnded:Connect(function(inp)
             if inp.UserInputType == Enum.UserInputType.MouseButton1 or inp.UserInputType == Enum.UserInputType.Touch then
                 drag = false
-                spring(handle, 0.16, {Size = UDim2.fromOffset(14, 14)})
+                spring(handle, 0.2, {Size = UDim2.fromOffset(14, 14)})
             end
         end)
         UIS.InputChanged:Connect(function(inp)
@@ -1214,19 +1163,17 @@ function PhantomLib:CreateTab(name)
     -- INPUT
     function tab:CreateInput(cfg)
         cfg = cfg or {}
-        local h = isMobile() and 40 or 36
-
         local frame = Instance.new("Frame")
-        frame.Size = UDim2.new(1, 0, 0, h)
-        frame.BackgroundColor3 = self.Window.Theme.Elevated
-        frame.BackgroundTransparency = self.Window.Theme.GlassSoft
+        frame.Size = UDim2.new(1, 0, 0, 38)
+        frame.BackgroundColor3 = self.Window.Theme.Card
+        frame.BackgroundTransparency = 0.25
         frame.Parent = view
-        corner(frame, 10)
-        stroke(frame, self.Window.Theme.Border, 1, self.Window.Theme.GlassBorder)
+        corner(frame, 9)
+        stroke(frame, self.Window.Theme.Border, 1, 0.45)
 
         local label = Instance.new("TextLabel")
-        label.Size = UDim2.new(0.36, 0, 1, 0)
-        label.Position = UDim2.new(0, 13, 0, 0)
+        label.Size = UDim2.new(0.4, 0, 1, 0)
+        label.Position = UDim2.new(0, 14, 0, 0)
         label.BackgroundTransparency = 1
         label.Text = cfg.Name or "Input"
         label.TextColor3 = self.Window.Theme.Text
@@ -1236,16 +1183,15 @@ function PhantomLib:CreateTab(name)
         label.Parent = frame
 
         local box = Instance.new("Frame")
-        box.Size = UDim2.new(0.6, -12, 0, 26)
-        box.Position = UDim2.new(0.4, 0, 0.5, -13)
-        box.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        box.BackgroundTransparency = 0.92
+        box.Size = UDim2.new(0.55, -10, 0, 26)
+        box.Position = UDim2.new(0.45, 0, 0.5, -13)
+        box.BackgroundColor3 = self.Window.Theme.Sidebar
         box.Parent = frame
         corner(box, 7)
 
         local input = Instance.new("TextBox")
         input.Size = UDim2.new(1, -12, 1, 0)
-        input.Position = UDim2.new(0, 7, 0, 0)
+        input.Position = UDim2.new(0, 8, 0, 0)
         input.BackgroundTransparency = 1
         input.Text = cfg.CurrentValue or ""
         input.PlaceholderText = cfg.PlaceholderText or "Type here..."
@@ -1258,36 +1204,35 @@ function PhantomLib:CreateTab(name)
         input.Parent = box
 
         input.Focused:Connect(function()
-            tween(box, 0.14, {BackgroundTransparency = 0.84})
+            tween(box, 0.18, {BackgroundColor3 = self.Window.Theme.Card})
         end)
         input.FocusLost:Connect(function()
-            tween(box, 0.14, {BackgroundTransparency = 0.92})
+            tween(box, 0.18, {BackgroundColor3 = self.Window.Theme.Sidebar})
             if cfg.Flag then self.Window.Flags[cfg.Flag] = input.Text end
             if cfg.Callback then pcall(cfg.Callback, input.Text) end
         end)
     end
 
-    -- COLOR PICKER
+    -- COLOR PICKER (simplified hue)
     function tab:CreateColorPicker(cfg)
         cfg = cfg or {}
         local col = cfg.Color or Color3.fromRGB(255, 255, 255)
         local open = false
-        local h = isMobile() and 40 or 36
 
         local frame = Instance.new("Frame")
-        frame.Size = UDim2.new(1, 0, 0, h)
-        frame.BackgroundColor3 = self.Window.Theme.Elevated
-        frame.BackgroundTransparency = self.Window.Theme.GlassSoft
+        frame.Size = UDim2.new(1, 0, 0, 38)
+        frame.BackgroundColor3 = self.Window.Theme.Card
+        frame.BackgroundTransparency = 0.25
         frame.ClipsDescendants = true
         frame.Parent = view
-        corner(frame, 10)
-        stroke(frame, self.Window.Theme.Border, 1, self.Window.Theme.GlassBorder)
+        corner(frame, 9)
+        stroke(frame, self.Window.Theme.Border, 1, 0.45)
 
         local title = Instance.new("TextLabel")
-        title.Size = UDim2.new(1, -52, 0, h)
-        title.Position = UDim2.new(0, 13, 0, 0)
+        title.Size = UDim2.new(1, -52, 0, 38)
+        title.Position = UDim2.new(0, 14, 0, 0)
         title.BackgroundTransparency = 1
-        title.Text = cfg.Name or "Color"
+        title.Text = cfg.Name or "Color Picker"
         title.TextColor3 = self.Window.Theme.Text
         title.TextSize = 13
         title.Font = Enum.Font.Gotham
@@ -1296,7 +1241,7 @@ function PhantomLib:CreateTab(name)
 
         local preview = Instance.new("TextButton")
         preview.Size = UDim2.fromOffset(24, 18)
-        preview.Position = UDim2.new(1, -40, 0, (h - 18) / 2)
+        preview.Position = UDim2.new(1, -38, 0, 10)
         preview.BackgroundColor3 = col
         preview.Text = ""
         preview.AutoButtonColor = false
@@ -1305,8 +1250,8 @@ function PhantomLib:CreateTab(name)
         stroke(preview, Color3.new(1, 1, 1), 1, 0.65)
 
         local hue = Instance.new("Frame")
-        hue.Size = UDim2.new(1, -26, 0, 14)
-        hue.Position = UDim2.new(0, 13, 0, h + 7)
+        hue.Size = UDim2.new(1, -28, 0, 14)
+        hue.Position = UDim2.new(0, 14, 0, 46)
         hue.BackgroundColor3 = Color3.new(1, 1, 1)
         hue.Parent = frame
         corner(hue, 5)
@@ -1357,44 +1302,355 @@ function PhantomLib:CreateTab(name)
 
         preview.MouseButton1Click:Connect(function()
             open = not open
-            spring(frame, 0.26, {Size = UDim2.new(1, 0, 0, open and (h + 32) or h)})
+            spring(frame, 0.3, {Size = UDim2.new(1, 0, 0, open and 72 or 38)})
         end)
 
         if cfg.Flag then self.Window.Flags[cfg.Flag] = col end
     end
 
-    -- DROPDOWNS (compact + modern)
-    local function createDropdownBase(cfg, isMulti)
+    -- ENHANCED MULTI DROPDOWN WITH SEARCH
+    function tab:CreateMultiDropdown(cfg)
         cfg = cfg or {}
         local options = cfg.Options or {}
         local selected = {}
-        local singleValue = cfg.CurrentValue or options[1] or ""
         local isOpen = false
-        local maxVisible = cfg.MaxVisible or (isMobile() and 5 or 6)
-        local itemHeight = isMobile() and 30 or 27
-        local baseH = isMobile() and 40 or 36
-        local maxOpenHeight = 148
-
-        if isMulti and cfg.CurrentOptions then
+        local maxVisible = cfg.MaxVisible or 5
+        local itemHeight = 28
+        
+        if cfg.CurrentOptions then
             for _, v in ipairs(cfg.CurrentOptions) do
                 selected[v] = true
             end
         end
 
         local frame = Instance.new("Frame")
-        frame.Size = UDim2.new(1, 0, 0, baseH)
-        frame.BackgroundColor3 = self.Window.Theme.Elevated
-        frame.BackgroundTransparency = self.Window.Theme.GlassSoft
+        frame.Size = UDim2.new(1, 0, 0, 38)
+        frame.BackgroundColor3 = self.Window.Theme.Card
+        frame.BackgroundTransparency = 0.25
         frame.ClipsDescendants = true
         frame.Parent = view
-        corner(frame, 10)
-        stroke(frame, self.Window.Theme.Border, 1, self.Window.Theme.GlassBorder)
+        corner(frame, 9)
+        stroke(frame, self.Window.Theme.Border, 1, 0.45)
 
         local title = Instance.new("TextLabel")
-        title.Size = UDim2.new(1, -36, 0, baseH)
-        title.Position = UDim2.new(0, 13, 0, 0)
+        title.Size = UDim2.new(1, -40, 0, 38)
+        title.Position = UDim2.new(0, 14, 0, 0)
         title.BackgroundTransparency = 1
-        title.Text = cfg.Name or (isMulti and "Multi Select" or "Select")
+        title.Text = cfg.Name or "Multi Select"
+        title.TextColor3 = self.Window.Theme.Text
+        title.TextSize = 13
+        title.Font = Enum.Font.Gotham
+        title.TextXAlignment = Enum.TextXAlignment.Left
+        title.TextTruncate = Enum.TextTruncate.AtEnd
+        title.Parent = frame
+
+        local arrow = Instance.new("TextLabel")
+        arrow.Size = UDim2.fromOffset(22, 38)
+        arrow.Position = UDim2.new(1, -28, 0, 0)
+        arrow.BackgroundTransparency = 1
+        arrow.Text = "▼"
+        arrow.TextColor3 = self.Window.Theme.Muted
+        arrow.TextSize = 11
+        arrow.Font = Enum.Font.GothamBold
+        arrow.Parent = frame
+
+        local trigger = Instance.new("TextButton")
+        trigger.Size = UDim2.new(1, 0, 0, 38)
+        trigger.BackgroundTransparency = 1
+        trigger.Text = ""
+        trigger.ZIndex = 2
+        trigger.Parent = frame
+
+        -- Dropdown content container
+        local content = Instance.new("Frame")
+        content.Size = UDim2.new(1, -8, 0, 0)
+        content.Position = UDim2.new(0, 4, 0, 42)
+        content.BackgroundTransparency = 1
+        content.ClipsDescendants = true
+        content.Visible = false
+        content.ZIndex = 5
+        content.Parent = frame
+
+        -- Search bar inside dropdown
+        local searchBox = Instance.new("Frame")
+        searchBox.Size = UDim2.new(1, 0, 0, 26)
+        searchBox.BackgroundColor3 = self.Window.Theme.Sidebar
+        searchBox.Parent = content
+        corner(searchBox, 6)
+        stroke(searchBox, self.Window.Theme.Border, 1, 0.3)
+
+        local searchInput = Instance.new("TextBox")
+        searchInput.Size = UDim2.new(1, -24, 1, 0)
+        searchInput.Position = UDim2.new(0, 10, 0, 0)
+        searchInput.BackgroundTransparency = 1
+        searchInput.PlaceholderText = "Search options..."
+        searchInput.PlaceholderColor3 = self.Window.Theme.Muted
+        searchInput.TextColor3 = self.Window.Theme.Text
+        searchInput.TextSize = 12
+        searchInput.Font = Enum.Font.Gotham
+        searchInput.ClearTextOnFocus = false
+        searchInput.Text = ""
+        searchInput.Parent = searchBox
+
+        local searchIcon = Instance.new("TextLabel")
+        searchIcon.Size = UDim2.fromOffset(16, 26)
+        searchIcon.Position = UDim2.new(0, 4, 0, 0)
+        searchIcon.BackgroundTransparency = 1
+        searchIcon.Text = "🔍"
+        searchIcon.TextColor3 = self.Window.Theme.Muted
+        searchIcon.TextSize = 10
+        searchIcon.Font = Enum.Font.Gotham
+        searchIcon.Parent = searchBox
+
+        -- Options list
+        local list = Instance.new("ScrollingFrame")
+        list.Size = UDim2.new(1, 0, 0, 0)
+        list.Position = UDim2.new(0, 0, 0, 34)
+        list.BackgroundColor3 = self.Window.Theme.Sidebar
+        list.BackgroundTransparency = 0.1
+        list.BorderSizePixel = 0
+        list.ScrollBarThickness = 3
+        list.ScrollBarImageColor3 = self.Window.Theme.Accent
+        list.CanvasSize = UDim2.new(0, 0, 0, 0)
+        list.ClipsDescendants = true
+        list.ZIndex = 6
+        list.Parent = content
+        corner(list, 7)
+
+        local listLayout = Instance.new("UIListLayout")
+        listLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        listLayout.Padding = UDim.new(0, 2)
+        listLayout.Parent = list
+        padding(list, 3, 3, 3, 3)
+
+        listLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+            list.CanvasSize = UDim2.new(0, 0, 0, listLayout.AbsoluteContentSize.Y + 6)
+        end)
+
+        local optionButtons = {}
+        local filteredOptions = {}
+        
+        -- Update dropdown height
+        local function updateDropdownHeight(count)
+            local visibleCount = math.min(count or #filteredOptions, maxVisible)
+            local searchHeight = 34
+            local listHeight = visibleCount * (itemHeight + 2) + 6
+            local totalHeight = searchHeight + listHeight
+            content.Size = UDim2.new(1, -8, 0, totalHeight)
+            list.Size = UDim2.new(1, 0, 0, listHeight)
+        end
+
+        -- Build filtered options
+        local function buildOptions(filterText)
+            filterText = string.lower(filterText or "")
+            
+            -- Clear existing buttons
+            for _, btn in pairs(optionButtons) do
+                btn:Destroy()
+            end
+            optionButtons = {}
+            
+            -- Filter options
+            filteredOptions = {}
+            if filterText == "" then
+                for _, opt in ipairs(options) do
+                    table.insert(filteredOptions, opt)
+                end
+            else
+                for _, opt in ipairs(options) do
+                    if string.find(string.lower(tostring(opt)), filterText, 1, true) then
+                        table.insert(filteredOptions, opt)
+                    end
+                end
+            end
+            
+            -- Create buttons
+            for i, opt in ipairs(filteredOptions) do
+                local isSelected = selected[opt] == true
+                local b = Instance.new("TextButton")
+                b.Size = UDim2.new(1, 0, 0, itemHeight)
+                b.BackgroundColor3 = isSelected and self.Window.Theme.Accent or self.Window.Theme.Card
+                b.BackgroundTransparency = isSelected and 0.3 or 0.65
+                b.Text = ""
+                b.AutoButtonColor = false
+                b.LayoutOrder = i
+                b.ZIndex = 7
+                b.Parent = list
+                corner(b, 5)
+
+                local lbl = Instance.new("TextLabel")
+                lbl.Size = UDim2.new(1, -30, 1, 0)
+                lbl.Position = UDim2.new(0, 8, 0, 0)
+                lbl.BackgroundTransparency = 1
+                lbl.Text = tostring(opt)
+                lbl.TextColor3 = self.Window.Theme.Text
+                lbl.TextSize = 12
+                lbl.Font = Enum.Font.Gotham
+                lbl.TextXAlignment = Enum.TextXAlignment.Left
+                lbl.ZIndex = 8
+                lbl.Parent = b
+
+                local check = Instance.new("TextLabel")
+                check.Size = UDim2.fromOffset(18, 18)
+                check.Position = UDim2.new(1, -24, 0.5, -9)
+                check.BackgroundTransparency = 1
+                check.Text = isSelected and "✓" or ""
+                check.TextColor3 = self.Window.Theme.Accent
+                check.TextSize = 14
+                check.Font = Enum.Font.GothamBold
+                check.ZIndex = 8
+                check.Parent = b
+
+                b.MouseEnter:Connect(function()
+                    if not selected[opt] then
+                        tween(b, 0.12, {BackgroundTransparency = 0.4})
+                    end
+                end)
+                b.MouseLeave:Connect(function()
+                    if not selected[opt] then
+                        tween(b, 0.12, {BackgroundTransparency = 0.65})
+                    end
+                end)
+                b.MouseButton1Click:Connect(function()
+                    selected[opt] = not selected[opt]
+                    local now = selected[opt]
+                    tween(b, 0.15, {
+                        BackgroundColor3 = now and self.Window.Theme.Accent or self.Window.Theme.Card,
+                        BackgroundTransparency = now and 0.3 or 0.65
+                    })
+                    check.Text = now and "✓" or ""
+                    updateTitle()
+                    if cfg.Flag then self.Window.Flags[cfg.Flag] = getSelectedList() end
+                    if cfg.Callback then pcall(cfg.Callback, getSelectedList()) end
+                end)
+                optionButtons[opt] = b
+            end
+            
+            updateDropdownHeight(#filteredOptions)
+        end
+
+        -- Search input handler
+        searchInput:GetPropertyChangedSignal("Text"):Connect(function()
+            buildOptions(searchInput.Text)
+        end)
+
+        local function getSelectedList()
+            local t = {}
+            for _, opt in ipairs(options) do
+                if selected[opt] then table.insert(t, opt) end
+            end
+            return t
+        end
+
+        local function updateTitle()
+            local sel = getSelectedList()
+            if #sel == 0 then
+                title.Text = cfg.Name or "Multi Select"
+                title.TextColor3 = self.Window.Theme.Muted
+            elseif #sel == 1 then
+                title.Text = (cfg.Name and (cfg.Name .. ": ") or "") .. sel[1]
+                title.TextColor3 = self.Window.Theme.Text
+            else
+                title.Text = (cfg.Name and (cfg.Name .. ": ") or "") .. #sel .. " selected"
+                title.TextColor3 = self.Window.Theme.Text
+            end
+        end
+
+        local function setOpen(state)
+            isOpen = state
+            if isOpen then
+                buildOptions("")
+                content.Visible = true
+                content.Size = UDim2.new(1, -8, 0, 0)
+                spring(content, 0.3, {Size = UDim2.new(1, -8, 0, 120)})
+                tween(arrow, 0.2, {Rotation = 180})
+                spring(frame, 0.3, {Size = UDim2.new(1, 0, 0, 38 + 8 + 120)})
+                
+                -- Focus search input
+                task.wait(0.1)
+                searchInput:CaptureFocus()
+            else
+                spring(frame, 0.26, {Size = UDim2.new(1, 0, 0, 38)})
+                tween(arrow, 0.2, {Rotation = 0})
+                tween(content, 0.22, {Size = UDim2.new(1, -8, 0, 0)}, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
+                task.delay(0.24, function()
+                    if not isOpen then
+                        content.Visible = false
+                        content.Size = UDim2.new(1, -8, 0, 0)
+                    end
+                end)
+            end
+        end
+
+        trigger.MouseButton1Click:Connect(function()
+            setOpen(not isOpen)
+        end)
+
+        -- Close on focus loss
+        searchInput.FocusLost:Connect(function()
+            task.delay(0.15, function()
+                if isOpen and not searchInput:IsFocused() then
+                    setOpen(false)
+                end
+            end)
+        end)
+
+        local obj = {}
+        function obj:SetOptions(newOptions)
+            options = newOptions or {}
+            for k in pairs(selected) do
+                if not table.find(options, k) then selected[k] = nil end
+            end
+            updateTitle()
+            if isOpen then buildOptions(searchInput.Text) end
+        end
+        function obj:Get() return getSelectedList() end
+        function obj:Set(values)
+            selected = {}
+            if type(values) == "table" then
+                for _, v in ipairs(values) do selected[v] = true end
+            end
+            updateTitle()
+            if isOpen then buildOptions(searchInput.Text) end
+            if cfg.Flag then self.Window.Flags[cfg.Flag] = getSelectedList() end
+            if cfg.Callback then pcall(cfg.Callback, getSelectedList()) end
+        end
+        function obj:Clear()
+            selected = {}
+            updateTitle()
+            if isOpen then buildOptions(searchInput.Text) end
+            if cfg.Flag then self.Window.Flags[cfg.Flag] = {} end
+            if cfg.Callback then pcall(cfg.Callback, {}) end
+        end
+
+        updateTitle()
+        if cfg.Flag then self.Window.Flags[cfg.Flag] = getSelectedList() end
+        return obj
+    end
+
+    -- ENHANCED SELECT DROPDOWN WITH SEARCH
+    function tab:CreateSelect(cfg)
+        cfg = cfg or {}
+        local options = cfg.Options or {}
+        local selected = cfg.CurrentValue or options[1] or ""
+        local isOpen = false
+        local maxVisible = cfg.MaxVisible or 6
+        local itemHeight = 28
+
+        local frame = Instance.new("Frame")
+        frame.Size = UDim2.new(1, 0, 0, 38)
+        frame.BackgroundColor3 = self.Window.Theme.Card
+        frame.BackgroundTransparency = 0.25
+        frame.ClipsDescendants = true
+        frame.Parent = view
+        corner(frame, 9)
+        stroke(frame, self.Window.Theme.Border, 1, 0.45)
+
+        local title = Instance.new("TextLabel")
+        title.Size = UDim2.new(1, -40, 0, 38)
+        title.Position = UDim2.new(0, 14, 0, 0)
+        title.BackgroundTransparency = 1
+        title.Text = cfg.Name or "Select"
         title.TextColor3 = self.Window.Theme.Muted
         title.TextSize = 13
         title.Font = Enum.Font.Gotham
@@ -1402,53 +1658,51 @@ function PhantomLib:CreateTab(name)
         title.TextTruncate = Enum.TextTruncate.AtEnd
         title.Parent = frame
 
-        local valueLbl
-        if not isMulti then
-            valueLbl = Instance.new("TextLabel")
-            valueLbl.Size = UDim2.new(0.42, -32, 1, 0)
-            valueLbl.Position = UDim2.new(0.58, 0, 0, 0)
-            valueLbl.BackgroundTransparency = 1
-            valueLbl.Text = tostring(singleValue)
-            valueLbl.TextColor3 = self.Window.Theme.Text
-            valueLbl.TextSize = 13
-            valueLbl.Font = Enum.Font.Gotham
-            valueLbl.TextXAlignment = Enum.TextXAlignment.Right
-            valueLbl.Parent = frame
-        end
+        local valueLbl = Instance.new("TextLabel")
+        valueLbl.Size = UDim2.new(0.5, -40, 1, 0)
+        valueLbl.Position = UDim2.new(0.5, 0, 0, 0)
+        valueLbl.BackgroundTransparency = 1
+        valueLbl.Text = tostring(selected)
+        valueLbl.TextColor3 = self.Window.Theme.Text
+        valueLbl.TextSize = 13
+        valueLbl.Font = Enum.Font.Gotham
+        valueLbl.TextXAlignment = Enum.TextXAlignment.Right
+        valueLbl.Parent = frame
 
         local arrow = Instance.new("TextLabel")
-        arrow.Size = UDim2.fromOffset(20, baseH)
-        arrow.Position = UDim2.new(1, -26, 0, 0)
+        arrow.Size = UDim2.fromOffset(22, 38)
+        arrow.Position = UDim2.new(1, -28, 0, 0)
         arrow.BackgroundTransparency = 1
         arrow.Text = "▼"
         arrow.TextColor3 = self.Window.Theme.Muted
-        arrow.TextSize = 10
+        arrow.TextSize = 11
         arrow.Font = Enum.Font.GothamBold
         arrow.Parent = frame
 
         local trigger = Instance.new("TextButton")
-        trigger.Size = UDim2.new(1, 0, 0, baseH)
+        trigger.Size = UDim2.new(1, 0, 0, 38)
         trigger.BackgroundTransparency = 1
         trigger.Text = ""
         trigger.ZIndex = 2
         trigger.Parent = frame
 
+        -- Dropdown content
         local content = Instance.new("Frame")
-        content.Size = UDim2.new(1, -10, 0, 0)
-        content.Position = UDim2.new(0, 5, 0, baseH + 3)
+        content.Size = UDim2.new(1, -8, 0, 0)
+        content.Position = UDim2.new(0, 4, 0, 42)
         content.BackgroundTransparency = 1
         content.ClipsDescendants = true
         content.Visible = false
         content.ZIndex = 5
         content.Parent = frame
 
+        -- Search bar
         local searchBox = Instance.new("Frame")
         searchBox.Size = UDim2.new(1, 0, 0, 26)
-        searchBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        searchBox.BackgroundTransparency = 0.92
+        searchBox.BackgroundColor3 = self.Window.Theme.Sidebar
         searchBox.Parent = content
-        corner(searchBox, 7)
-        stroke(searchBox, self.Window.Theme.Border, 1, 0.88)
+        corner(searchBox, 6)
+        stroke(searchBox, self.Window.Theme.Border, 1, 0.3)
 
         local searchInput = Instance.new("TextBox")
         searchInput.Size = UDim2.new(1, -24, 1, 0)
@@ -1463,11 +1717,22 @@ function PhantomLib:CreateTab(name)
         searchInput.Text = ""
         searchInput.Parent = searchBox
 
+        local searchIcon = Instance.new("TextLabel")
+        searchIcon.Size = UDim2.fromOffset(16, 26)
+        searchIcon.Position = UDim2.new(0, 4, 0, 0)
+        searchIcon.BackgroundTransparency = 1
+        searchIcon.Text = "🔍"
+        searchIcon.TextColor3 = self.Window.Theme.Muted
+        searchIcon.TextSize = 10
+        searchIcon.Font = Enum.Font.Gotham
+        searchIcon.Parent = searchBox
+
+        -- Options list
         local list = Instance.new("ScrollingFrame")
         list.Size = UDim2.new(1, 0, 0, 0)
-        list.Position = UDim2.new(0, 0, 0, 30)
-        list.BackgroundColor3 = self.Window.Theme.Surface
-        list.BackgroundTransparency = 0.12
+        list.Position = UDim2.new(0, 0, 0, 34)
+        list.BackgroundColor3 = self.Window.Theme.Sidebar
+        list.BackgroundTransparency = 0.1
         list.BorderSizePixel = 0
         list.ScrollBarThickness = 3
         list.ScrollBarImageColor3 = self.Window.Theme.Accent
@@ -1490,49 +1755,28 @@ function PhantomLib:CreateTab(name)
         local optionButtons = {}
         local filteredOptions = {}
 
-        local function getSelectedList()
-            local t = {}
-            for _, opt in ipairs(options) do
-                if selected[opt] then table.insert(t, opt) end
-            end
-            return t
-        end
-
-        local function updateTitle()
-            if isMulti then
-                local sel = getSelectedList()
-                if #sel == 0 then
-                    title.Text = cfg.Name or "Multi Select"
-                    title.TextColor3 = self.Window.Theme.Muted
-                elseif #sel == 1 then
-                    title.Text = (cfg.Name and (cfg.Name .. ": ") or "") .. sel[1]
-                    title.TextColor3 = self.Window.Theme.Text
-                else
-                    title.Text = (cfg.Name and (cfg.Name .. ": ") or "") .. #sel .. " selected"
-                    title.TextColor3 = self.Window.Theme.Text
-                end
-            else
-                valueLbl.Text = tostring(singleValue)
-                title.TextColor3 = singleValue ~= "" and self.Window.Theme.Text or self.Window.Theme.Muted
-            end
-        end
-
         local function updateDropdownHeight(count)
             local visibleCount = math.min(count or #filteredOptions, maxVisible)
-            local searchH = 30
-            local listH = math.min(visibleCount * (itemHeight + 2) + 6, maxOpenHeight - searchH)
-            content.Size = UDim2.new(1, -10, 0, searchH + listH)
-            list.Size = UDim2.new(1, 0, 0, listH)
+            local searchHeight = 34
+            local listHeight = visibleCount * (itemHeight + 2) + 6
+            local totalHeight = searchHeight + listHeight
+            content.Size = UDim2.new(1, -8, 0, totalHeight)
+            list.Size = UDim2.new(1, 0, 0, listHeight)
         end
 
         local function buildOptions(filterText)
             filterText = string.lower(filterText or "")
-            for _, btn in pairs(optionButtons) do btn:Destroy() end
+            
+            for _, btn in pairs(optionButtons) do
+                btn:Destroy()
+            end
             optionButtons = {}
+            
             filteredOptions = {}
-
             if filterText == "" then
-                for _, opt in ipairs(options) do table.insert(filteredOptions, opt) end
+                for _, opt in ipairs(options) do
+                    table.insert(filteredOptions, opt)
+                end
             else
                 for _, opt in ipairs(options) do
                     if string.find(string.lower(tostring(opt)), filterText, 1, true) then
@@ -1540,23 +1784,23 @@ function PhantomLib:CreateTab(name)
                     end
                 end
             end
-
+            
             for i, opt in ipairs(filteredOptions) do
-                local isSel = isMulti and selected[opt] or (opt == singleValue)
+                local isSelected = opt == selected
                 local b = Instance.new("TextButton")
                 b.Size = UDim2.new(1, 0, 0, itemHeight)
-                b.BackgroundColor3 = isSel and self.Window.Theme.Accent or Color3.fromRGB(255, 255, 255)
-                b.BackgroundTransparency = isSel and 0.22 or 0.9
+                b.BackgroundColor3 = isSelected and self.Window.Theme.Accent or self.Window.Theme.Card
+                b.BackgroundTransparency = isSelected and 0.3 or 0.65
                 b.Text = ""
                 b.AutoButtonColor = false
                 b.LayoutOrder = i
                 b.ZIndex = 7
                 b.Parent = list
-                corner(b, 6)
+                corner(b, 5)
 
                 local lbl = Instance.new("TextLabel")
-                lbl.Size = UDim2.new(1, -28, 1, 0)
-                lbl.Position = UDim2.new(0, 9, 0, 0)
+                lbl.Size = UDim2.new(1, -30, 1, 0)
+                lbl.Position = UDim2.new(0, 8, 0, 0)
                 lbl.BackgroundTransparency = 1
                 lbl.Text = tostring(opt)
                 lbl.TextColor3 = self.Window.Theme.Text
@@ -1567,46 +1811,37 @@ function PhantomLib:CreateTab(name)
                 lbl.Parent = b
 
                 local check = Instance.new("TextLabel")
-                check.Size = UDim2.fromOffset(16, 16)
-                check.Position = UDim2.new(1, -22, 0.5, -8)
+                check.Size = UDim2.fromOffset(18, 18)
+                check.Position = UDim2.new(1, -24, 0.5, -9)
                 check.BackgroundTransparency = 1
-                check.Text = isSel and "✓" or ""
+                check.Text = isSelected and "✓" or ""
                 check.TextColor3 = self.Window.Theme.Accent
-                check.TextSize = 13
+                check.TextSize = 14
                 check.Font = Enum.Font.GothamBold
                 check.ZIndex = 8
                 check.Parent = b
 
                 b.MouseEnter:Connect(function()
-                    if not isSel then tween(b, 0.1, {BackgroundTransparency = 0.78}) end
+                    if opt ~= selected then
+                        tween(b, 0.12, {BackgroundTransparency = 0.4})
+                    end
                 end)
                 b.MouseLeave:Connect(function()
-                    if not isSel then tween(b, 0.1, {BackgroundTransparency = 0.9}) end
-                end)
-
-                b.MouseButton1Click:Connect(function()
-                    if isMulti then
-                        selected[opt] = not selected[opt]
-                        local now = selected[opt]
-                        tween(b, 0.12, {
-                            BackgroundColor3 = now and self.Window.Theme.Accent or Color3.fromRGB(255, 255, 255),
-                            BackgroundTransparency = now and 0.22 or 0.9
-                        })
-                        check.Text = now and "✓" or ""
-                        updateTitle()
-                        if cfg.Flag then self.Window.Flags[cfg.Flag] = getSelectedList() end
-                        if cfg.Callback then pcall(cfg.Callback, getSelectedList()) end
-                    else
-                        singleValue = opt
-                        valueLbl.Text = tostring(singleValue)
-                        title.TextColor3 = self.Window.Theme.Text
-                        if cfg.Flag then self.Window.Flags[cfg.Flag] = singleValue end
-                        if cfg.Callback then pcall(cfg.Callback, singleValue) end
-                        setOpen(false)
+                    if opt ~= selected then
+                        tween(b, 0.12, {BackgroundTransparency = 0.65})
                     end
+                end)
+                b.MouseButton1Click:Connect(function()
+                    selected = opt
+                    valueLbl.Text = tostring(selected)
+                    title.TextColor3 = self.Window.Theme.Text
+                    if cfg.Flag then self.Window.Flags[cfg.Flag] = selected end
+                    if cfg.Callback then pcall(cfg.Callback, selected) end
+                    setOpen(false)
                 end)
                 optionButtons[opt] = b
             end
+            
             updateDropdownHeight(#filteredOptions)
         end
 
@@ -1619,21 +1854,20 @@ function PhantomLib:CreateTab(name)
             if isOpen then
                 buildOptions("")
                 content.Visible = true
-                content.Size = UDim2.new(1, -10, 0, 0)
-                local targetH = math.min(maxOpenHeight, 30 + (math.min(#filteredOptions, maxVisible) * (itemHeight + 2) + 6))
-                spring(content, 0.24, {Size = UDim2.new(1, -10, 0, targetH)})
-                tween(arrow, 0.16, {Rotation = 180})
-                spring(frame, 0.24, {Size = UDim2.new(1, 0, 0, baseH + 5 + targetH)})
-                task.wait(0.05)
+                content.Size = UDim2.new(1, -8, 0, 0)
+                spring(content, 0.3, {Size = UDim2.new(1, -8, 0, 120)})
+                tween(arrow, 0.2, {Rotation = 180})
+                spring(frame, 0.3, {Size = UDim2.new(1, 0, 0, 38 + 8 + 120)})
+                task.wait(0.1)
                 searchInput:CaptureFocus()
             else
-                spring(frame, 0.2, {Size = UDim2.new(1, 0, 0, baseH)})
-                tween(arrow, 0.16, {Rotation = 0})
-                tween(content, 0.16, {Size = UDim2.new(1, -10, 0, 0)}, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
-                task.delay(0.18, function()
+                spring(frame, 0.26, {Size = UDim2.new(1, 0, 0, 38)})
+                tween(arrow, 0.2, {Rotation = 0})
+                tween(content, 0.22, {Size = UDim2.new(1, -8, 0, 0)}, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
+                task.delay(0.24, function()
                     if not isOpen then
                         content.Visible = false
-                        content.Size = UDim2.new(1, -10, 0, 0)
+                        content.Size = UDim2.new(1, -8, 0, 0)
                     end
                 end)
             end
@@ -1644,7 +1878,7 @@ function PhantomLib:CreateTab(name)
         end)
 
         searchInput.FocusLost:Connect(function()
-            task.delay(0.1, function()
+            task.delay(0.15, function()
                 if isOpen and not searchInput:IsFocused() then
                     setOpen(false)
                 end
@@ -1654,66 +1888,402 @@ function PhantomLib:CreateTab(name)
         local obj = {}
         function obj:SetOptions(newOptions)
             options = newOptions or {}
-            if isMulti then
-                for k in pairs(selected) do
-                    if not table.find(options, k) then selected[k] = nil end
-                end
-            else
-                if not table.find(options, singleValue) then
-                    singleValue = options[1] or ""
-                end
+            if not table.find(options, selected) then
+                selected = options[1] or ""
+                valueLbl.Text = tostring(selected)
+                title.TextColor3 = selected ~= "" and self.Window.Theme.Text or self.Window.Theme.Muted
             end
-            updateTitle()
             if isOpen then buildOptions(searchInput.Text) end
         end
-        function obj:Get()
-            return isMulti and getSelectedList() or singleValue
-        end
+        function obj:Get() return selected end
         function obj:Set(value)
-            if isMulti then
-                selected = {}
-                if type(value) == "table" then
-                    for _, v in ipairs(value) do selected[v] = true end
-                end
-            else
-                if table.find(options, value) or value == "" then
-                    singleValue = value
-                end
+            if table.find(options, value) or value == "" then
+                selected = value
+                valueLbl.Text = tostring(selected)
+                title.TextColor3 = selected ~= "" and self.Window.Theme.Text or self.Window.Theme.Muted
+                if cfg.Flag then self.Window.Flags[cfg.Flag] = selected end
+                if cfg.Callback then pcall(cfg.Callback, selected) end
+                if isOpen then buildOptions(searchInput.Text) end
             end
-            updateTitle()
-            if isOpen then buildOptions(searchInput.Text) end
-            if cfg.Flag then self.Window.Flags[cfg.Flag] = obj:Get() end
-            if cfg.Callback then pcall(cfg.Callback, obj:Get()) end
-        end
-        function obj:Clear()
-            if isMulti then
-                selected = {}
-            else
-                singleValue = ""
-            end
-            updateTitle()
-            if isOpen then buildOptions(searchInput.Text) end
-            if cfg.Flag then self.Window.Flags[cfg.Flag] = obj:Get() end
-            if cfg.Callback then pcall(cfg.Callback, obj:Get()) end
         end
 
-        updateTitle()
-        if cfg.Flag then self.Window.Flags[cfg.Flag] = obj:Get() end
+        if cfg.Flag then self.Window.Flags[cfg.Flag] = selected end
         return obj
     end
 
-    function tab:CreateMultiDropdown(cfg)
-        return createDropdownBase(cfg, true)
-    end
-
-    function tab:CreateSelect(cfg)
-        return createDropdownBase(cfg, false)
-    end
-
+    -- SEARCHABLE LIST ELEMENT (Shows selected on button)
     function tab:CreateSearchableList(cfg)
         cfg = cfg or {}
-        cfg.Name = cfg.Name or "List"
-        return createDropdownBase(cfg, true)
+        local options = cfg.Options or {}
+        local maxVisible = cfg.MaxVisible or 6
+        local itemHeight = cfg.ItemHeight or 28
+        
+        -- Store selected items in a table
+        local selectedItems = {}
+        if cfg.CurrentOptions then
+            for _, v in ipairs(cfg.CurrentOptions) do
+                selectedItems[v] = true
+            end
+        end
+
+        local frame = Instance.new("Frame")
+        frame.Size = UDim2.new(1, 0, 0, 0)
+        frame.BackgroundColor3 = self.Window.Theme.Card
+        frame.BackgroundTransparency = 0.25
+        frame.ClipsDescendants = true
+        frame.Parent = view
+        corner(frame, 9)
+        stroke(frame, self.Window.Theme.Border, 1, 0.45)
+
+        -- This is the main button that shows what's selected
+        local mainButton = Instance.new("TextButton")
+        mainButton.Size = UDim2.new(1, -16, 0, 32)
+        mainButton.Position = UDim2.new(0, 8, 0, 6)
+        mainButton.BackgroundColor3 = self.Window.Theme.Button
+        mainButton.BackgroundTransparency = 0.3
+        mainButton.Text = ""
+        mainButton.AutoButtonColor = false
+        mainButton.Parent = frame
+        corner(mainButton, 7)
+        stroke(mainButton, self.Window.Theme.Border, 1, 0.3)
+
+        -- Title label on button
+        local titleLabel = Instance.new("TextLabel")
+        titleLabel.Size = UDim2.new(1, -36, 1, 0)
+        titleLabel.Position = UDim2.new(0, 12, 0, 0)
+        titleLabel.BackgroundTransparency = 1
+        titleLabel.TextColor3 = self.Window.Theme.Text
+        titleLabel.TextSize = 12
+        titleLabel.Font = Enum.Font.Gotham
+        titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+        titleLabel.TextTruncate = Enum.TextTruncate.AtEnd
+        titleLabel.Parent = mainButton
+
+        -- Arrow on button
+        local arrow = Instance.new("TextLabel")
+        arrow.Size = UDim2.fromOffset(20, 32)
+        arrow.Position = UDim2.new(1, -24, 0, 0)
+        arrow.BackgroundTransparency = 1
+        arrow.Text = "▼"
+        arrow.TextColor3 = self.Window.Theme.Muted
+        arrow.TextSize = 11
+        arrow.Font = Enum.Font.GothamBold
+        arrow.Parent = mainButton
+
+        -- Dropdown content container
+        local content = Instance.new("Frame")
+        content.Size = UDim2.new(1, -8, 0, 0)
+        content.Position = UDim2.new(0, 4, 0, 44)
+        content.BackgroundTransparency = 1
+        content.ClipsDescendants = true
+        content.Visible = false
+        content.ZIndex = 5
+        content.Parent = frame
+
+        -- Search bar inside dropdown
+        local searchBox = Instance.new("Frame")
+        searchBox.Size = UDim2.new(1, 0, 0, 26)
+        searchBox.BackgroundColor3 = self.Window.Theme.Sidebar
+        searchBox.Parent = content
+        corner(searchBox, 6)
+        stroke(searchBox, self.Window.Theme.Border, 1, 0.3)
+
+        local searchIcon = Instance.new("TextLabel")
+        searchIcon.Size = UDim2.fromOffset(20, 26)
+        searchIcon.Position = UDim2.new(0, 4, 0, 0)
+        searchIcon.BackgroundTransparency = 1
+        searchIcon.Text = "🔍"
+        searchIcon.TextColor3 = self.Window.Theme.Muted
+        searchIcon.TextSize = 10
+        searchIcon.Font = Enum.Font.Gotham
+        searchIcon.Parent = searchBox
+
+        local searchInput = Instance.new("TextBox")
+        searchInput.Size = UDim2.new(1, -28, 1, 0)
+        searchInput.Position = UDim2.new(0, 24, 0, 0)
+        searchInput.BackgroundTransparency = 1
+        searchInput.PlaceholderText = cfg.SearchPlaceholder or "Search items..."
+        searchInput.PlaceholderColor3 = self.Window.Theme.Muted
+        searchInput.TextColor3 = self.Window.Theme.Text
+        searchInput.TextSize = 12
+        searchInput.Font = Enum.Font.Gotham
+        searchInput.ClearTextOnFocus = false
+        searchInput.Text = ""
+        searchInput.Parent = searchBox
+
+        -- Options list
+        local list = Instance.new("ScrollingFrame")
+        list.Size = UDim2.new(1, 0, 0, 0)
+        list.Position = UDim2.new(0, 0, 0, 34)
+        list.BackgroundColor3 = self.Window.Theme.Sidebar
+        list.BackgroundTransparency = 0.1
+        list.BorderSizePixel = 0
+        list.ScrollBarThickness = 3
+        list.ScrollBarImageColor3 = self.Window.Theme.Accent
+        list.CanvasSize = UDim2.new(0, 0, 0, 0)
+        list.ClipsDescendants = true
+        list.ZIndex = 6
+        list.Parent = content
+        corner(list, 7)
+
+        local listLayout = Instance.new("UIListLayout")
+        listLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        listLayout.Padding = UDim.new(0, 2)
+        listLayout.Parent = list
+        padding(list, 3, 3, 3, 3)
+
+        listLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+            list.CanvasSize = UDim2.new(0, 0, 0, listLayout.AbsoluteContentSize.Y + 6)
+        end)
+
+        local optionButtons = {}
+        local filteredOptions = {}
+        local isOpen = false
+
+        -- Update the title on the main button
+        local function updateMainButtonTitle()
+            local selectedList = {}
+            for k, v in pairs(selectedItems) do
+                if v then table.insert(selectedList, k) end
+            end
+            
+            if #selectedList == 0 then
+                titleLabel.Text = cfg.Name or "List"
+                titleLabel.TextColor3 = self.Window.Theme.Muted
+            elseif #selectedList == 1 then
+                titleLabel.Text = (cfg.Name and (cfg.Name .. ": ") or "") .. tostring(selectedList[1])
+                titleLabel.TextColor3 = self.Window.Theme.Text
+            else
+                titleLabel.Text = (cfg.Name and (cfg.Name .. ": ") or "") .. #selectedList .. " selected"
+                titleLabel.TextColor3 = self.Window.Theme.Text
+            end
+        end
+
+        -- Update dropdown height
+        local function updateDropdownHeight(count)
+            local visibleCount = math.min(count or #filteredOptions, maxVisible)
+            local searchHeight = 34
+            local listHeight = visibleCount * (itemHeight + 2) + 6
+            local totalHeight = searchHeight + listHeight
+            content.Size = UDim2.new(1, -8, 0, totalHeight)
+            list.Size = UDim2.new(1, 0, 0, listHeight)
+        end
+
+        -- Build filtered options
+        local function buildOptions(filterText)
+            filterText = string.lower(filterText or "")
+            
+            -- Clear existing buttons
+            for _, btn in pairs(optionButtons) do
+                btn:Destroy()
+            end
+            optionButtons = {}
+            
+            -- Filter options
+            filteredOptions = {}
+            if filterText == "" then
+                for _, opt in ipairs(options) do
+                    table.insert(filteredOptions, opt)
+                end
+            else
+                for _, opt in ipairs(options) do
+                    if string.find(string.lower(tostring(opt)), filterText, 1, true) then
+                        table.insert(filteredOptions, opt)
+                    end
+                end
+            end
+            
+            -- Create buttons
+            for i, opt in ipairs(filteredOptions) do
+                local isSelected = selectedItems[opt] == true
+                local b = Instance.new("TextButton")
+                b.Size = UDim2.new(1, 0, 0, itemHeight)
+                b.BackgroundColor3 = isSelected and self.Window.Theme.Accent or self.Window.Theme.Card
+                b.BackgroundTransparency = isSelected and 0.3 or 0.65
+                b.Text = ""
+                b.AutoButtonColor = false
+                b.LayoutOrder = i
+                b.ZIndex = 7
+                b.Parent = list
+                corner(b, 5)
+
+                local lbl = Instance.new("TextLabel")
+                lbl.Size = UDim2.new(1, -30, 1, 0)
+                lbl.Position = UDim2.new(0, 8, 0, 0)
+                lbl.BackgroundTransparency = 1
+                lbl.Text = tostring(opt)
+                lbl.TextColor3 = self.Window.Theme.Text
+                lbl.TextSize = 12
+                lbl.Font = Enum.Font.Gotham
+                lbl.TextXAlignment = Enum.TextXAlignment.Left
+                lbl.ZIndex = 8
+                lbl.Parent = b
+
+                local check = Instance.new("TextLabel")
+                check.Size = UDim2.fromOffset(18, 18)
+                check.Position = UDim2.new(1, -24, 0.5, -9)
+                check.BackgroundTransparency = 1
+                check.Text = isSelected and "✓" or ""
+                check.TextColor3 = self.Window.Theme.Accent
+                check.TextSize = 14
+                check.Font = Enum.Font.GothamBold
+                check.ZIndex = 8
+                check.Parent = b
+
+                b.MouseEnter:Connect(function()
+                    if not selectedItems[opt] then
+                        tween(b, 0.12, {BackgroundTransparency = 0.4})
+                    end
+                end)
+                b.MouseLeave:Connect(function()
+                    if not selectedItems[opt] then
+                        tween(b, 0.12, {BackgroundTransparency = 0.65})
+                    end
+                end)
+                b.MouseButton1Click:Connect(function()
+                    selectedItems[opt] = not selectedItems[opt]
+                    local now = selectedItems[opt]
+                    tween(b, 0.15, {
+                        BackgroundColor3 = now and self.Window.Theme.Accent or self.Window.Theme.Card,
+                        BackgroundTransparency = now and 0.3 or 0.65
+                    })
+                    check.Text = now and "✓" or ""
+                    updateMainButtonTitle()
+                    
+                    -- Get selected list for callbacks
+                    local selectedList = {}
+                    for k, v in pairs(selectedItems) do
+                        if v then table.insert(selectedList, k) end
+                    end
+                    
+                    if cfg.Flag then self.Window.Flags[cfg.Flag] = selectedList end
+                    if cfg.Callback then pcall(cfg.Callback, selectedList) end
+                    
+                    -- Update frame height
+                    task.wait(0.05)
+                    updateFrameHeight()
+                end)
+                optionButtons[opt] = b
+            end
+            
+            updateDropdownHeight(#filteredOptions)
+        end
+
+        -- Search input handler
+        searchInput:GetPropertyChangedSignal("Text"):Connect(function()
+            buildOptions(searchInput.Text)
+        end)
+
+        -- Open/Close dropdown
+        local function setOpen(state)
+            isOpen = state
+            if isOpen then
+                buildOptions("")
+                content.Visible = true
+                content.Size = UDim2.new(1, -8, 0, 0)
+                spring(content, 0.3, {Size = UDim2.new(1, -8, 0, 120)})
+                tween(arrow, 0.2, {Rotation = 180})
+                spring(frame, 0.3, {Size = UDim2.new(1, 0, 0, 44 + 8 + 120)})
+                
+                -- Focus search input
+                task.wait(0.1)
+                searchInput:CaptureFocus()
+            else
+                spring(frame, 0.26, {Size = UDim2.new(1, 0, 0, 44 + 8 + 4)})
+                tween(arrow, 0.2, {Rotation = 0})
+                tween(content, 0.22, {Size = UDim2.new(1, -8, 0, 0)}, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
+                task.delay(0.24, function()
+                    if not isOpen then
+                        content.Visible = false
+                        content.Size = UDim2.new(1, -8, 0, 0)
+                    end
+                end)
+            end
+        end
+
+        -- Main button click toggles dropdown
+        mainButton.MouseButton1Click:Connect(function()
+            setOpen(not isOpen)
+        end)
+
+        -- Close on focus loss
+        searchInput.FocusLost:Connect(function()
+            task.delay(0.15, function()
+                if isOpen and not searchInput:IsFocused() then
+                    setOpen(false)
+                end
+            end)
+        end)
+
+        -- Update frame height
+        local function updateFrameHeight()
+            local h = 44  -- main button height + padding
+            if isOpen then
+                h = h + content.Size.Y.Offset + 8
+            end
+            frame.Size = UDim2.new(1, 0, 0, h)
+        end
+
+        -- Hook into content size changes
+        content:GetPropertyChangedSignal("Size"):Connect(updateFrameHeight)
+
+        -- Initial height
+        updateFrameHeight()
+        updateMainButtonTitle()
+
+        -- Object API
+        local obj = {}
+        function obj:SetOptions(newOptions)
+            options = newOptions or {}
+            -- Remove any selected items that no longer exist
+            for k in pairs(selectedItems) do
+                if not table.find(options, k) then
+                    selectedItems[k] = nil
+                end
+            end
+            updateMainButtonTitle()
+            if isOpen then buildOptions(searchInput.Text) end
+            task.wait(0.05)
+            updateFrameHeight()
+        end
+        function obj:Get()
+            local result = {}
+            for k, v in pairs(selectedItems) do
+                if v then table.insert(result, k) end
+            end
+            return result
+        end
+        function obj:Set(values)
+            selectedItems = {}
+            if type(values) == "table" then
+                for _, v in ipairs(values) do
+                    if table.find(options, v) then
+                        selectedItems[v] = true
+                    end
+                end
+            end
+            updateMainButtonTitle()
+            if isOpen then buildOptions(searchInput.Text) end
+            if cfg.Flag then self.Window.Flags[cfg.Flag] = self:Get() end
+            if cfg.Callback then pcall(cfg.Callback, self:Get()) end
+            task.wait(0.05)
+            updateFrameHeight()
+        end
+        function obj:Clear()
+            selectedItems = {}
+            updateMainButtonTitle()
+            if isOpen then buildOptions(searchInput.Text) end
+            if cfg.Flag then self.Window.Flags[cfg.Flag] = {} end
+            if cfg.Callback then pcall(cfg.Callback, {}) end
+            task.wait(0.05)
+            updateFrameHeight()
+        end
+        function obj:Search(text)
+            searchInput.Text = text or ""
+        end
+
+        if cfg.Flag then self.Window.Flags[cfg.Flag] = self:Get() end
+        return obj
     end
 
     return tab
@@ -1741,23 +2311,23 @@ function PhantomLib:Destroy()
     scale.Scale = 1
     scale.Parent = main
 
-    if glow then tween(glow, 0.18, {ImageTransparency = 1}) end
-    if stroke then tween(stroke, 0.16, {Transparency = 1}) end
+    if glow then tween(glow, 0.22, {ImageTransparency = 1}) end
+    if stroke then tween(stroke, 0.2, {Transparency = 1}) end
 
-    tween(scale, 0.24, {Scale = 0.93}, Enum.EasingStyle.Back, Enum.EasingDirection.In)
-    tween(main, 0.24, {
-        BackgroundTransparency = 0.55,
-        Position = UDim2.new(main.Position.X.Scale, main.Position.X.Offset + 14, main.Position.Y.Scale, main.Position.Y.Offset - 10)
+    tween(scale, 0.28, {Scale = 0.9}, Enum.EasingStyle.Back, Enum.EasingDirection.In)
+    tween(main, 0.28, {
+        BackgroundTransparency = 0.4,
+        Position = UDim2.new(main.Position.X.Scale, main.Position.X.Offset + 20, main.Position.Y.Scale, main.Position.Y.Offset - 14)
     }, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
 
-    task.wait(0.15)
-    tween(scale, 0.18, {Scale = 0}, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
-    tween(main, 0.18, {
+    task.wait(0.18)
+    tween(scale, 0.22, {Scale = 0}, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
+    tween(main, 0.22, {
         BackgroundTransparency = 1,
-        Position = UDim2.new(main.Position.X.Scale, main.Position.X.Offset + 26, main.Position.Y.Scale, main.Position.Y.Offset - 20)
+        Position = UDim2.new(main.Position.X.Scale, main.Position.X.Offset + 38, main.Position.Y.Scale, main.Position.Y.Offset - 30)
     }, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
 
-    task.wait(0.2)
+    task.wait(0.24)
     if self.Screen then self.Screen:Destroy() end
 end
 
